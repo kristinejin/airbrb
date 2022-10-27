@@ -199,6 +199,7 @@ const BookingHistory = (props) => {
             </Card>
           </Grid>
         </Grid>
+
         <TableContainer sx={{marginTop: "50px"}} component={Paper}>
           <Table aria-label="pastBookingTable">
             <TableHead>
@@ -230,17 +231,17 @@ const BookingHistory = (props) => {
             
             <TableBody>
               <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                <TableCell sx={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <Table>
                       <TableHead>
-                      <TableRow>
-                        <TableCell>Requester</TableCell>
-                        <TableCell align="right">Start Date</TableCell>
-                        <TableCell align="right">End Date</TableCell>
-                        <TableCell align="right">Price</TableCell>
-                        <TableCell align="right">Status</TableCell>
-                      </TableRow>
+                        <TableRow>
+                          <TableCell>Requester</TableCell>
+                          <TableCell align="right">Start Date</TableCell>
+                          <TableCell align="right">End Date</TableCell>
+                          <TableCell align="right">Price</TableCell>
+                          <TableCell align="right">Status</TableCell>
+                        </TableRow>
                       </TableHead>
                       <TableBody>
                         {pastBookings.slice(pastBookingPage * rowsPerPastBookingPage, pastBookingPage * rowsPerPastBookingPage + rowsPerPastBookingPage)
@@ -284,7 +285,7 @@ const BookingHistory = (props) => {
         <TableContainer component={Paper}>
           <Table aria-label="bookingTable">
             <TableHead>
-              <TableRow>
+              <TableRow> 
                 <TableCell>Requester</TableCell>
                 <TableCell align="right">Start Date</TableCell>
                 <TableCell align="right">End Date</TableCell>
