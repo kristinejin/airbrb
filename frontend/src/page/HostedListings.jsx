@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
 
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
@@ -27,17 +28,34 @@ import HomeIcon from '@mui/icons-material/Home';
 import { withStyles } from '@mui/styles';
 import { styled } from '@mui/material/styles';
 
+import Dialog from '@mui/material/Dialog';
+import Slide from '@mui/material/Slide';
+import CloseIcon from '@mui/icons-material/Close';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
 import HostedListingCard from '../component/HostedListingCard';
 import SideMenu from '../component/SideMenu';
+import CreateDialog from '../component/CreateDialog';
 
 import { apiCall } from '../util/api';
+// import FullScreenDialog from './ListingCreate';
 
 const styles = theme => ({
 })
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const HostedListings = (props) => {
     const user_email = localStorage.getItem("email");
     const [listings, setListings] = React.useState('');
+	const [create, setCreate] = React.useState(false);
+	
 
     const getListings = () => {
         apiCall('listings', 'GET')
@@ -73,32 +91,76 @@ const HostedListings = (props) => {
         });
     }
 
-		const publishListing = (listingId) => {
-			const availability = {"availability": [{"start": 1, "end": 2}]};
-			apiCall(`listings/publish/${listingId}`, 'PUT', availability).then(_ => {
-				const currentListing = [...listings];
-				const getIndex = currentListing.findIndex(obj => obj.id === listingId);
-				currentListing[getIndex].published = true;
-				setListings(currentListing);
-			});
-		}
+	const publishListing = (listingId) => {
+		const availability = {"availability": [{"start": 1, "end": 2}]};
+		apiCall(`listings/publish/${listingId}`, 'PUT', availability).then(_ => {
+			const currentListing = [...listings];
+			const getIndex = currentListing.findIndex(obj => obj.id === listingId);
+			currentListing[getIndex].published = true;
+			setListings(currentListing);
+		});
+	}
 
-		const unPublishListing = (listingId) => {
-			apiCall(`listings/unpublish/${listingId}`, 'PUT').then(_ => {
-				const currentListing = [...listings];
-				const getIndex = currentListing.findIndex(obj => obj.id === listingId);
-				currentListing[getIndex].published = false;
-				setListings(currentListing);
-			});
-		}
-
+	const unPublishListing = (listingId) => {
+		apiCall(`listings/unpublish/${listingId}`, 'PUT').then(_ => {
+			const currentListing = [...listings];
+			const getIndex = currentListing.findIndex(obj => obj.id === listingId);
+			currentListing[getIndex].published = false;
+			setListings(currentListing);
+		});
+	}
+	
     React.useEffect(() => {
         getListings();
     }, [])
 
-		if (!listings) {
-			return <>Loading...</>
-		}
+	if (!listings) {
+		return <>Loading...</>
+	}
+	const setCreateOpen = () => {
+		setCreate(true);
+	}
+	const setCreateClose = () => {
+		setCreate(false);
+	}
+	const callCreateListing = (data) => {
+		apiCall('listings/new', 'POST', data)
+			.then(data => {
+				console.log(data)
+				setCreateClose()
+			})
+	}
+
+	if (create) {
+		return (
+			<div>
+				<Dialog
+					fullScreen
+					open={create}
+					onClose={setCreateClose}
+					TransitionComponent={Transition}
+				>
+					<Toolbar>
+						<IconButton
+						edge="start"
+						color="inherit"
+						onClick={setCreateClose}
+						aria-label="close"
+						>
+						<CloseIcon />
+						</IconButton>
+						<Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+							Create a new listing
+						</Typography>
+						{/* <Button autoFocus color="inherit" onClick={setCreateClose}>
+						save
+						</Button> */}
+					</Toolbar>
+					<CreateDialog callCreateListing={e => callCreateListing(e)}/>
+				</Dialog>
+			</div>
+		)
+	}
 
     const {classes} = props;
     return (
@@ -113,7 +175,7 @@ const HostedListings = (props) => {
 					</Box>
 				</Box>
 				<Box sx={{padding: '40px'}}>
-					<Button>Create New Listing</Button>
+					<Button onClick={setCreateOpen}>Create New Listing</Button>
 					<Grid container rowSpacing={3} columnSpacing={3}>
 						{listings.map((data) => (
 						<Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>

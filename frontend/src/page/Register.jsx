@@ -32,7 +32,7 @@ const Register = () => {
 
 		apiCall('user/auth/register', 'POST', body)
         .then(data => {
-            setLogin(data.token, data.email);
+            setLogin(data.token, email);
             // redirect to logged in page
             nav('/HostedListings');
         });
@@ -57,28 +57,28 @@ const Register = () => {
 
     return (
 		<Box
-		sx={{
-			// '& .MuiTextField-root': { m: 1, width: '25ch' },
-			display: 'flex',
-			alignItems: 'center',
-			justifyContent: 'center',
-			width: 'auto',
-			height: 'auto',
-		}}
+			sx={{
+				// '& .MuiTextField-root': { m: 1, width: '25ch' },
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+				width: 'auto',
+				height: 'auto',
+			}}
 		>
 
 			<Box
-			component="form"
-			sx={{
-				// '& .MuiTextField-root': { m: 1, width: '25ch' },
-				marginTop: '20px',
-				display:'flex',
-				flexDirection: 'column',
-				width: '400px',
-				gap: '10px',
-			}}
-			noValidate
-			autoComplete="off"
+				component="form"
+				sx={{
+					// '& .MuiTextField-root': { m: 1, width: '25ch' },
+					marginTop: '20px',
+					display:'flex',
+					flexDirection: 'column',
+					width: '400px',
+					gap: '10px',
+				}}
+				noValidate
+				autoComplete="off"
 			>
 				<Typography component="h1" variant="h5">
 				Register your Airbnb account
