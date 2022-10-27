@@ -105,6 +105,14 @@ const CreateDialog = ({callCreateListing}) => {
 
     const setNewListingData = () => {
         // convert data
+        // TODO: ensure each room element is not empty?
+        // 1. get beds num
+        // 2. get num rooms
+        const numBedrooms = roomList.length;
+        let totalBeds = 0;
+        roomList.forEach(room => {
+            totalBeds += parseInt(room.numBeds)
+        })
         const data = {
             "title": title,
             "address": {
@@ -119,9 +127,10 @@ const CreateDialog = ({callCreateListing}) => {
             "metadata": {
                 'propertyType': type,
                 'numBaths': bathrooms,
-                'bedrooms': roomList,
-            'amenities': amenities
-        }
+                'numBedrooms': numBedrooms,
+                'numBeds': totalBeds,
+                'amenities': amenities
+            }
         }
         callCreateListing(data);
     }

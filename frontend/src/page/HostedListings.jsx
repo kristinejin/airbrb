@@ -126,8 +126,8 @@ const HostedListings = (props) => {
 	const callCreateListing = (data) => {
 		apiCall('listings/new', 'POST', data)
 			.then(data => {
-				console.log(data)
-				setCreateClose()
+				setCreateClose();
+				// TODO: call getListing to fetch data?
 			})
 	}
 
