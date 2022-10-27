@@ -130,7 +130,8 @@ const CreateDialog = ({callCreateListing}) => {
                 'numBedrooms': numBedrooms,
                 'numBeds': totalBeds,
                 'amenities': amenities
-            }
+            },
+            'reviews': []
         }
         callCreateListing(data);
     }
@@ -163,7 +164,7 @@ const CreateDialog = ({callCreateListing}) => {
                     <OutlinedInput
                         fullWidth
                         id="outlined-adornment-amount"
-                        // value={values.amount}
+                        value={price}
                         onChange={e => setPrice(e.target.value)}
                         startAdornment={<InputAdornment position="start">$</InputAdornment>}
                         label="Amount"
