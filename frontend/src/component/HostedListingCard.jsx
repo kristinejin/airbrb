@@ -14,17 +14,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import StarIcon from '@mui/icons-material/Star';
 import CribIcon from '@mui/icons-material/Crib';
 import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
-
+import { useNavigate } from 'react-router-dom';
 
 const HostedListingCard = (props) => {
 	const listing = props.listing;
 	const deleteListing = props.deleteListing;
 	const publishListing = props.publishListing;
 	const unPublishListing = props.unPublishListing;
-
+	const nav = useNavigate();
 	return (
 		<Card>
-			<CardActionArea onClick={() => {console.log("hihi")}}>
+			<CardActionArea onClick={() => {nav('/edit')}}>
 				<CardHeader 
 					sx={{
 						display: "flex",
