@@ -178,20 +178,25 @@ const CreateDialog = ({callCreateListing}) => {
                 </Grid2>
 
                 <Grid2 xs={12}>
-                    <TextField fullWidth label="Address Line" onChange={(e) => setStreet(e.target.value)}/>
+                    <TextField fullWidth label="Address Line" required
+                        onChange={(e) => setStreet(e.target.value)}/>
                 </Grid2>
                 
                 <Grid2 xs={6} md={3}>
-                    <TextField fullWidth label="City/Suburb" onChange={(e) => setCity(e.target.value)}/>
+                    <TextField fullWidth label="City/Suburb" required
+                        onChange={(e) => setCity(e.target.value)}/>
                 </Grid2>
                 <Grid2 xs={6} md={3}>
-                    <TextField fullWidth label="State" onChange={(e) => setState(e.target.value)}/>
+                    <TextField fullWidth label="State" required
+                        onChange={(e) => setState(e.target.value)}/>
                 </Grid2>
                 <Grid2 xs={6} md={3}>
-                    <TextField fullWidth label="Postcode" onChange={(e) => setPostcode(e.target.value)}/>
+                    <TextField fullWidth label="Postcode" required
+                        onChange={(e) => setPostcode(e.target.value)}/>
                 </Grid2>
                 <Grid2 xs={6} md={3}>
-                    <TextField fullWidth label="Country" onChange={(e) => setCountry(e.target.value)}/>
+                    <TextField fullWidth label="Country" required
+                        onChange={(e) => setCountry(e.target.value)}/>
                 </Grid2>
 
                 
@@ -203,7 +208,7 @@ const CreateDialog = ({callCreateListing}) => {
                 </Grid2>
                 
                 <Grid2 xs={12} md={4}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth required>
                         <InputLabel id="PropertyTypeLabel">Property Type</InputLabel>
                         <Select
                             fullWidth
@@ -222,11 +227,7 @@ const CreateDialog = ({callCreateListing}) => {
                 </Grid2>
 
                 <Grid2 xs={12} md={4}>
-                    <TextField fullWidth label="Number of Bathrooms" onChange={(e) => setBathrooms(e.target.value)}/>
-                </Grid2>
-
-                <Grid2 xs={12} md={4}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth required>
                         <InputLabel htmlFor="Price">Price (per night)</InputLabel>
                         <OutlinedInput
                             fullWidth
@@ -240,8 +241,16 @@ const CreateDialog = ({callCreateListing}) => {
                     </FormControl>
                 </Grid2>
 
+                <Grid2 xs={12} md={4}>
+                    <TextField fullWidth label="Number of Bathrooms" required
+                        onChange={(e) => setBathrooms(e.target.value)}/>
+                </Grid2>
+
+                
+
                 <Grid2 xs={12}>
-                    <TextField fullWidth label="Amenities" multiline onChange = {handleAmenitiesChange}/>
+                    <TextField fullWidth label="Amenities"
+                        multiline onChange = {handleAmenitiesChange}/>
                 </Grid2>
 
                 {/* add bedrooms */}
@@ -261,6 +270,7 @@ const CreateDialog = ({callCreateListing}) => {
                                 <Grid2 xs={12} md={4}>
                                     <TextField
                                         fullWidth
+                                        required
                                         onChange={(e) => {handleRoomTypeChange(e, i)}}
                                         value={room.roomType}
                                         id={i}
@@ -270,6 +280,7 @@ const CreateDialog = ({callCreateListing}) => {
                                 <Grid2 xs={8} md={4}>
                                     <TextField
                                         fullWidth
+                                        required
                                         onChange={(e) => {handleNumsBedsChange(e, i)}}
                                         value={room.numBeds}
                                         id={i}
@@ -294,10 +305,13 @@ const CreateDialog = ({callCreateListing}) => {
 
                 
                 <Grid2 xs={12} md={6}>
-                    <Typography variant="overline">
+                    <Typography variant="overline" fullWidth>
                         Upload an image for the property
                     </Typography>
+                </Grid2>
+                <Grid2 xs={12} md={6}>
                     <input
+                        
                         type="file"
                         accept="image/*"
                         style={{ display: 'none' }}
@@ -306,7 +320,7 @@ const CreateDialog = ({callCreateListing}) => {
                     />
                     <label htmlFor="contained-Button-file">
                         <Button color="primary" component="span">
-                        Upload
+                            Upload
                         </Button>
                     </label>
                 </Grid2>
