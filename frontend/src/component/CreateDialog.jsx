@@ -131,7 +131,6 @@ const CreateDialog = ({callCreateListing}) => {
                 'numBeds': totalBeds,
                 'amenities': amenities
             },
-            'reviews': []
         }
         callCreateListing(data);
     }
