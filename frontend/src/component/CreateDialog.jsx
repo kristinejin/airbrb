@@ -14,6 +14,8 @@ import Typography from '@mui/material/Typography';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import FormControl from '@mui/material/FormControl';
+
 
 import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
 
@@ -139,8 +141,9 @@ const CreateDialog = ({callCreateListing}) => {
 	return (
         <Box
             sx={{
+                display: 'flex',
                 alignSelf: 'center',
-                width: '80%',
+                width: '60%',
                 height: 'auto',
             }}
         >
@@ -153,23 +156,26 @@ const CreateDialog = ({callCreateListing}) => {
                     width: 'auto',
                     height: 'auto',
                 }}
+                // xs={24}
             >
             
-                <Grid2 xs={6} md={8}>
-                    <TextField fullWidth label="Title" onChange={(e) => setTitle(e.target.value)}/>
+                <Grid2 xs={12}>
+                    <Typography variant="overline">
+                        Listing Information
+                    </Typography>
+                </Grid2>
+                <Grid2 xs={12}>
+                    <TextField fullWidth label="Title" helperText='Give your listing a title'
+                        onChange={(e) => setTitle(e.target.value)}/>
                 </Grid2>
 
-                <Grid2 xs={6} md={4}>
-                    <OutlinedInput
-                        fullWidth
-                        id="outlined-adornment-amount"
-                        value={price}
-                        onChange={e => setPrice(e.target.value)}
-                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                        label="Amount"
-                    />
-                </Grid2>
+                
                     
+                <Grid2 xs={12}>
+                    <Typography variant="overline">
+                        Property Address
+                    </Typography>
+                </Grid2>
 
                 <Grid2 xs={12}>
                     <TextField fullWidth label="Address Line" onChange={(e) => setStreet(e.target.value)}/>
@@ -188,62 +194,109 @@ const CreateDialog = ({callCreateListing}) => {
                     <TextField fullWidth label="Country" onChange={(e) => setCountry(e.target.value)}/>
                 </Grid2>
 
-                <Grid2 xs={12} md={6}>
-                    <InputLabel id="PropertyTypeLabel">Property Type</InputLabel>
-                    <Select
-                        fullWidth
-                        labelId="PropertyTypeLabel"
-                        id="PropertyType"
-                        value={type}
-                        label="Type"
-                        onChange={handleTypeChange}
-                    >
-                        <MenuItem value={'House'}>House</MenuItem>
-                        <MenuItem value={'Apartment'}>Apartment</MenuItem>
-                        <MenuItem value={'Room'}>Single Room</MenuItem>
-                        <MenuItem value={'Other'}>Other</MenuItem>
-                    </Select>
+                
+
+                <Grid2 xs={12}>
+                    <Typography variant="overline">
+                        Property Information
+                    </Typography>
+                </Grid2>
+                
+                <Grid2 xs={12} md={4}>
+                    <FormControl fullWidth>
+                        <InputLabel id="PropertyTypeLabel">Property Type</InputLabel>
+                        <Select
+                            fullWidth
+                            labelId="PropertyTypeLabel"
+                            id="PropertyType"
+                            value={type}
+                            label="Property Type"
+                            onChange={handleTypeChange}
+                        >
+                            <MenuItem value={'House'}>House</MenuItem>
+                            <MenuItem value={'Apartment'}>Apartment</MenuItem>
+                            <MenuItem value={'Room'}>Single Room</MenuItem>
+                            <MenuItem value={'Other'}>Other</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid2>
 
-                <Grid2 xs={12} md={6}>
+                <Grid2 xs={12} md={4}>
                     <TextField fullWidth label="Number of Bathrooms" onChange={(e) => setBathrooms(e.target.value)}/>
                 </Grid2>
 
+                <Grid2 xs={12} md={4}>
+                    <FormControl fullWidth>
+                        <InputLabel htmlFor="Price">Price (per night)</InputLabel>
+                        <OutlinedInput
+                            fullWidth
+                            id="Price"
+                            value={price}
+                            onChange={e => setPrice(e.target.value)}
+                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                            label="Price per week"
+                            // helperText='Price per week'
+                        />
+                    </FormControl>
+                </Grid2>
+
                 <Grid2 xs={12}>
-                    <TextField fullWidth label="Amenities" onChange = {handleAmenitiesChange}/>
+                    <TextField fullWidth label="Amenities" multiline onChange = {handleAmenitiesChange}/>
                 </Grid2>
 
                 {/* add bedrooms */}
 
-                <div>
+                <Grid2 xs={12}>
+                    <Typography variant="overline">
+                        Bedrooms information
+                    </Typography>
+                </Grid2>
+
+                <Grid2 xs={12}>
                     
                     {roomList.map((room, i) => {
                         console.log(room)
                         return (
-                            <div>
-                                <TextField
-                                    onChange={(e) => {handleRoomTypeChange(e, i)}}
-                                    value={room.roomType}
-                                    id={i}
-                                    label='Type of Room'
-                                ></TextField>
-                                <TextField
-                                    onChange={(e) => {handleNumsBedsChange(e, i)}}
-                                    value={room.numBeds}
-                                    id={i}
-                                    label='Number of beds'
-                                ></TextField>
-                                <Button onClick={(e) => {handleRoomRemove(e, i)}}>Remove</Button>
-                            </div>
+                            <Grid2 container>
+                                <Grid2 xs={12} md={4}>
+                                    <TextField
+                                        fullWidth
+                                        onChange={(e) => {handleRoomTypeChange(e, i)}}
+                                        value={room.roomType}
+                                        id={i}
+                                        label='Type of Room'
+                                    ></TextField>
+                                </Grid2>
+                                <Grid2 xs={8} md={4}>
+                                    <TextField
+                                        fullWidth
+                                        onChange={(e) => {handleNumsBedsChange(e, i)}}
+                                        value={room.numBeds}
+                                        id={i}
+                                        label='Number of beds'
+                                    ></TextField>
+                                </Grid2>
+                                <Grid2 xs={4}>
+                                    <Button onClick={(e) => {handleRoomRemove(e, i)}}>
+                                        Remove
+                                    </Button>
+                                </Grid2>
+                            </Grid2>
                         )
                     })}
-                    <Button onClick={handleRoomAdd}>Add</Button>
+                    <Grid2>
+                        <Button onClick={handleRoomAdd}>
+                            Add
+                        </Button>
+                    </Grid2>
                     
-                </div>
+                </Grid2>
 
                 
                 <Grid2 xs={12} md={6}>
-                    Upload image for the property
+                    <Typography variant="overline">
+                        Upload an image for the property
+                    </Typography>
                     <input
                         type="file"
                         accept="image/*"
@@ -257,10 +310,12 @@ const CreateDialog = ({callCreateListing}) => {
                         </Button>
                     </label>
                 </Grid2>
+                <Grid2 xs={12}>
+                    <Button variant='outlined' fullWidth onClick={setNewListingData}>
+                        Save
+                    </Button>
+                </Grid2>
             </Grid2>
-            <Button fullWidth onClick={setNewListingData}>
-                Save
-            </Button>
         </Box>
 	)
 }
