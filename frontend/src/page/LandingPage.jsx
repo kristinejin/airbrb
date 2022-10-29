@@ -1,29 +1,8 @@
 import React from 'react'
-
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-
-import Paper from '@mui/material/Paper'
-import Card from '@mui/material/Card'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import { CardActionArea } from '@mui/material';
-
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteIcon from '@mui/icons-material/Delete';
-import StarIcon from '@mui/icons-material/Star';
-import CribIcon from '@mui/icons-material/Crib';
-import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
 
 import { withStyles } from '@mui/styles';
 
@@ -41,32 +20,82 @@ const styles = theme => ({
 })
 
 const LandingPage = (props) => {
-    const [listings, setListings] = React.useState('');
+  const user_email = localStorage.getItem("email");
+  const [bookedListings, setBookedListings] = React.useState('');
+  const [listings, setListings] = React.useState('');
 
-    const getListings = () => {
-      apiCall('listings', 'GET')
-        .then((data) => {
-          let AllListingsPromises = [];
-          let allListingsIds = [];
-          data.listings.forEach((listing) => {
-            AllListingsPromises.push(apiCall(`listings/${listing.id}`, 'GET'));
-            allListingsIds.push(listing.id);
-          }); 
-          const responses = Promise.all(AllListingsPromises);
-          responses.then(response => {
-            let allListings = [];
-            let i = 0;
-            response.forEach(listing => {
-              if (listing.listing.published) {
-                listing.listing.id = allListingsIds[i];
-                allListings.push(listing.listing);
-              }
-              i += 1;
-            });
+  const sortListings = (listingArray) => {
+    const compare = (a,b) => {
+      if (a.title < b.title) {
+        return -1;
+      } else if (a.title > b.title) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+    listingArray.sort(compare);
+  }
 
-            setListings(allListings);
-          })
+  const putBookedListingsFirst = (listingArray) => {
+    if (!user_email) {
+      setListings(listingArray);
+      setBookedListings([]);
+      return {};
+    }
+
+    apiCall('bookings', 'GET')
+      .then((data) => {
+      
+        const bookedListingIds = [];
+        data.bookings.forEach((booking) => {
+          if (booking.owner === user_email) {
+            bookedListingIds.push(booking.listingId);
+          }
         });
+
+        const allBookedListings = [];
+        listingArray.forEach((listing) => {
+          console.log(listing.id);
+          if (bookedListingIds.includes(listing.id.toString())) {
+            allBookedListings.push(listing);
+          } 
+        });
+
+        bookedListingIds.forEach((listingId) => {
+          listingArray = listingArray.filter((listing) => listing.id.toString() !== listingId);
+        });
+
+        setBookedListings(allBookedListings);
+        setListings(listingArray);
+      })
+  }
+
+  const getListings = () => {
+    apiCall('listings', 'GET')
+      .then((data) => {
+        let AllListingsPromises = [];
+        let allListingsIds = [];
+        data.listings.forEach((listing) => {
+          AllListingsPromises.push(apiCall(`listings/${listing.id}`, 'GET'));
+          allListingsIds.push(listing.id);
+        }); 
+        const responses = Promise.all(AllListingsPromises);
+        responses.then(response => {
+          let allListings = [];
+          let i = 0;
+          response.forEach(listing => {
+            if (listing.listing.published) {
+              listing.listing.id = allListingsIds[i];
+              allListings.push(listing.listing);
+            }
+            i += 1;
+          });
+
+          sortListings(allListings);
+          putBookedListingsFirst(allListings);
+        })
+      });
   };
 
 
@@ -74,7 +103,7 @@ const LandingPage = (props) => {
         getListings();
     }, [])
 
-		if (!listings) {
+		if (!listings || !bookedListings) {
 			return <>Loading...</>
 		}
 
@@ -89,11 +118,23 @@ const LandingPage = (props) => {
 					</Box>
 				</Box>
 				<Box sx={{padding: '40px'}}>
-					<Grid container rowSpacing={3} columnSpacing={3}>
-						{listings.map((data) => (
-						<Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>
-							<AllListingCard listing={data}/>
-						</Grid>
+          {bookedListings.length !== 0 &&
+            <Typography component="h1" variant="h5">Your booked listings</Typography>
+          }
+					<Grid container rowSpacing={3} columnSpacing={3} sx={{paddingBottom: "30px"}}>
+            {bookedListings.map((data) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>
+                <AllListingCard listing={data}/>
+              </Grid>
+            ))}
+					</Grid>
+
+          <Typography component="h1" variant="h5">All hosted listings</Typography>
+          <Grid container rowSpacing={3} columnSpacing={3}>
+            {listings.map((data) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>
+                <AllListingCard listing={data}/>
+              </Grid>
 						))}
 					</Grid>
 				</Box>

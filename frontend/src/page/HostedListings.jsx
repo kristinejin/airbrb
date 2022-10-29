@@ -58,37 +58,37 @@ const HostedListings = (props) => {
 	
 
     const getListings = () => {
-        apiCall('listings', 'GET')
-            .then((data) => {
-                let hostedListingsPromises = [];
-                let hostedListingsIds = [];
-                data.listings.forEach((listing) => {
-                    if (listing.owner === user_email) {
-                        hostedListingsPromises.push(apiCall(`listings/${listing.id}`, 'GET'));
-                        hostedListingsIds.push(listing.id);
-                    }
-                }); 
-                const responses = Promise.all(hostedListingsPromises);
-                responses.then(response => {
-                    let hostedListings = [];
-                    let i = 0;
-                    response.forEach(listing => {
-                        listing.listing.id = hostedListingsIds[i];
-                        hostedListings.push(listing.listing);
-                        i += 1;
-                    });
-
-                    setListings(hostedListings);
-                })
+      apiCall('listings', 'GET')
+        .then((data) => {
+          let hostedListingsPromises = [];
+          let hostedListingsIds = [];
+          data.listings.forEach((listing) => {
+            if (listing.owner === user_email) {
+              hostedListingsPromises.push(apiCall(`listings/${listing.id}`, 'GET'));
+              hostedListingsIds.push(listing.id);
+            }
+          }); 
+          const responses = Promise.all(hostedListingsPromises);
+          responses.then(response => {
+            let hostedListings = [];
+            let i = 0;
+            response.forEach(listing => {
+              listing.listing.id = hostedListingsIds[i];
+              hostedListings.push(listing.listing);
+              i += 1;
             });
+
+            setListings(hostedListings);
+            })
+          });
     };
 
     const deleteListing = (listingId) => {
-        apiCall(`listings/${listingId}`, 'DELETE').then(_ => {
-            setListings((current) => 
-                current.filter((currentListing) => currentListing.id !== listingId)
-            )
-        });
+      apiCall(`listings/${listingId}`, 'DELETE').then(_ => {
+        setListings((current) => 
+          current.filter((currentListing) => currentListing.id !== listingId)
+        )
+      });
     }
 
 	const publishListing = (listingId) => {
@@ -178,9 +178,12 @@ const HostedListings = (props) => {
 					<Button onClick={setCreateOpen}>Create New Listing</Button>
 					<Grid container rowSpacing={3} columnSpacing={3}>
 						{listings.map((data) => (
-						<Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>
-							<HostedListingCard unPublishListing={unPublishListing} publishListing={publishListing} deleteListing={deleteListing} listing={data}/>
-						</Grid>
+							<Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>
+								<HostedListingCard unPublishListing={unPublishListing} publishListing={publishListing} deleteListing={deleteListing} listing={data}/>
+                <Card sx={{textAlign: "center"}}>
+                  <Button sx={{width: "100%"}} onClick={() => {window.location.href=`/BookingHistory/${data.id}`}}>View Booking History</Button>
+                </Card>
+							</Grid>
 						))}
 					</Grid>
 				</Box>

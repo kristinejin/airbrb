@@ -8,7 +8,11 @@ import {
 import LandingPage from './page/LandingPage';
 import Login from './page/Login';
 import HostedListings from './page/HostedListings';
+<<<<<<< HEAD
 import Register from './page/Register';
+=======
+import BookingHistory from './page/BookingHistory';
+>>>>>>> master
 
 
 const Router = () => {
@@ -18,6 +22,7 @@ const Router = () => {
             <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<Register/>} />
             <Route path="/HostedListings" element={<HostedListings/>} />
+            <Route path="/BookingHistory/:id" element={<BookingHistory/>}/>
         </Routes>
     );
 }
