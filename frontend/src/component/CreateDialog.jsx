@@ -1,7 +1,13 @@
+import Dialog from '@mui/material/Dialog';
+import Slide from '@mui/material/Slide';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 import React from 'react';
+import Toolbar from '@mui/material/Toolbar';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import Container from '@mui/material/Container';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -9,63 +15,42 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import FormControl from '@mui/material/FormControl';
-import { Box } from '@mui/system';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Box, flexbox } from '@mui/system';
+import { Grid } from '@mui/material';
 
 import { fileToDataUrl } from '../util/fileToUrl';
 
 
 const CreateDialog = ({callCreateListing, listingInfo}) => {
-
-    const [title, setTitle] = useState('');
-    const [price, setPrice] = useState('');
+    const [title, setTitle] = useState(listingInfo ? listingInfo.title : '');
+    const [price, setPrice] = useState(listingInfo ? listingInfo.price : '');
     const [thumbnail, setThumbnail] = useState('');
 
-    const [street, setStreet] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [postcode, setPostcode] = useState('');
-    const [country, setCountry] = useState('');
+    const [street, setStreet] = useState(listingInfo ? listingInfo.address.street : '');
+    const [city, setCity] = useState(listingInfo ? listingInfo.address.city : '');
+    const [state, setState] = useState(listingInfo ? listingInfo.address.state : '');
+    const [postcode, setPostcode] = useState(listingInfo ? listingInfo.address.postcode : '');
+    const [country, setCountry] = useState(listingInfo ? listingInfo.address.country : '');
     
-    const [type, setType] = useState('Other');
-    const [amenities, setAmenities] = useState('');
-    const [bathrooms, setBathrooms] = useState(0);
-    const [roomList, setRoomList] = useState([
+    const [type, setType] = useState(listingInfo ? listingInfo.metadata.propertyType : '');
+    const [amenities, setAmenities] = useState(listingInfo ? listingInfo.metadata.amenities : '');
+    const [bathrooms, setBathrooms] = useState(listingInfo ? listingInfo.metadata.numBaths : '');
+    const [roomList, setRoomList] = useState(listingInfo ? listingInfo.metadata.bedrooms :[
         {
-            numBeds: null,
+            numBeds: 0,
             roomType: '',
             index: 0
         }
     ]);
 
-    if (listingInfo) {
-        setTitle(listingInfo.title);
-        setPrice(listingInfo.price);
-        //setThumbnail(listingInfo.thumbnail); // hmm
-        setStreet(listingInfo.address.street);
-        setCity(listingInfo.address.city);
-        setState(listingInfo.address.state);
-        setPostcode(listingInfo.address.postcode);
-        setCountry(listingInfo.address.country)
-        setType(listingInfo.metadata.propertyType);
-        setAmenities(listingInfo.metadata.amenities);
-        setBathrooms(listingInfo.metadata.numBaths);
-        // loop to set bedrooms
-    }
-
-    
-
-    // const [isDisabled, setIsDisabled] = useState(false)
-
-    // List of rooms in the property
-    
 
     const handleRoomAdd = () => {
         setRoomList([
             ...roomList,
             {
-                numBeds: null,
+                numBeds: 0,
                 roomType: '',
                 index: null
             }
@@ -77,14 +62,12 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
         const newRoomList = [...roomList]
         newRoomList[index].roomType = type
         newRoomList[index].index = index + 1
-        console.log(newRoomList)
         setRoomList(newRoomList)
     }
 
     const handleNumsBedsChange = (event, index) => {
         const numBeds = event.target.value
         const newRoomList = [...roomList]
-        console.log(index)
         newRoomList[index].numBeds = numBeds
         newRoomList[index].index = index + 1
         setRoomList(newRoomList)
@@ -112,10 +95,6 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
     }
 
     const setNewListingData = () => {
-        // convert data
-        // TODO: ensure each room element is not empty?
-        // 1. get beds num
-        // 2. get num rooms
         const numBedrooms = roomList.length;
         let totalBeds = 0;
         roomList.forEach(room => {
@@ -138,7 +117,8 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 'numBedrooms': numBedrooms,
                 'numBeds': totalBeds,
                 'amenities': amenities,
-                'bedrooms': roomList
+                'bedrooms': roomList,
+                'images': []
             },
         }
         callCreateListing(data);
@@ -171,8 +151,9 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                         Listing Information
                     </Typography>
                 </Grid2>
+
                 <Grid2 xs={12}>
-                    <TextField fullWidth label="Title" helperText='Give your listing a title'
+                    <TextField fullWidth label="Title" defaultValue={ title }
                         onChange={(e) => setTitle(e.target.value)}/>
                 </Grid2>
 
@@ -185,20 +166,25 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 </Grid2>
 
                 <Grid2 xs={12}>
-                    <TextField fullWidth label="Address Line" onChange={(e) => setStreet(e.target.value)}/>
+                    <TextField fullWidth label="Address Line" defaultValue={ street } required
+                        onChange={(e) => setStreet(e.target.value)}/>
                 </Grid2>
                 
                 <Grid2 xs={6} md={3}>
-                    <TextField fullWidth label="City/Suburb" onChange={(e) => setCity(e.target.value)}/>
+                    <TextField fullWidth label="City/Suburb" defaultValue={ city } required
+                        onChange={(e) => setCity(e.target.value)}/>
                 </Grid2>
                 <Grid2 xs={6} md={3}>
-                    <TextField fullWidth label="State" onChange={(e) => setState(e.target.value)}/>
+                    <TextField fullWidth label="State" defaultValue={ state } required
+                        onChange={(e) => setState(e.target.value)}/>
                 </Grid2>
                 <Grid2 xs={6} md={3}>
-                    <TextField fullWidth label="Postcode" onChange={(e) => setPostcode(e.target.value)}/>
+                    <TextField fullWidth label="Postcode" defaultValue={ postcode } required
+                        onChange={(e) => setPostcode(e.target.value)}/>
                 </Grid2>
                 <Grid2 xs={6} md={3}>
-                    <TextField fullWidth label="Country" onChange={(e) => setCountry(e.target.value)}/>
+                    <TextField fullWidth label="Country" defaultValue={ country } required
+                        onChange={(e) => setCountry(e.target.value)}/>
                 </Grid2>
 
                 
@@ -210,7 +196,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 </Grid2>
                 
                 <Grid2 xs={12} md={4}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth required>
                         <InputLabel id="PropertyTypeLabel">Property Type</InputLabel>
                         <Select
                             fullWidth
@@ -229,16 +215,12 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 </Grid2>
 
                 <Grid2 xs={12} md={4}>
-                    <TextField fullWidth label="Number of Bathrooms" onChange={(e) => setBathrooms(e.target.value)}/>
-                </Grid2>
-
-                <Grid2 xs={12} md={4}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth required>
                         <InputLabel htmlFor="Price">Price (per night)</InputLabel>
                         <OutlinedInput
                             fullWidth
                             id="Price"
-                            value={price}
+                            value={price.toString()}
                             onChange={e => setPrice(e.target.value)}
                             startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             label="Price per week"
@@ -247,8 +229,16 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                     </FormControl>
                 </Grid2>
 
+                <Grid2 xs={12} md={4}>
+                    <TextField fullWidth label="Number of Bathrooms" defaultValue={ bathrooms } required
+                        onChange={(e) => setBathrooms(parseInt(e.target.value))}/>
+                </Grid2>
+
+                
+
                 <Grid2 xs={12}>
-                    <TextField fullWidth label="Amenities" multiline onChange = {handleAmenitiesChange}/>
+                    <TextField fullWidth label="Amenities" defaultValue={ amenities }
+                        multiline onChange = {handleAmenitiesChange}/>
                 </Grid2>
 
                 {/* add bedrooms */}
@@ -263,12 +253,14 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                     
                     {roomList.map((room, i) => {
                         return (
-                            <Grid2 container>
+                            <Grid2 container key={i}>
                                 <Grid2 xs={12} md={4}>
                                     <TextField
                                         fullWidth
+                                        required
                                         onChange={(e) => {handleRoomTypeChange(e, i)}}
                                         value={room.roomType}
+                                        defaultValue={ room.roomType }
                                         id={i}
                                         label='Type of Room'
                                     ></TextField>
@@ -276,8 +268,10 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                                 <Grid2 xs={8} md={4}>
                                     <TextField
                                         fullWidth
+                                        required
                                         onChange={(e) => {handleNumsBedsChange(e, i)}}
-                                        value={room.numBeds}
+                                        value={room.numBeds.toString()}
+                                        defaultValue={ room.numBeds }
                                         id={i}
                                         label='Number of beds'
                                     ></TextField>
@@ -298,24 +292,38 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                     
                 </Grid2>
 
+                {() => {
+                    if (!listingInfo) {
+                        return (
+                            <Grid2 xs={12} md={6}>
+                                <Typography variant="overline" fullWidth>
+                                    Upload an image for the property
+                                </Typography>
+                            </Grid2>
+                        )
+                    }
+                }}
+                {() => {
+                    if (!listingInfo) {
+                        return (
+                            <Grid2 xs={12} md={6}>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    id="contained-Button-file"
+                                    onChange={updateThumbnail}
+                                />
+                                <label htmlFor="contained-Button-file">
+                                    <Button color="primary" component="span">
+                                        Upload
+                                    </Button>
+                                </label>
+                            </Grid2>
+                        )
+                    }
+                }}
                 
-                <Grid2 xs={12} md={6}>
-                    <Typography variant="overline">
-                        Upload an image for the property
-                    </Typography>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        id="contained-Button-file"
-                        onChange={updateThumbnail}
-                    />
-                    <label htmlFor="contained-Button-file">
-                        <Button color="primary" component="span">
-                        Upload
-                        </Button>
-                    </label>
-                </Grid2>
                 <Grid2 xs={12}>
                     <Button variant='outlined' fullWidth onClick={setNewListingData}>
                         Save

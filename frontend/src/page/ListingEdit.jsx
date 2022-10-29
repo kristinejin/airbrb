@@ -2,24 +2,45 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { apiCall } from "../util/api";
 import CreateDialog from "../component/CreateDialog";
+import config from '../config';
+import { useState } from "react";
+import { useEffect } from "react";
+
 
 const ListingEdit = (props) => {
     const listingId = useParams().listingId;
-    // display all the listing information 
-    let listing;
-    apiCall(`listings/${listingId}`, 'GET')
-        .then(data => {
-            listing = data.listing
-            console.log(listing)
-        })
+    const [listing, setListing] = useState({});
+    const [isLoaded, setIsLoaded] = useState(false);
+    // // display all the listing information 
+    const getListing = async () => {
+        const resp = await apiCall(`listings/${listingId}`, 'GET');
+        return resp;
+    }
+
+    useEffect(() => {
+        getListing()
+            .then((data) => {
+                setListing(data.listing)
+                setIsLoaded(true)
+            })
+            .catch((data) => {
+                setIsLoaded(false);
+                alert(data)
+            })
+    }, [])
 
     const doEdit = () => {
-        console.log('hey')
+        // request to edit
+        // go back to hosted listing page
+        // update, show all the new info
     }
+
     return (
         <>
-         {() => console.log(listing)}
-        <CreateDialog callCreateListing={e => doEdit(e)} listing/>
+            {!isLoaded && <p>loading...</p>}
+            {isLoaded && <CreateDialog callCreateListing={e => doEdit(e)} listingInfo={listing}/>}
+            {/* thumbnail */}
+            {/* list of images */}
         </>
     )
 }

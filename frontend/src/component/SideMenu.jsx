@@ -14,6 +14,8 @@ import CribIcon from '@mui/icons-material/Crib';
 import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 
+import { apiCall } from '../util/api';
+
 import { withStyles } from '@mui/styles';
 
 const styles = theme => ({
@@ -35,9 +37,11 @@ const SideMenu = (props) => {
   }
 
   const handleLogout = () => {
-    handleClose();
-    localStorage.clear();
-    window.location.href="/";
+    apiCall('user/auth/logout', 'POST').then(_ => {
+      handleClose();
+      localStorage.clear();
+      window.location.href="/";
+    })
   }
 
   const handleViewListings = () => {
@@ -68,7 +72,7 @@ const SideMenu = (props) => {
   } else {
     return (
       <Box>
-        <Button sx={{float: "right"}}>Register</Button>
+        <Button sx={{float: "right"}} onClick={() => {window.location.href="/register"}}>Register</Button>
         <Button sx={{float: "right"}} onClick={() => {window.location.href="/login"}}>Sign in</Button>
       </Box>
     )

@@ -22,9 +22,15 @@ const HostedListingCard = (props) => {
 	const publishListing = props.publishListing;
 	const unPublishListing = props.unPublishListing;
 	const nav = useNavigate();
+
+	// Default image
+	if (!listing.thumbnail) {
+		listing.thumbnail = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
+	}
+
 	return (
 		<Card>
-			<CardActionArea onClick={() => {nav(`/HostedListings/edit/${listing.id}`)}}>
+			<CardActionArea onClick={() => {nav(`/HostedListings/edit/${listing.id.toString()}`)}}>
 				<CardHeader 
 					sx={{
 						display: "flex",
@@ -50,15 +56,16 @@ const HostedListingCard = (props) => {
 					image={listing.thumbnail}
 					alt="Listing thumbnail"
 				/>       
+
 				<CardContent>
 					<Box justifyContent="space-between" alignItems="center" display="flex">
-						<Typography>House</Typography>
+						<Typography>{listing.metadata.propertyType}</Typography>
 						<Typography>5.8<StarIcon style={{verticalAlign:"middle"}}/></Typography>
 					</Box>
 					<Box justifyContent="space-between" alignItems="center" display="flex">
 						<Box gap="5px" justifyContent="space-between" alignItems="center" display="flex">
-							<Typography>3<CribIcon style={{verticalAlign:"middle"}}/></Typography>
-							<Typography>4<AirlineSeatLegroomNormalIcon style={{verticalAlign:"middle"}}/></Typography>
+							<Typography>{listing.metadata.numBeds}<CribIcon style={{verticalAlign:"middle"}}/></Typography>
+							<Typography>{listing.metadata.numBaths}<AirlineSeatLegroomNormalIcon style={{verticalAlign:"middle"}}/></Typography>
 						</Box>
 						<Typography>{listing.reviews.length} Reviews</Typography>
 					</Box>

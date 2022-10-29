@@ -10,6 +10,7 @@ import Login from './page/Login';
 import HostedListings from './page/HostedListings';
 import Register from './page/Register';
 import ListingEdit from './page/ListingEdit';
+import BookingHistory from './page/BookingHistory';
 
 
 const Router = () => {
@@ -20,6 +21,7 @@ const Router = () => {
             <Route path="/register" element={<Register/>} />
             <Route path="/HostedListings" element={<HostedListings/>} />
             <Route path="/HostedListings/edit/:listingId" element={<ListingEdit/>}/>
+            <Route path="/BookingHistory/:id" element={<BookingHistory/>}/>
         </Routes>
     );
 }
