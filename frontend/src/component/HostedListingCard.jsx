@@ -55,15 +55,16 @@ const HostedListingCard = (props) => {
 					image={listing.thumbnail}
 					alt="Listing thumbnail"
 				/>       
+
 				<CardContent>
 					<Box justifyContent="space-between" alignItems="center" display="flex">
-						<Typography>House</Typography>
+						<Typography>{listing.metadata.propertyType}</Typography>
 						<Typography>5.8<StarIcon style={{verticalAlign:"middle"}}/></Typography>
 					</Box>
 					<Box justifyContent="space-between" alignItems="center" display="flex">
 						<Box gap="5px" justifyContent="space-between" alignItems="center" display="flex">
-							<Typography>3<CribIcon style={{verticalAlign:"middle"}}/></Typography>
-							<Typography>4<AirlineSeatLegroomNormalIcon style={{verticalAlign:"middle"}}/></Typography>
+							<Typography>{listing.metadata.numBeds}<CribIcon style={{verticalAlign:"middle"}}/></Typography>
+							<Typography>{listing.metadata.numBaths}<AirlineSeatLegroomNormalIcon style={{verticalAlign:"middle"}}/></Typography>
 						</Box>
 						<Typography>{listing.reviews.length} Reviews</Typography>
 					</Box>
