@@ -24,7 +24,7 @@ const HostedListingCard = (props) => {
 	const nav = useNavigate();
 	return (
 		<Card>
-			<CardActionArea onClick={() => {nav('/edit')}}>
+			<CardActionArea onClick={() => {nav(`/HostedListings/edit/${listing.id}`)}}>
 				<CardHeader 
 					sx={{
 						display: "flex",

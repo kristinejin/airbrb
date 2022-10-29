@@ -1,13 +1,7 @@
-import Dialog from '@mui/material/Dialog';
-import Slide from '@mui/material/Slide';
-import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
 import React from 'react';
-import Toolbar from '@mui/material/Toolbar';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import Container from '@mui/material/Container';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -15,18 +9,15 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import FormControl from '@mui/material/FormControl';
+import { Box } from '@mui/system';
 
-
-import { CountryDropdown, RegionDropdown, CountryRegionData } from 'react-country-region-selector';
-
-import { useState, useEffect } from 'react';
-import { Box, flexbox } from '@mui/system';
-import { Grid } from '@mui/material';
+import { useState } from 'react';
 
 import { fileToDataUrl } from '../util/fileToUrl';
 
 
-const CreateDialog = ({callCreateListing}) => {
+const CreateDialog = ({callCreateListing, listingInfo}) => {
+
     const [title, setTitle] = useState('');
     const [price, setPrice] = useState('');
     const [thumbnail, setThumbnail] = useState('');
@@ -47,6 +38,21 @@ const CreateDialog = ({callCreateListing}) => {
             index: 0
         }
     ]);
+
+    if (listingInfo) {
+        setTitle(listingInfo.title);
+        setPrice(listingInfo.price);
+        //setThumbnail(listingInfo.thumbnail); // hmm
+        setStreet(listingInfo.address.street);
+        setCity(listingInfo.address.city);
+        setState(listingInfo.address.state);
+        setPostcode(listingInfo.address.postcode);
+        setCountry(listingInfo.address.country)
+        setType(listingInfo.metadata.propertyType);
+        setAmenities(listingInfo.metadata.amenities);
+        setBathrooms(listingInfo.metadata.numBaths);
+        // loop to set bedrooms
+    }
 
     
 
@@ -131,7 +137,8 @@ const CreateDialog = ({callCreateListing}) => {
                 'numBaths': bathrooms,
                 'numBedrooms': numBedrooms,
                 'numBeds': totalBeds,
-                'amenities': amenities
+                'amenities': amenities,
+                'bedrooms': roomList
             },
         }
         callCreateListing(data);
@@ -255,7 +262,6 @@ const CreateDialog = ({callCreateListing}) => {
                 <Grid2 xs={12}>
                     
                     {roomList.map((room, i) => {
-                        console.log(room)
                         return (
                             <Grid2 container>
                                 <Grid2 xs={12} md={4}>
