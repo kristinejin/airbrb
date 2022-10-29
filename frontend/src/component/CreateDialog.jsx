@@ -16,8 +16,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import FormControl from '@mui/material/FormControl';
 
-
-
 import { useState, useEffect } from 'react';
 import { Box, flexbox } from '@mui/system';
 import { Grid } from '@mui/material';
@@ -242,7 +240,7 @@ const CreateDialog = ({callCreateListing}) => {
 
                 <Grid2 xs={12} md={4}>
                     <TextField fullWidth label="Number of Bathrooms" required
-                        onChange={(e) => setBathrooms(e.target.value)}/>
+                        onChange={(e) => setBathrooms(parseInt(e.target.value))}/>
                 </Grid2>
 
                 

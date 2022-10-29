@@ -97,7 +97,11 @@ const BookingHistory = (props) => {
   }
 
   const totalDaysOnline = () => {
-    return 10;
+    const postedOn = listingInfo.postedOn;
+    const dateNow = new Date();
+    const postedOnDate = new Date(postedOn);
+    const totalDays = Math.ceil((dateNow - postedOnDate) / (1000 * 3600 * 24));
+    return totalDays;
   }
 
   const handleChangeBookingPage = (e, newPage) => {
@@ -174,7 +178,7 @@ const BookingHistory = (props) => {
                 titleTypographyProps={{variant:'h7'}}
               />
               <CardContent>
-                <Typography component="h2" variant="h7">{calcTotalDaysBooked()}</Typography>
+                <Typography component="h2" variant="h7">{totalDaysOnline()}</Typography>
               </CardContent>  
             </Card>
           </Grid>
@@ -182,10 +186,10 @@ const BookingHistory = (props) => {
             <Card sx={{textAlign: "center"}}>
               <CardHeader 
                 title="Total Days Booked"
-                titleTypographyProps={{variant:'h7'}}
+                titleTypographyProps={{variant:'h7'}}totalDaysOnline
               />
               <CardContent>
-                <Typography component="h2" variant="h7">{totalDaysOnline()}</Typography>
+                <Typography component="h2" variant="h7">{calcTotalDaysBooked()}</Typography>
               </CardContent>   
             </Card>
           </Grid>
