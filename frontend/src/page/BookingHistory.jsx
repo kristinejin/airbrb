@@ -76,12 +76,14 @@ const BookingHistory = (props) => {
 
   const calcTotalProfit = () => {
     let totalProfit = 0;
+
     pastBookings.forEach((pastBooking) => {
       if (pastBooking.status === "accepted") {
         totalProfit += pastBooking.totalPrice - listingInfo.price;
       }
     });
-
+    
+    
     return totalProfit;
   }
   const calcTotalDaysBooked = () => {
@@ -146,7 +148,7 @@ const BookingHistory = (props) => {
 
   const emptyRowsPerBookingPage = rowsPerBookingPage - Math.min(rowsPerBookingPage, bookings.length - bookingPage * rowsPerBookingPage);
   const emptyRowsPerPastBookingPage = rowsPerPastBookingPage - Math.min(rowsPerPastBookingPage, pastBookings.length - pastBookingPage * rowsPerPastBookingPage);
-  if (!bookings || !listingInfo) {
+  if (!bookings || !listingInfo || !pastBookings) {
     return <>Loading...</>
   }
 
