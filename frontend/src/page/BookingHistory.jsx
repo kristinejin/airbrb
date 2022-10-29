@@ -98,6 +98,9 @@ const BookingHistory = (props) => {
 
   const totalDaysOnline = () => {
     const postedOn = listingInfo.postedOn;
+    if (!postedOn) {
+      return 0;
+    }
     const dateNow = new Date();
     const postedOnDate = new Date(postedOn);
     const totalDays = Math.ceil((dateNow - postedOnDate) / (1000 * 3600 * 24));
