@@ -39,7 +39,7 @@ const CreateDialog = ({callCreateListing}) => {
     const [bathrooms, setBathrooms] = useState(0);
     const [roomList, setRoomList] = useState([
         {
-            numBeds: null,
+            numBeds: 0,
             roomType: '',
             index: 0
         }
@@ -56,7 +56,7 @@ const CreateDialog = ({callCreateListing}) => {
         setRoomList([
             ...roomList,
             {
-                numBeds: null,
+                numBeds: 0,
                 roomType: '',
                 index: null
             }
