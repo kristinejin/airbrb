@@ -49,7 +49,7 @@ const SideMenu = (props) => {
   if (user_email) {
     return (
       <Box>
-        <Button id='sideButton' className={classes.sideMenu} onClick={handleClick} aria-cntrols={open ? 'sideMenu' : undefined} aria-haspopup='true' aria-expanded={open ? 'true' : undefined}><DehazeIcon/></Button>
+        <Button id='sideButton' className={classes.sideMenu} onClick={handleClick} aria-controls={open ? 'sideMenu' : undefined} aria-haspopup='true' aria-expanded={open ? 'true' : undefined}><DehazeIcon/></Button>
         <Menu
           id="sideMenu"
           anchorEl={anchorEl}

@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 
 import { withStyles } from '@mui/styles';
 import { apiCall } from '../util/api';
+import { useNavigate } from 'react-router-dom';
 
 const styles = theme => ({
     main: {
@@ -41,6 +42,7 @@ const Login = (props) => {
             })
     }
 
+    const navigate = useNavigate();
     const {classes} = props;
     return (
         <main className={classes.main}>
@@ -53,7 +55,7 @@ const Login = (props) => {
 
                 <Box className={classes.loginbuttons}>
                     <Button onClick={() => signIn(userEmail, userPassword)}>Sign in</Button>
-                    <Button>Register</Button>
+                    <Button onClick={() => navigate('/register')}>Register</Button>
                 </Box>
             </Box>
         </main>
