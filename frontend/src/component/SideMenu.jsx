@@ -14,6 +14,8 @@ import CribIcon from '@mui/icons-material/Crib';
 import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 
+import { apiCall } from '../util/api';
+
 import { withStyles } from '@mui/styles';
 
 const styles = theme => ({
@@ -35,9 +37,11 @@ const SideMenu = (props) => {
   }
 
   const handleLogout = () => {
-    handleClose();
-    localStorage.clear();
-    window.location.href="/";
+    apiCall('user/auth/logout', 'POST').then(_ => {
+      handleClose();
+      localStorage.clear();
+      window.location.href="/";
+    })
   }
 
   const handleViewListings = () => {
@@ -49,7 +53,7 @@ const SideMenu = (props) => {
   if (user_email) {
     return (
       <Box>
-        <Button id='sideButton' className={classes.sideMenu} onClick={handleClick} aria-controls={open ? 'sideMenu' : undefined} aria-haspopup='true' aria-expanded={open ? 'true' : undefined}><DehazeIcon/></Button>
+        <Button id='sideButton' className={classes.sideMenu} onClick={handleClick} aria-cntrols={open ? 'sideMenu' : undefined} aria-haspopup='true' aria-expanded={open ? 'true' : undefined}><DehazeIcon/></Button>
         <Menu
           id="sideMenu"
           anchorEl={anchorEl}
@@ -68,7 +72,7 @@ const SideMenu = (props) => {
   } else {
     return (
       <Box>
-        <Button sx={{float: "right"}}>Register</Button>
+        <Button sx={{float: "right"}} onClick={() => {window.location.href="/register"}}>Register</Button>
         <Button sx={{float: "right"}} onClick={() => {window.location.href="/login"}}>Sign in</Button>
       </Box>
     )
