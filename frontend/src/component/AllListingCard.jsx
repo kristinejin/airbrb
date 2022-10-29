@@ -21,39 +21,47 @@ const AllListingCard = (props) => {
 
 	return (
 		<Card>
-			<CardActionArea onClick={() => {console.log("hihi")}}>
-				<CardHeader 
-					sx={{
-						display: "flex",
-						overflow: "hidden",
-						"& .MuiCardHeader-content": {
-								overflow: "hidden"
-						}
-					}}
-					title={listing.title}
-					titleTypographyProps={{ noWrap: true}}
-				/>
-				<CardMedia
-					component="img"
-					image={listing.thumbnail}
-					alt="Listing thumbnail"
-				/>       
-				<CardContent>
-					<Box justifyContent="space-between" alignItems="center" display="flex">
-						<Typography>{listing.reviews.length} Reviews</Typography>
-					</Box>
+      <CardActionArea onClick={() => {console.log("hihi")}}>
+        <CardHeader 
+          sx={{
+            display: "flex",
+            overflow: "hidden",
+            "& .MuiCardHeader-content": {
+                overflow: "hidden"
+            }
+          }}
+          title={listing.title}
+          titleTypographyProps={{ noWrap: true}}
+        />
+        <CardMedia
+          component="img"
+          image={listing.thumbnail}
+          alt="Listing thumbnail"
+        />       
+        <CardContent>
+          <Box justifyContent="space-between" alignItems="center" display="flex">
+            <Typography>House</Typography>
+            <Typography>5.8<StarIcon style={{verticalAlign:"middle"}}/></Typography>
+          </Box>
+          <Box justifyContent="space-between" alignItems="center" display="flex">
+            <Box gap="5px" justifyContent="space-between" alignItems="center" display="flex">
+              <Typography>3<CribIcon style={{verticalAlign:"middle"}}/></Typography>
+              <Typography>4<AirlineSeatLegroomNormalIcon style={{verticalAlign:"middle"}}/></Typography>
+            </Box>
+            <Typography>{listing.reviews.length} Reviews</Typography>
+          </Box>
 
-					<Box  sx={{position: 'relative', top: '10px'}} justifyContent="space-between" alignItems="center" display="flex">
-						<Typography sx={{textDecoration: 'underline'}}>
-							<Typography sx={{fontWeight:'bold'}} display="inline">
-								${listing.price} AUD   
-							</Typography>
-							&nbsp; per night
-						</Typography>
-					</Box>
-					
-				</CardContent>   
-			</CardActionArea>          
+          <Box  sx={{position: 'relative', top: '10px'}} justifyContent="space-between" alignItems="center" display="flex">
+            <Typography sx={{textDecoration: 'underline'}}>
+              <Typography sx={{fontWeight:'bold'}} display="inline">
+                ${listing.price} AUD   
+              </Typography>
+              &nbsp; per night
+            </Typography>
+          </Box>
+          
+        </CardContent>   
+      </CardActionArea>          
 		</Card>
 	)
 }
