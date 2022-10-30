@@ -1,13 +1,7 @@
-import Dialog from '@mui/material/Dialog';
-import Slide from '@mui/material/Slide';
-import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
-import React from 'react';
-import Toolbar from '@mui/material/Toolbar';
+import React, { useEffect } from 'react';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import Container from '@mui/material/Container';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -15,18 +9,28 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import FormControl from '@mui/material/FormControl';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import IconButton from '@mui/material/IconButton';
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
 
-import { useState, useEffect } from 'react';
-import { Box, flexbox } from '@mui/system';
-import { Grid } from '@mui/material';
+import { useState } from 'react';
+import { Box } from '@mui/system';
 
 import { fileToDataUrl } from '../util/fileToUrl';
+import EditImageList from './HostedListingImageList.jsx';
+
+const imageStyle = {
+    width: '20vw',
+    height: 'auto'
+}
 
 
 const CreateDialog = ({callCreateListing, listingInfo}) => {
     const [title, setTitle] = useState(listingInfo ? listingInfo.title : '');
     const [price, setPrice] = useState(listingInfo ? listingInfo.price : '');
-    const [thumbnail, setThumbnail] = useState('');
+    const defaultThumbnail = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
+    const [thumbnail, setThumbnail] = useState(defaultThumbnail);
 
     const [street, setStreet] = useState(listingInfo ? listingInfo.address.street : '');
     const [city, setCity] = useState(listingInfo ? listingInfo.address.city : '');
@@ -37,6 +41,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
     const [type, setType] = useState(listingInfo ? listingInfo.metadata.propertyType : '');
     const [amenities, setAmenities] = useState(listingInfo ? listingInfo.metadata.amenities : '');
     const [bathrooms, setBathrooms] = useState(listingInfo ? listingInfo.metadata.numBaths : '');
+    const [images, setImages] = useState(listingInfo ? listingInfo.metadata.images : []);
     const [roomList, setRoomList] = useState(listingInfo ? listingInfo.metadata.bedrooms :[
         {
             numBeds: 0,
@@ -45,6 +50,11 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
         }
     ]);
 
+    useEffect(() => {
+        if (listingInfo) {
+            document.getElementById('thumbnail').src = thumbnail;
+        }
+    }, [thumbnail])
 
     const handleRoomAdd = () => {
         setRoomList([
@@ -83,15 +93,37 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
         setType(e.target.value);
     }
 
+    
+
     const updateThumbnail = (e) => {
         //  convert data
-        const image = fileToDataUrl(e.value.target)
-        setThumbnail(image)
+        const upload = e.target.files[0];
+        
+        fileToDataUrl(upload)
+            .then(data => {
+                setThumbnail(data)
+            })
+    }
 
+    const removeThumbnail = () => {
+        setThumbnail(defaultThumbnail);
+        document.getElementById('thumbnail').src = thumbnail;
     }
 
     const handleAmenitiesChange = (e) => {
         setAmenities(e.target.value)
+    }
+
+    const updateImages = async (e) => {
+        const imageData = await fileToDataUrl(e.target.files[0]);
+        const newImages = [...images, imageData];
+        setImages(newImages);
+    }
+
+    const removeImage = (i) => {
+        // const newImages = [...images]
+        const img = images[i];
+        setImages(images.filter(image => image !== img));
     }
 
     const setNewListingData = () => {
@@ -118,19 +150,151 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 'numBeds': totalBeds,
                 'amenities': amenities,
                 'bedrooms': roomList,
-                'images': []
+                'images': images
             },
         }
         callCreateListing(data);
     }
 
- 
+    const ImageUploadTitle = () => {
+        if (!listingInfo) {
+            return (
+                <Grid2 xs={12} md={6}>
+                    <Typography variant="overline" fullWidth>
+                        Upload an image for the property
+                    </Typography>
+                </Grid2>
+            )
+        }
+    }
+
+    const ThumbnailUploadAction = () => {
+        return (
+            <Grid2 xs={12}>
+                <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="thumbnailUpload"
+                    onChange={updateThumbnail}
+                />
+                <label htmlFor="thumbnailUpload">
+                    <Button color="primary" component="span">
+                        Upload
+                    </Button>
+                </label>
+            </Grid2>
+        )
+    }
+
+    const ListingActionButton = () => {
+        return (
+            <Grid2 xs={12}>
+                <Button variant='outlined' fullWidth onClick={setNewListingData}>
+                    Save
+                </Button>
+            </Grid2>
+        )
+        
+    }
+
+    const ListingEditThumbnail = () => {
+        if (listingInfo) {
+            return (
+                <Grid2>
+                    <Grid2 xs={12}>
+                        <Typography variant='overline'>
+                            Listing Thumbnail
+                        </Typography>
+                    </Grid2>
+                    <ImageListItem key={listingInfo.thumbnail} style={imageStyle}>
+                        <img
+                            id="thumbnail"
+                            src={listingInfo.thumbnail}
+                            alt='listing thumbnail'
+                            loading="lazy"
+                            
+                        />
+                        <ImageListItemBar
+                            sx={{
+                                background:
+                                'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
+                                'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                            }}
+                            title={'Thumbnail'}
+                            position="top"
+                            actionIcon={
+                                <IconButton
+                                    sx={{ color: 'white' }}
+                                    aria-label={`star isisi`}
+                                    onClick={removeThumbnail}
+                                >
+                                    <DeleteSharpIcon />
+                                </IconButton>
+                            }
+                            actionPosition="right"
+                        />
+                    </ImageListItem>
+                </Grid2>
+            )
+        }
+    }
+
+    const ListingEditImagesTitle = () => {
+        if (listingInfo) {
+            return (
+                <Grid2 xs={12}>
+                    <Typography variant='overline'>
+                        Property Images
+                    </Typography>
+                </Grid2>
+            )
+        }
+    }
+
+
+    
+
+    const ListingEditImages = () => {
+        if (listingInfo) {
+            if (listingInfo.metadata.images.length === 0) {
+                return;
+            }
+            return (
+                <EditImageList images={images} removeImage={removeImage}/>
+            )
+        }
+    }
+
+    const ListingEditUploadImage = () => {
+        if (listingInfo) {
+            return (
+                <Grid2 xs={12} md={6}>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        id="imageUpload"
+                        onChange={updateImages}
+                    />
+                    <label htmlFor="imageUpload">
+                        <Button color="primary" component="span">
+                            Upload
+                        </Button>
+                    </label>
+                </Grid2>
+            )
+        }
+    }
+
+
+
 	return (
         <Box
             sx={{
                 display: 'flex',
                 alignSelf: 'center',
-                width: '60%',
+                width: '68vw',
                 height: 'auto',
             }}
         >
@@ -220,7 +384,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                         <OutlinedInput
                             fullWidth
                             id="Price"
-                            value={price.toString()}
+                            value={price}
                             onChange={e => setPrice(e.target.value)}
                             startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             label="Price per week"
@@ -250,7 +414,6 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 </Grid2>
 
                 <Grid2 xs={12}>
-                    
                     {roomList.map((room, i) => {
                         return (
                             <Grid2 container key={i}>
@@ -270,7 +433,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                                         fullWidth
                                         required
                                         onChange={(e) => {handleNumsBedsChange(e, i)}}
-                                        value={room.numBeds.toString()}
+                                        value={room.numBeds}
                                         defaultValue={ room.numBeds }
                                         id={i}
                                         label='Number of beds'
@@ -286,49 +449,23 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                     })}
                     <Grid2>
                         <Button onClick={handleRoomAdd}>
-                            Add
+                            Add room
                         </Button>
                     </Grid2>
                     
                 </Grid2>
 
-                {() => {
-                    if (!listingInfo) {
-                        return (
-                            <Grid2 xs={12} md={6}>
-                                <Typography variant="overline" fullWidth>
-                                    Upload an image for the property
-                                </Typography>
-                            </Grid2>
-                        )
-                    }
-                }}
-                {() => {
-                    if (!listingInfo) {
-                        return (
-                            <Grid2 xs={12} md={6}>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    style={{ display: 'none' }}
-                                    id="contained-Button-file"
-                                    onChange={updateThumbnail}
-                                />
-                                <label htmlFor="contained-Button-file">
-                                    <Button color="primary" component="span">
-                                        Upload
-                                    </Button>
-                                </label>
-                            </Grid2>
-                        )
-                    }
-                }}
-                
-                <Grid2 xs={12}>
-                    <Button variant='outlined' fullWidth onClick={setNewListingData}>
-                        Save
-                    </Button>
+
+                <ListingEditThumbnail/>
+                <ImageUploadTitle/>
+                <ThumbnailUploadAction/>
+                <ListingEditImagesTitle/>
+                <Grid2>
+                    <ListingEditImages/>
                 </Grid2>
+                <ListingEditUploadImage/>
+                <ListingActionButton/>
+                
             </Grid2>
         </Box>
 	)
