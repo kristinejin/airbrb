@@ -152,9 +152,6 @@ const HostedListings = (props) => {
 						<Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
 							Create a new listing
 						</Typography>
-						{/* <Button autoFocus color="inherit" onClick={setCreateClose}>
-						save
-						</Button> */}
 					</Toolbar>
 					<CreateDialog callCreateListing={e => callCreateListing(e)}/>
 				</Dialog>

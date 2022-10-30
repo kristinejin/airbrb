@@ -65,6 +65,9 @@ const ListingEdit = (props) => {
             spacing={0}
             direction="column"
             alignItems="center"
+            sx={{
+                mb: 8,
+            }}
         >
             <Typography 
                 component='h1' 
