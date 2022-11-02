@@ -3,6 +3,9 @@ import ImageListElement from './ImageListElement';
 
 
 const EditImageList = ({images, saveImage, removeImage}) => {	
+	if (!images) {
+		return null;
+	}
 	return (
 		<ImageList
 			sx={{

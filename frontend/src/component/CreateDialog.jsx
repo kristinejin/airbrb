@@ -166,6 +166,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 </Grid2>
             )
         }
+        return null;
     }
 
     const ThumbnailUploadAction = () => {
@@ -238,6 +239,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 </Grid2>
             )
         }
+        return null;
     }
 
     const ListingEditImagesTitle = () => {
@@ -250,6 +252,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 </Grid2>
             )
         }
+        return null;
     }
 
 
@@ -258,12 +261,14 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
     const ListingEditImages = () => {
         if (listingInfo) {
             if (listingInfo.metadata.images.length === 0) {
-                return;
+                return null;
             }
             return (
                 <EditImageList images={images} removeImage={removeImage}/>
             )
         }
+
+        return null;
     }
 
     const ListingEditUploadImage = () => {
@@ -285,6 +290,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                 </Grid2>
             )
         }
+        return null;
     }
 
 

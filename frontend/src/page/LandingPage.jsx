@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import Slider, { SliderThumb } from '@mui/material/Slider';
 import Popover from '@mui/material/Popover';
 import IconButton from '@mui/material/IconButton';
+import TuneIcon from '@mui/icons-material/Tune';
 
 import Toolbar from '@mui/material/Toolbar';
 
@@ -21,9 +22,11 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import SearchIcon from '@mui/icons-material/Search';
 
+
 import { apiCall } from '../util/api';
 import Chip from '@mui/material/Chip';
 import { useState } from 'react';
+import FilterDialog from '../component/FilterDialog';
 
 
 const styles = theme => ({
@@ -40,6 +43,7 @@ const LandingPage = (props) => {
   const [listings, setListings] = React.useState('');
 	const [priceRange, setValue] = React.useState([20, 37]);
   const [searchStr, setSearchStr] = React.useState('');
+  const [showFilters, setShowFileters] = useState(false);
 
   const sortListings = (listingArray) => {
     const compare = (a,b) => {
@@ -115,28 +119,26 @@ const LandingPage = (props) => {
   };
     // const filteredListings = 
 
-    const pushListings = (data) => {
+    const pushListings = async (data) => {
       let AllListingsPromises = [];
       let allListingsIds = [];
       data.forEach((listing) => {
         AllListingsPromises.push(apiCall(`listings/${listing.id}`, 'GET'));
         allListingsIds.push(listing.id);
       }); 
-      const responses = Promise.all(AllListingsPromises);
-      responses.then(response => {
-        let allListings = [];
-        let i = 0;
-        response.forEach(listing => {
-          if (listing.listing.published) {
-            listing.listing.id = allListingsIds[i];
-            allListings.push(listing.listing);
-          }
-          i += 1;
-        });
+      const responses = await Promise.all(AllListingsPromises);
+      let allListings = [];
+      let i = 0;
+      responses.forEach(listing => {
+        if (listing.listing.published) {
+          listing.listing.id = allListingsIds[i];
+          allListings.push(listing.listing);
+        }
+        i += 1;
+      });
 
-        sortListings(allListings);
-        putBookedListingsFirst(allListings);
-      })
+      sortListings(allListings);
+      putBookedListingsFirst(allListings);
     }
 
     const searchAction = async () => {
@@ -146,7 +148,6 @@ const LandingPage = (props) => {
       
       const filteredListings = listings.filter(
         l => {
-          console.log(wordsList.some(w => l.title.toLowerCase().includes(w)))
           return (
             wordsList.some(w => l.title.toLowerCase().includes(w)) ||
             wordsList.some(w => l.address.city.toLowerCase().includes(w))
@@ -156,26 +157,56 @@ const LandingPage = (props) => {
       pushListings(filteredListings);
     }
 
-
-
-    
     const handleSearchStrUpdate = (e) => {
       setSearchStr(e.target.value)
     }
-    const [showFilters, setShowFileters] = useState(false);
+    
     const handleClickFilters = () => {
       setShowFileters(showFilters ? false : true)
     }
 
-    const FilterFields = () => {
-      if (showFilters) {
-        return (
-          // return input fields 
-          <Box>
-            <TextField/>
-          </Box>
-        )
+    const filterNumBedrooms = async (min, max) => {
+      const resp = await apiCall('listings', 'GET');
+      const listings = resp.listings;
+      const promises = []
+      const ids = [];
+      const getListingDets = async (id) => {
+        const listing = await apiCall(`listings/${id}`, 'GET');
+        return listing;
       }
+      
+      listings.forEach(async (listing) => {
+        ids.push(listing.id)
+        promises.push(getListingDets(listing.id))
+      })
+      const listingList = await Promise.all(promises);
+
+      const filteredListings = listingList.filter(
+        l => {
+          return (
+            parseInt(l.listing.metadata.numBeds) <= parseInt(max) &&
+            parseInt(l.listing.metadata.numBeds) >= parseInt(min)
+          )
+        }
+      )
+
+      const listingData = []
+      for (const [i, l] of filteredListings.entries()) {
+        l.listing.id = ids[i]
+        listingData.push(l.listing)
+      }
+
+      sortListings(filteredListings);
+      // console.log(listingData);
+      setListings(listingData);
+    }
+
+    const handleApplyFilters = ({minBed, maxBed}) => {
+      if (minBed && maxBed) {
+        // apply num bed filters
+        filterNumBedrooms(minBed, maxBed)
+      }
+      handleClickFilters();
     }
 
     React.useEffect(() => {
@@ -218,9 +249,15 @@ const LandingPage = (props) => {
             sx={{
               ml: 1
             }}
+            // TuneIcon
+            icon={<TuneIcon fontSize="small"/>}
           />
 
-          <FilterFields/>
+          <FilterDialog 
+            open={showFilters} 
+            handleClick={handleClickFilters}
+            handleApply={handleApplyFilters}
+          />
 					<Box sx={{flex: '1'}}>
             <SideMenu/>
 					</Box>
