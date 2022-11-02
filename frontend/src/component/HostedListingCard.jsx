@@ -16,12 +16,14 @@ import CribIcon from '@mui/icons-material/Crib';
 import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
 import { useNavigate } from 'react-router-dom';
 
+
 const HostedListingCard = (props) => {
 	const listing = props.listing;
 	const deleteListing = props.deleteListing;
-	const publishListing = props.publishListing;
 	const unPublishListing = props.unPublishListing;
+	const handleOpen = props.handleOpen;
 	const nav = useNavigate();
+
 
 	// Default image
 	if (!listing.thumbnail) {
@@ -85,8 +87,10 @@ const HostedListingCard = (props) => {
 						}}>Unpublish</Button>) : (<Button onClick={event => {
 							event.stopPropagation();
 							event.preventDefault();
-							publishListing(listing.id);
+							handleOpen(listing.id);
+							//publishListing(listing.id);
 						}}>publish</Button>)}
+
 
 						
 					</Box>
