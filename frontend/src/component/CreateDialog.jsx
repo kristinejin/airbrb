@@ -165,6 +165,8 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                     </Typography>
                 </Grid2>
             )
+        } else {
+            return null;
         }
     }
 
@@ -237,6 +239,8 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                     </ImageListItem>
                 </Grid2>
             )
+        } else {
+            return null;
         }
     }
 
@@ -249,6 +253,8 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                     </Typography>
                 </Grid2>
             )
+        } else {
+            return null;
         }
     }
 
@@ -258,11 +264,13 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
     const ListingEditImages = () => {
         if (listingInfo) {
             if (listingInfo.metadata.images.length === 0) {
-                return;
+                return null;
             }
             return (
                 <EditImageList images={images} removeImage={removeImage}/>
             )
+        } else {
+            return null;
         }
     }
 
@@ -284,6 +292,8 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
                     </label>
                 </Grid2>
             )
+        } else {
+            return null;
         }
     }
 
