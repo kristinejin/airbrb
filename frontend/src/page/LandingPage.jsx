@@ -8,6 +8,7 @@ import Slider, { SliderThumb } from '@mui/material/Slider';
 import Popover from '@mui/material/Popover';
 import IconButton from '@mui/material/IconButton';
 import TuneIcon from '@mui/icons-material/Tune';
+import dayjs, { Dayjs } from 'dayjs';
 
 import Toolbar from '@mui/material/Toolbar';
 
@@ -43,7 +44,8 @@ const LandingPage = (props) => {
   const [listings, setListings] = React.useState('');
 	const [priceRange, setValue] = React.useState([20, 37]);
   const [searchStr, setSearchStr] = React.useState('');
-  const [showFilters, setShowFileters] = useState(false);
+  const [showFilters, setShowFileters] = React.useState(false);
+  const [listingIds, setAllListingIds] = React.useState([]);
 
   const sortListings = (listingArray) => {
     const compare = (a,b) => {
@@ -165,7 +167,16 @@ const LandingPage = (props) => {
       setShowFileters(showFilters ? false : true)
     }
 
-    const filterNumBedrooms = async (min, max) => {
+    const addIdToListing = (listings, ids) => {
+      const listingList = []
+      for (const [i, l] of listings.entries()) {
+        l.listing.id = ids[i]
+        listingList.push(l.listing)
+      }
+      return listingList;
+    }
+
+    const getListingDetails = async() => {
       const resp = await apiCall('listings', 'GET');
       const listings = resp.listings;
       const promises = []
@@ -179,32 +190,60 @@ const LandingPage = (props) => {
         ids.push(listing.id)
         promises.push(getListingDets(listing.id))
       })
-      const listingList = await Promise.all(promises);
 
-      const filteredListings = listingList.filter(
+      setAllListingIds(ids);
+      return Promise.all(promises);
+    }
+
+    const filterNumBedrooms = async (min, max) => {
+      const listingList = await getListingDetails();
+      const listings  = addIdToListing(listingList, listingIds);
+
+      const filteredListings = listings.filter(
         l => {
           return (
-            parseInt(l.listing.metadata.numBeds) <= parseInt(max) &&
-            parseInt(l.listing.metadata.numBeds) >= parseInt(min)
+            parseInt(l.metadata.numBeds) <= parseInt(max) &&
+            parseInt(l.metadata.numBeds) >= parseInt(min)
           )
         }
       )
 
-      const listingData = []
-      for (const [i, l] of filteredListings.entries()) {
-        l.listing.id = ids[i]
-        listingData.push(l.listing)
-      }
-
       sortListings(filteredListings);
-      // console.log(listingData);
-      setListings(listingData);
+      setListings(filteredListings);
     }
 
-    const handleApplyFilters = ({minBed, maxBed}) => {
-      if (minBed && maxBed) {
+    const checkDates = (avai, dateRange) => {
+      const avaiDate = {start: new Date(avai.start), end: new Date(avai.end)};
+      return (
+        avaiDate.start.getTime() <= dateRange.start.valueOf() && 
+        avaiDate.end.getTime() >= dateRange.end.valueOf()
+      )
+    }
+
+    const filterDate = async (dateRange) => {
+      const listingList = await getListingDetails();
+      const listings  = addIdToListing(listingList, listingIds);
+      
+      const filteredListings = listings.filter(
+        l => {
+          const avai = l.availability;
+          console.log(avai)
+          return avai.some(a => checkDates(a, dateRange));
+        }
+      )
+
+      sortListings(filteredListings);
+      setListings(filteredListings);
+    }
+
+    const handleApplyFilters = (bedroom, date) => {
+      if (bedroom.isFilter) {
         // apply num bed filters
-        filterNumBedrooms(minBed, maxBed)
+        filterNumBedrooms(bedroom.min, bedroom.max)
+      }
+      if (date.isFilter) {
+        // apply num bed filters
+        filterDate(date.dateRange);
       }
       handleClickFilters();
     }

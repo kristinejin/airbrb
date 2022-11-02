@@ -12,24 +12,56 @@ import TextField from '@mui/material/TextField';
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import DatePicker from './DatePicker';
-
-
-
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 
 const FilterDialog = ({handleClick, open, handleApply}) => {
-    const [minBedroom, setMinBedroom] = React.useState(0);
-    const [maxBedroom, setMaxBedroom] = React.useState(0);
-    const [openCalender, setOpenCalender] = React.useState(false);
+    const [minBedroom, setMinBedroom] = React.useState(null);
+    const [maxBedroom, setMaxBedroom] = React.useState(null);
+    const [dateRange, setDateRange] = React.useState({"start": null, "end": null});
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const handleOnChangeDateStart = (newDate) => {
+        const curr = dateRange;
+        curr.start = newDate
+		setDateRange(curr);
+    }
+
+    const handleOnChangeDateEnd = (newDate) => {
+        const curr = dateRange;
+        curr.end = newDate
+		setDateRange(curr);
+    }
+    
     console.log(fullScreen)
     if (!open) {
         return null;
     }
+
+    const cleanData = () => {
+        const bedroom = {
+            isFilter: false
+        }
+        if (minBedroom && maxBedroom) {
+            bedroom.isFilter = true
+            bedroom.min = minBedroom
+            bedroom.max = maxBedroom
+        }
+
+        const date = {
+            isFilter: false
+        }
+        if (dateRange.start && dateRange.end) {
+            date.isFilter = true
+            date.dateRange = dateRange;
+        }
+
+        handleApply(bedroom, date)
+    }
+
     return (
         <Dialog
             // sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
@@ -50,61 +82,57 @@ const FilterDialog = ({handleClick, open, handleApply}) => {
                     2. Price (lowest - highest, slider)
                     3. Review Ratings
                         - Sort from height - lowerest and vice versa
-                        - Order don't matter for the same rating listings
+                        - Order don't matter for the same rated listings
                 */}
                 
-                <Grid2 container>
-                    <Grid2 xs={12}>
-                        <Button
-                            onClick={() => {setOpenCalender(openCalender ? false : true)}}
+                <Grid2 container spacing={2}>
+                    <Grid2 container>
+                        <Grid2
+                            xs={4}
+                            sx={{
+                                display: 'flex',
+                                alignItems: "center"
+                            }}
                         >
-                            <CalendarMonthIcon/>
-                            <Typography>Dates</Typography>
-                        </Button>
-
+                            <Typography>Date Range:</Typography>
+                        </Grid2>
+                        <Grid2
+                            xs={8}
+                        >
+                            <DatePicker 
+                                dateRange={dateRange} 
+                                handleOnChangeDateStart={handleOnChangeDateStart} 
+                                handleOnChangeDateEnd={handleOnChangeDateEnd}
+                            />
+                        </Grid2>
                     </Grid2>
-                    <Grid2
-                        xs={12}
-                        sx={{
-                            display:'flex',
-                            flexDirection: 'column',
-                            alignItems:'center'
-                        }}
-                    >
-                        <DatePicker open={openCalender}/>
-                        
+                    <Grid2 container spacing={1.5}>
+                        <Grid2
+                            xs={4}
+                            sx={{
+                                display: 'flex',
+                                alignItems: "center"
+                            }}
+                        >
+                            <Typography>
+                                Bedrooms:
+                            </Typography>
+                        </Grid2>
+                        <Grid2 xs={4}>
+                            <TextField
+                                size="small"
+                                label='Min'
+                                onChange={(e) => setMinBedroom(e.target.value)}
+                            />
+                        </Grid2>
+                        <Grid2 xs={4}>
+                            <TextField
+                                size="small"
+                                label='Max'
+                                onChange={(e) => setMaxBedroom(e.target.value)}
+                            />
+                        </Grid2>
                     </Grid2>
-                </Grid2>  
-                <Grid2 container spacing={1}>
-                    <Grid2 
-                        xs={4}
-                        sx={{
-                            display: 'flex',
-                            alignItems: "center"
-                        }}
-                    >
-                        <Typography>
-                            Bedrooms:
-                        </Typography>
-                    </Grid2>
-                    <Grid2 xs={4}>
-                        <TextField 
-                            size="small" 
-                            label='Min'
-                            onChange={(e) => setMinBedroom(e.target.value)}
-                        />
-                    </Grid2>
-                    <Grid2 xs={4}>
-                        <TextField 
-                            size="small" 
-                            label='Max'
-                            onChange={(e) => setMaxBedroom(e.target.value)}
-                        />
-                    </Grid2>
-                </Grid2>
-
-                <Grid2>
-                    {/* <DatePicker /> */}
                 </Grid2>
                 {/* <Slider
                     getAriaLabel={() => 'Minimum distance'}
@@ -118,9 +146,12 @@ const FilterDialog = ({handleClick, open, handleApply}) => {
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleClick}>
-                Cancel
+                    Cancel
                 </Button>
-                <Button onClick={() => handleApply({minBed: minBedroom, maxBed: maxBedroom})}>Apply</Button>
+                <Button onClick={handleClick}>
+                    Clean Filters
+                </Button>
+                <Button onClick={cleanData}>Apply</Button>
             </DialogActions>
         </Dialog>
     );

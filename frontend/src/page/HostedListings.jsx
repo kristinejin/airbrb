@@ -117,75 +117,79 @@ const HostedListings = (props) => {
 		});
 	}
 
-const publishListing = (listingId) => {
-	const allAvailability = {"availability": availability};
-	apiCall(`listings/publish/${listingId}`, 'PUT', allAvailability).then(_ => {
-		const currentListing = [...listings];
-		const getIndex = currentListing.findIndex(obj => obj.id === listingId);
-		currentListing[getIndex].published = true;
-		setListings(currentListing);
-		handleClose();
-	});
-}
+	/*
+		Publish / Unpublish Listings
+	*/
 
-const unPublishListing = (listingId) => {
-	apiCall(`listings/unpublish/${listingId}`, 'PUT').then(_ => {
-		const currentListing = [...listings];
-		const getIndex = currentListing.findIndex(obj => obj.id === listingId);
-		currentListing[getIndex].published = false;
-		setListings(currentListing);
-	});
-}
+	const publishListing = (listingId) => {
+		const allAvailability = {"availability": availability};
+		apiCall(`listings/publish/${listingId}`, 'PUT', allAvailability).then(_ => {
+			const currentListing = [...listings];
+			const getIndex = currentListing.findIndex(obj => obj.id === listingId);
+			currentListing[getIndex].published = true;
+			setListings(currentListing);
+			handleClose();
+		});
+	}
 
-React.useEffect(() => {
-		getListings();
-}, [])
+	const unPublishListing = (listingId) => {
+		apiCall(`listings/unpublish/${listingId}`, 'PUT').then(_ => {
+			const currentListing = [...listings];
+			const getIndex = currentListing.findIndex(obj => obj.id === listingId);
+			currentListing[getIndex].published = false;
+			setListings(currentListing);
+		});
+	}
 
-if (!listings) {
-	return <>Loading...</>
-}
-const setCreateOpen = () => {
-	console.log("aaaaa");
-	setCreate(true);
-}
-const setCreateClose = () => {
-	setCreate(false);
-}
-const callCreateListing = (data) => {
-	apiCall('listings/new', 'POST', data)
-		.then(data => {
-			setCreateClose();
+	React.useEffect(() => {
 			getListings();
-		})
-}
+	}, [])
 
-if (create) {
-	return (
-		<div>
-			<Dialog
-				fullScreen
-				open={create}
-				onClose={setCreateClose}
-				TransitionComponent={Transition}
-			>
-				<Toolbar>
-					<IconButton
-					edge="start"
-					color="inherit"
-					onClick={setCreateClose}
-					aria-label="close"
-					>
-					<CloseIcon />
-					</IconButton>
-					<Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-						Create a new listing
-					</Typography>
-				</Toolbar>
-				<CreateDialog callCreateListing={e => callCreateListing(e)}/>
-			</Dialog>
-		</div>
-	)
-}
+	if (!listings) {
+		return <>Loading...</>
+	}
+	const setCreateOpen = () => {
+		console.log("aaaaa");
+		setCreate(true);
+	}
+	const setCreateClose = () => {
+		setCreate(false);
+	}
+	const callCreateListing = (data) => {
+		apiCall('listings/new', 'POST', data)
+			.then(data => {
+				setCreateClose();
+				getListings();
+			})
+	}
+
+	if (create) {
+		return (
+			<div>
+				<Dialog
+					fullScreen
+					open={create}
+					onClose={setCreateClose}
+					TransitionComponent={Transition}
+				>
+					<Toolbar>
+						<IconButton
+						edge="start"
+						color="inherit"
+						onClick={setCreateClose}
+						aria-label="close"
+						>
+						<CloseIcon />
+						</IconButton>
+						<Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+							Create a new listing
+						</Typography>
+					</Toolbar>
+					<CreateDialog callCreateListing={e => callCreateListing(e)}/>
+				</Dialog>
+			</div>
+		)
+	}
 
 	const {classes} = props;
 	return (
