@@ -8,9 +8,6 @@ import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import TextField from '@mui/material/TextField';
-// import { DatePicker } from '@atlaskit/datetime-picker';
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
 import DatePicker from './DatePicker';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import useMediaQuery from '@mui/material/useMediaQuery';
