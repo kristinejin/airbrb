@@ -14,19 +14,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import StarIcon from '@mui/icons-material/Star';
 import CribIcon from '@mui/icons-material/Crib';
 import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
-
+import { useNavigate } from 'react-router-dom';
 
 const AllListingCard = (props) => {
 	const listing = props.listing;
+  const dateRange = props.dateRange;
+  const nav = useNavigate();
 
   // Default image
 	if (!listing.thumbnail) {
 		listing.thumbnail = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
 	}
 
+  const handleSelect = () => {
+    nav(`listings/${listing.id}/${dateRange}`)
+  }
+
 	return (
 		<Card>
-      <CardActionArea onClick={() => {console.log("hihi")}}>
+      <CardActionArea onClick={() => handleSelect()}>
         <CardHeader 
           sx={{
             display: "flex",

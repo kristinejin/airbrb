@@ -34,6 +34,8 @@ const LandingPage = (props) => {
   const [searchStr, setSearchStr] = React.useState('');
   const [showFilters, setShowFileters] = React.useState(false);
   const [listingIds, setAllListingIds] = React.useState([]);
+  const [appliedDate, setAppliedDate] = React.useState(false);
+  const [dateRange, setDateRange] = React.useState(false)
 
   const sortListings = (listingArray) => {
     const compare = (a,b) => {
@@ -172,26 +174,35 @@ const LandingPage = (props) => {
       const resp = await apiCall('listings', 'GET');
       const listings = resp.listings;
       const promises = []
-      const ids = [];
       const getListingDets = async (id) => {
         const listing = await apiCall(`listings/${id}`, 'GET');
         return listing;
       }
       
-      listings.forEach(async (listing) => {
-        ids.push(listing.id)
+      listings.forEach(listing => {
+        setAllListingIds([...listingIds, listing.id]);
         promises.push(getListingDets(listing.id))
       })
-
-      setAllListingIds(ids);
       return Promise.all(promises);
     }
 
     const filterNumBedrooms = async (min, max) => {
-      const listingList = await getListingDetails();
-      const listings  = addIdToListing(listingList, listingIds);
+      const resp = await apiCall('listings', 'GET');
+      const promises = []
+      const ids = []
+      const getListingDets = async (id) => {
+        const listing = await apiCall(`listings/${id}`, 'GET');
+        return listing;
+      }
+      resp.listings.forEach(l => {
+        promises.push(getListingDets(l.id))
+        ids.push(l.id)
+      })
 
-      const filteredListings = listings.filter(
+      const listings = await Promise.all(promises);
+      const finalListingInfo = addIdToListing(listings, ids);
+
+      const filteredListings = finalListingInfo.filter(
         l => {
           return (
             parseInt(l.metadata.numBeds) <= parseInt(max) &&
@@ -213,25 +224,52 @@ const LandingPage = (props) => {
     }
 
     const filterDate = async (dateRange) => {
-      const listingList = await getListingDetails();
-      const listings  = addIdToListing(listingList, listingIds);
+      const resp = await apiCall('listings', 'GET');
+      const promises = []
+      const ids = []
+      const getListingDets = async (id) => {
+        const listing = await apiCall(`listings/${id}`, 'GET');
+        return listing;
+      }
+      resp.listings.forEach(l => {
+        promises.push(getListingDets(l.id))
+        ids.push(l.id)
+      })
+
+      const listings = await Promise.all(promises);
+      const finalListingInfo = addIdToListing(listings, ids);
       
-      const filteredListings = listings.filter(
+      const filteredListings = finalListingInfo.filter(
         l => {
           const avai = l.availability;
           return avai.some(a => checkDates(a, dateRange));
         }
       )
 
+      setDateRange(dateRange.start.diff(dateRange.end, 'day'));
+      setAppliedDate(true);
+
       sortListings(filteredListings);
       setListings(filteredListings);
     }
 
     const filterPrice = async (min, max) => {
-      const listingList = await getListingDetails();
-      const listings  = addIdToListing(listingList, listingIds);
+      const resp = await apiCall('listings', 'GET');
+      const promises = []
+      const ids = []
+      const getListingDets = async (id) => {
+        const listing = await apiCall(`listings/${id}`, 'GET');
+        return listing;
+      }
+      resp.listings.forEach(l => {
+        promises.push(getListingDets(l.id))
+        ids.push(l.id)
+      })
 
-      const filteredListings = listings.filter(
+      const listings = await Promise.all(promises);
+      const finalListingInfo = addIdToListing(listings, ids);
+
+      const filteredListings = finalListingInfo.filter(
         l => {
           return(
             parseInt(l.price) >= min && parseInt(l.price) <= max
@@ -317,7 +355,7 @@ const LandingPage = (props) => {
 					<Grid container rowSpacing={3} columnSpacing={3} sx={{paddingBottom: "30px"}}>
             {bookedListings.map((data) => (
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>
-                <AllListingCard listing={data}/>
+                <AllListingCard listing={data} isDate={appliedDate} dateRange={dateRange}/>
               </Grid>
             ))}
 					</Grid>
@@ -326,7 +364,7 @@ const LandingPage = (props) => {
           <Grid container rowSpacing={3} columnSpacing={3}>
             {listings.map((data) => (
               <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>
-                <AllListingCard listing={data}/>
+                <AllListingCard listing={data} isDate={appliedDate} dateRange={dateRange}/>
               </Grid>
 						))}
 					</Grid>

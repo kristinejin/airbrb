@@ -20,7 +20,7 @@ const EditImageList = ({images, saveImage, removeImage}) => {
 			>
 			{images.map((image, i) => {
 				return (
-				<ImageListElement image={image} i={i} removeImage={removeImage}/>
+					<ImageListElement image={image} i={i} removeImage={removeImage}/>
 				);
 			})}
 		</ImageList>
