@@ -11,6 +11,7 @@ import HostedListings from './page/HostedListings';
 import Register from './page/Register';
 import ListingEdit from './page/ListingEdit';
 import BookingHistory from './page/BookingHistory';
+import SingleListing from './page/SingleListing';
 
 
 const Router = () => {
@@ -22,6 +23,7 @@ const Router = () => {
             <Route path="/HostedListings" element={<HostedListings/>} />
             <Route path="/HostedListings/edit/:listingId" element={<ListingEdit/>}/>
             <Route path="/BookingHistory/:id" element={<BookingHistory/>}/>
+            <Route path="/listings/:listingId/:dateRange" element={<SingleListing/>}/>
         </Routes>
     );
 }
