@@ -1,33 +1,21 @@
 import React from 'react'
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import Slider, { SliderThumb } from '@mui/material/Slider';
-import Popover from '@mui/material/Popover';
 import IconButton from '@mui/material/IconButton';
 import TuneIcon from '@mui/icons-material/Tune';
-import dayjs, { Dayjs } from 'dayjs';
-
-import Toolbar from '@mui/material/Toolbar';
-
 
 import { withStyles } from '@mui/styles';
 
 import AllListingCard from '../component/AllListingCard';
 import SideMenu from '../component/SideMenu';
-import BedIcon from '@mui/icons-material/Bed';
-import PriceChangeIcon from '@mui/icons-material/PriceChange';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import RateReviewIcon from '@mui/icons-material/RateReview';
 import SearchIcon from '@mui/icons-material/Search';
-
 
 import { apiCall } from '../util/api';
 import Chip from '@mui/material/Chip';
-import { useState } from 'react';
 import FilterDialog from '../component/FilterDialog';
+import { getMinPrice, getMaxPrice } from '../util/priceData';
 
 
 const styles = theme => ({
@@ -42,7 +30,7 @@ const LandingPage = (props) => {
   const user_email = localStorage.getItem("email");
   const [bookedListings, setBookedListings] = React.useState('');
   const [listings, setListings] = React.useState('');
-	const [priceRange, setValue] = React.useState([20, 37]);
+	const [priceRange, setPriceRange] = React.useState({min: 0, max: 0});
   const [searchStr, setSearchStr] = React.useState('');
   const [showFilters, setShowFileters] = React.useState(false);
   const [listingIds, setAllListingIds] = React.useState([]);
@@ -96,6 +84,10 @@ const LandingPage = (props) => {
   const getListings = () => {
     apiCall('listings', 'GET')
       .then((data) => {
+        const minPrice = getMinPrice(data.listings);
+        const maxPrice = getMaxPrice(data.listings);
+        setPriceRange({min: minPrice, max: maxPrice});
+
         let AllListingsPromises = [];
         let allListingsIds = [];
         data.listings.forEach((listing) => {
@@ -227,7 +219,6 @@ const LandingPage = (props) => {
       const filteredListings = listings.filter(
         l => {
           const avai = l.availability;
-          console.log(avai)
           return avai.some(a => checkDates(a, dateRange));
         }
       )
@@ -236,17 +227,39 @@ const LandingPage = (props) => {
       setListings(filteredListings);
     }
 
-    const handleApplyFilters = (bedroom, date) => {
+    const filterPrice = async (min, max) => {
+      const listingList = await getListingDetails();
+      const listings  = addIdToListing(listingList, listingIds);
+
+      const filteredListings = listings.filter(
+        l => {
+          return(
+            parseInt(l.price) >= min && parseInt(l.price) <= max
+          )
+        }
+      )
+
+      sortListings(filteredListings);
+      setListings(filteredListings);
+
+    }
+
+    const handleApplyFilters = (bedroom, date, price) => {
       if (bedroom.isFilter) {
         // apply num bed filters
         filterNumBedrooms(bedroom.min, bedroom.max)
       }
-      if (date.isFilter) {
+      else if (date.isFilter) {
         // apply num bed filters
         filterDate(date.dateRange);
       }
+      else if (price) {
+        filterPrice(price.min, price.max)
+      }
       handleClickFilters();
     }
+
+
 
     React.useEffect(() => {
         getListings();
@@ -261,11 +274,6 @@ const LandingPage = (props) => {
 			<Box>
 				<Box sx={{border: '1px solid rgb(230, 230, 230)', padding: '30px'}} justifyContent="space-between" alignItems="center" display="flex">
 					<Typography sx={{flex: '1'}} component="h1" variant="h4">airbrb</Typography>
-					{/* <InputBase 
-            className={classes.searchBox} 
-            placeholder="Search by location or listing title" 
-            onChange={handleSearchStrUpdate}
-          ></InputBase> */}
           <TextField
             placeholder="Search..." 
             size="small"
@@ -296,6 +304,7 @@ const LandingPage = (props) => {
             open={showFilters} 
             handleClick={handleClickFilters}
             handleApply={handleApplyFilters}
+            priceInfo={priceRange}
           />
 					<Box sx={{flex: '1'}}>
             <SideMenu/>

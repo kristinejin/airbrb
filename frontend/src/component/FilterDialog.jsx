@@ -15,12 +15,15 @@ import DatePicker from './DatePicker';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { apiCall } from '../util/api';
 
 
-const FilterDialog = ({handleClick, open, handleApply}) => {
+const FilterDialog = ({handleClick, open, handleApply, priceInfo}) => {
     const [minBedroom, setMinBedroom] = React.useState(null);
     const [maxBedroom, setMaxBedroom] = React.useState(null);
     const [dateRange, setDateRange] = React.useState({"start": null, "end": null});
+    const [minPrice, setMinPrice] = React.useState(priceInfo.min);
+    const [maxPrice, setMaxPrice] = React.useState(priceInfo.max);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -59,7 +62,32 @@ const FilterDialog = ({handleClick, open, handleApply}) => {
             date.dateRange = dateRange;
         }
 
-        handleApply(bedroom, date)
+        const price = {
+            isFilter: false
+        }
+        if (parseInt(minPrice) !== parseInt(priceInfo.min) || parseInt(maxPrice) !== parseInt(priceInfo.max)) {
+            price.isFilter = true
+            price.min = parseInt(minPrice)
+            price.max = parseInt(maxPrice)
+        }
+
+        handleApply(bedroom, date, price)
+    }
+    const minDistance = 10;
+    const handlePriceChange = (e, newValue, activeThumb) => {
+        if (!Array.isArray(newValue)) {
+            return;
+        }
+    
+        if (activeThumb === 0) {
+            setMinPrice(Math.min(newValue[0], maxPrice - minDistance))
+            setMaxPrice(maxPrice)
+            // setValue1([Math.min(newValue[0], value1[1] - minDistance), value1[1]]);
+        } else {
+            setMinPrice(minPrice)
+            setMaxPrice(Math.max(newValue[1], minPrice + minDistance))
+            // setValue1([value1[0], Math.max(newValue[1], value1[0] + minDistance)]);
+        }
     }
 
     return (
@@ -133,15 +161,30 @@ const FilterDialog = ({handleClick, open, handleApply}) => {
                             />
                         </Grid2>
                     </Grid2>
+
+                    <Grid2 container xs={12}>
+                        <Grid2 xs={4}>
+                            <Typography>
+                                Price:
+                            </Typography>
+                        </Grid2>
+
+                        <Grid2 xs={8}>
+                            <Slider
+                                getAriaLabel={() => 'Minimum distance'}
+                                value={[minPrice, maxPrice]}
+                                onChange={handlePriceChange}
+                                valueLabelDisplay="auto"
+                                max={priceInfo.max}
+                                min={priceInfo.min}
+                                // step={1}
+                                // valueLabelDisplay="on"
+                                disableSwap
+                            />
+                        </Grid2>
+                    </Grid2>
                 </Grid2>
-                {/* <Slider
-                    getAriaLabel={() => 'Minimum distance'}
-                    value={value1}
-                    onChange={handleChange1}
-                    valueLabelDisplay="auto"
-                    getAriaValueText={valuetext}
-                    disableSwap
-                /> */}
+                
                 
             </DialogContent>
             <DialogActions>
