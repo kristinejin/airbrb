@@ -168,6 +168,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
         } else {
             return null;
         }
+        return null;
     }
 
     const ThumbnailUploadAction = () => {
@@ -242,6 +243,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
         } else {
             return null;
         }
+        return null;
     }
 
     const ListingEditImagesTitle = () => {
@@ -256,6 +258,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
         } else {
             return null;
         }
+        return null;
     }
 
 
@@ -272,6 +275,8 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
         } else {
             return null;
         }
+
+        return null;
     }
 
     const ListingEditUploadImage = () => {
@@ -295,6 +300,7 @@ const CreateDialog = ({callCreateListing, listingInfo}) => {
         } else {
             return null;
         }
+        return null;
     }
 
 
