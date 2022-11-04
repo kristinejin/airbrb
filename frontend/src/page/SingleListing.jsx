@@ -14,22 +14,15 @@ import SideMenu from '../component/SideMenu';
 import DatePicker from "../component/DatePicker";
 
 import MobileStepper from '@mui/material/MobileStepper';
-import Paper from '@mui/material/Paper';
-import SwipeableViews from 'react-swipeable-views';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import { autoPlay } from 'react-swipeable-views-utils';
 
-
-
-import AspectRatio from '@mui/joy/AspectRatio';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Sheet from '@mui/joy/Sheet';
 
 // TODO: improve on overall UI + mobile responsiveness
 
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const clickable = {
     cursor: 'pointer',
