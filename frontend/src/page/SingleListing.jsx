@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { apiCall } from "../util/api";
+import { useTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -12,6 +13,15 @@ import CardContent from '@mui/material/CardContent';
 import SideMenu from '../component/SideMenu';
 import DatePicker from "../component/DatePicker";
 
+import MobileStepper from '@mui/material/MobileStepper';
+import Paper from '@mui/material/Paper';
+import SwipeableViews from 'react-swipeable-views';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { autoPlay } from 'react-swipeable-views-utils';
+
+
+
 import AspectRatio from '@mui/joy/AspectRatio';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
@@ -19,9 +29,7 @@ import Sheet from '@mui/joy/Sheet';
 
 // TODO: improve on overall UI + mobile responsiveness
 
-/*
-    For Jaeff: Ctrl F (Review Modal) for review modal section
-*/
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const clickable = {
     cursor: 'pointer',
@@ -33,14 +41,43 @@ const SingleListing = () => {
     // console.log(dateRange)
     const listingId = useParams().listingId;
     const dateRange = useParams().dateRange;
+    const theme = useTheme();
 
     const [listing, setListing] = React.useState({});
-    // const [images, setImages] = React.useState([]);
+    const [images, setImages] = React.useState([]);
     const [isLoaded, setIsLoaded] = React.useState(false);
     const [isBooked, setIsBooked] = React.useState(false);
     const [bookingStatus, setBookingStatus] = React.useState(false);
     const [openReview, setOpenReview] = React.useState(false);
     const [bookedDates, setBookedDates] = React.useState({start: false, end: false});
+    const [maxSteps, setMaxSteps] = React.useState(false);
+    const [activeStep, setActiveStep] = React.useState(0);
+
+    React.useEffect(() => {
+        listingInfo()
+            .then((data) => {
+                setListing(data.listing)
+                setMaxSteps(data.listing.metadata.images.length + 1);
+                setImages ([data.listing.thumbnail, ...data.listing.metadata.images])
+                setIsLoaded(true)
+            })
+            .catch((data) => {
+                setIsLoaded(false);
+                alert(data)
+            })
+    }, [])
+
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleStepChange = (step) => {
+        setActiveStep(step);
+    };
     
     const listingInfo = async () => {
         const info = await apiCall(`listings/${listingId}`, 'GET');
@@ -212,19 +249,9 @@ const SingleListing = () => {
         )
     }
 
-    React.useEffect(() => {
-        listingInfo()
-            .then((data) => {
-                setListing(data.listing)
-                setIsLoaded(true)
-            })
-            .catch((data) => {
-                setIsLoaded(false);
-                alert(data)
-            })
-    }, [])
+    
 
-    if (!isLoaded) {
+    if (!isLoaded || !maxSteps || images.length === 0) {
         return (
             <p>loading...</p>
         )
@@ -334,52 +361,49 @@ const SingleListing = () => {
                 
                 </Grid2>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                        py: 1,
-                        overflow: 'auto',
-                        width: '60vw',
-                        scrollSnapType: 'x mandatory',
-                        '& > *': {
-                        scrollSnapAlign: 'center',
-                        },
-                        '::-webkit-scrollbar': { display: 'none' },
-                        border: 2,
-                        borderColor: 'grey.500',
-                        borderRadius: '16px'
-                    }}
-                >
-
-                    <AspectRatio
-                        ratio="1"
-                        sx={{ minWidth: 180, borderRadius: 'sm', overflow: 'auto' }}
-                    >
-                        <img 
-                            src={listing.thumbnail}
-                            // TODO: check if below is needed?
-                            // src={`${listing.thumbnail}?h=120&fit=crop&auto=format`}
-                            // srcSet={`${listing.thumbnail}?h=120&fit=crop&auto=format&dpr=2 2x`}
-                            alt="listing thumbnail" 
-                        />
-                    </AspectRatio>
-                    {listing.metadata.images.map((image, i) => {
-                        return (
-                            <AspectRatio
-                                ratio="1"
-                                sx={{ minWidth: 180, borderRadius: 'sm', overflow: 'auto' }}
-                            >
-                                <img 
-                                    // src={`${image}?h=120&fit=crop&auto=format`}
-                                    // srcSet={`${image}?h=120&fit=crop&auto=format&dpr=2 2x`}
-                                    src={image}
-                                    alt="listing images" 
-                                />
-                            </AspectRatio>
-                        );
-                    })}
+                <Box sx={{ maxWidth: 500, flexGrow: 1 }}>
+                    <Box
+                        component="img"
+                        sx={{
+                        height: 300,
+                        display: 'block',
+                        maxWidth: 500,
+                        overflow: 'hidden',
+                        width: '100%',
+                        }}
+                        src={images[activeStep]}
+                        alt='Listing Images'
+                    />
+                    <MobileStepper
+                        steps={maxSteps}
+                        position="static"
+                        activeStep={activeStep}
+                        nextButton={
+                        <Button
+                            onClick={handleNext}
+                            disabled={activeStep === maxSteps - 1}
+                        >
+                            
+                            {theme.direction === 'rtl' ? (
+                            <KeyboardArrowLeft/>
+                            ) : (
+                            <KeyboardArrowRight/>
+                            )}
+                        </Button>
+                        }
+                        backButton={
+                        <Button onClick={handleBack} disabled={activeStep === 0}>
+                            {theme.direction === 'rtl' ? (
+                            <KeyboardArrowRight/>
+                            ) : (
+                            <KeyboardArrowLeft/>
+                            )}
+                            
+                        </Button>
+                        }
+                    />
                 </Box>
+
                 <Grid2 container spacing={1}>
                     <Grid2>
                         <Typography>
