@@ -1,16 +1,11 @@
 import React from "react";
-
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import { CardActionArea } from "@mui/material";
-
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
 import StarIcon from "@mui/icons-material/Star";
 import CribIcon from "@mui/icons-material/Crib";
 import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroomNormal";
@@ -20,12 +15,6 @@ const AllListingCard = (props) => {
     const listing = props.listing;
     const dateRange = props.dateRange;
     const nav = useNavigate();
-
-    // Default image
-    if (!listing.thumbnail) {
-        listing.thumbnail =
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
-    }
 
     const handleSelect = () => {
         nav(`listings/${listing.id}/${dateRange}`);
