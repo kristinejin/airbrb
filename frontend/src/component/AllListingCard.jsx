@@ -63,6 +63,10 @@ const AllListingCard = (props) => {
               </Typography>
               &nbsp; per night
             </Typography>
+
+            {listing.status === "accepted" &&
+              <Button>Write a Review</Button>
+            }
           </Box>
           
         </CardContent>   

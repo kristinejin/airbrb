@@ -48,16 +48,19 @@ const LandingPage = (props) => {
       .then((data) => {
       
         const bookedListingIds = [];
+        const bookedStatus = [];
         data.bookings.forEach((booking) => {
           if (booking.owner === user_email) {
             bookedListingIds.push(booking.listingId);
+            bookedStatus.push(booking.status);
           }
         });
 
         const allBookedListings = [];
         listingArray.forEach((listing) => {
-          console.log(listing.id);
-          if (bookedListingIds.includes(listing.id.toString())) {
+          const findId = bookedListingIds.indexOf(listing.id.toString());
+          if (findId !== -1) {
+            listing["status"] = bookedStatus[findId];
             allBookedListings.push(listing);
           } 
         });

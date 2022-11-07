@@ -70,6 +70,7 @@ const HostedListings = (props) => {
 	}
 
 	const handleOnChangeDateEnd = (index, newDate) => {
+		console.log(newDate);
 		const currentAvailabilities = [...availability];
 		currentAvailabilities[index].end = newDate;
 		setAvailability(currentAvailabilities);
