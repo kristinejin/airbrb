@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import GradeIcon from "@mui/icons-material/Grade";
 import Card from "@mui/material/Card";
+import { CardActions } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import CardContent from "@mui/material/CardContent";
 import Alert from "@mui/material/Alert";
@@ -16,7 +17,7 @@ import Collapse from "@mui/material/Collapse";
 import MobileStepper from "@mui/material/MobileStepper";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-
+import * as dayjs from "dayjs";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import Sheet from "@mui/joy/Sheet";
@@ -51,6 +52,7 @@ const SingleListing = () => {
     const [maxSteps, setMaxSteps] = React.useState(false);
     const [activeStep, setActiveStep] = React.useState(0);
     const [bookingSuccess, setBookingSuccess] = React.useState(false);
+    const [newBid, setNewBid] = React.useState(0);
 
     React.useEffect(() => {
         listingInfo()
@@ -106,20 +108,67 @@ const SingleListing = () => {
     };
 
     const handleBook = async () => {
-        const start = new Date(bookedDates.start);
-        const end = new Date(bookedDates.end);
-        const duration = end - start;
+        const start = dayjs(bookedDates.start);
+        const end = dayjs(bookedDates.end);
+        const duration =
+            end.diff(start, "day") > 0 ? end.diff(start, "day") : 1;
+        const total = duration * parseInt(listing.price);
         const request = await apiCall(`bookings/new/${listingId}`, "POST", {
             dateRange: {
                 startdate: bookedDates.start,
                 enddate: bookedDates.enddate,
             },
-            totalPrice: duration * listing.price,
+            totalPrice: total,
         });
         // popup showing booking status
-        console.log(request);
-        console.log(bookedDates);
-        console.log(listing.availability);
+        setNewBid(request.bookingId);
+        setBookingSuccess(true);
+    };
+
+    const getAllBookings = async () => {
+        const resp = await apiCall("bookings", "GET");
+        const bookings = resp.bookings;
+        console.log(bookings);
+        bookings.forEach((b) => {
+            if (
+                b.owner === localStorage.getItem("email") &&
+                b.listingId === parseInt(listingId)
+            ) {
+                setIsBooked(true);
+                setBookingStatus(b.status);
+            }
+        });
+    };
+    React.useEffect(() => {
+        getAllBookings();
+    }, []);
+
+    const ShowBookingStatus = () => {
+        if (!localStorage.getItem("token")) {
+            return null;
+        }
+        if (isBooked) {
+            return (
+                <Box>
+                    <Typography>
+                        Your booking status is {bookingStatus}
+                    </Typography>
+                </Box>
+            );
+        }
+
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    // justifyContent:'center'
+                }}
+            >
+                <Typography>You have not booked this property yet</Typography>
+            </Box>
+        );
     };
 
     const BookListing = () => {
@@ -131,7 +180,6 @@ const SingleListing = () => {
             price *= days;
             priceLabel = `for total of ${days} day(s)`;
         }
-
         const BookingSection = () => {
             if (!localStorage.getItem("token")) {
                 return (
@@ -149,49 +197,9 @@ const SingleListing = () => {
                 );
             }
 
-            const getAllBookings = async () => {
-                const resp = await apiCall("bookings", "GET");
-                const bookings = resp.bookings;
-                bookings.forEach((b) => {
-                    if (b.owner === localStorage.getItem("email")) {
-                        setIsBooked(true);
-                        setBookingStatus(b.status);
-                    }
-                });
-            };
-
-            getAllBookings();
-
-            const ShowBookingStatus = () => {
-                if (isBooked) {
-                    return (
-                        <Box>
-                            <Typography>
-                                Your booking status is {bookingStatus}
-                            </Typography>
-                        </Box>
-                    );
-                }
-
-                return (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            // justifyContent:'center'
-                        }}
-                    >
-                        <Typography>
-                            You have not booked this property yet
-                        </Typography>
-                    </Box>
-                );
-            };
-
             return (
                 <Box>
-                    <Grid2 container spacing={2}>
+                    <Grid2 container spacing={2} justifyContent="center">
                         <Grid2
                             xs={12}
                             sx={{
@@ -200,8 +208,8 @@ const SingleListing = () => {
                                 alignItems: "center",
                             }}
                         >
-                            {console.log(listing)}
                             <CustomDatePicker
+                                fullWidth
                                 handleOnChangeDateEnd={handleOnChangeDateEnd}
                                 handleOnChangeDateStart={
                                     handleOnChangeDateStart
@@ -229,20 +237,20 @@ const SingleListing = () => {
                                 severity="success"
                                 sx={{
                                     display: "flex",
-                                    // flexDirection: "column",
                                     alignItems: "center",
-                                    // width: "60%",
                                 }}
                             >
                                 <AlertTitle>
                                     Congrats, this booking has been made.
                                 </AlertTitle>
-                                Your booking id is 38453843, you booking status
+                                Your booking id is #{newBid}, you booking status
                                 will change once the host process your booking
                             </Alert>
                         )}
+
                         <Grid2
                             xs={12}
+                            md={8}
                             sx={{
                                 display: "flex",
                                 flexDirection: "column",
@@ -250,6 +258,7 @@ const SingleListing = () => {
                             }}
                         >
                             <Button
+                                fullWidth
                                 variant="outlined"
                                 sx={{ width: "90%" }}
                                 onClick={handleBook}
@@ -258,10 +267,6 @@ const SingleListing = () => {
                             </Button>
                         </Grid2>
                     </Grid2>
-
-                    <Divider sx={{ m: 2 }}>Booking Status</Divider>
-
-                    <ShowBookingStatus />
                 </Box>
             );
         };
@@ -296,6 +301,10 @@ const SingleListing = () => {
                         </Box>
                         <Divider sx={{ m: 2 }}>Make a Booking</Divider>
                         <BookingSection />
+                        {localStorage.getItem("token") && (
+                            <Divider sx={{ m: 2 }}>Booking Status</Divider>
+                        )}
+                        <ShowBookingStatus />
                     </CardContent>
                 </Card>
             </Grid2>

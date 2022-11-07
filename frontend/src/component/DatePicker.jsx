@@ -50,6 +50,7 @@ const CustomDatePicker = ({
 
     return (
         <Grid2
+            fullWidth
             sx={{
                 display: "flex",
                 alignItems: "center",
@@ -58,6 +59,7 @@ const CustomDatePicker = ({
         >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
+                    fullWidth
                     label="CHECK IN"
                     inputFormat="MM/DD/YYYY"
                     value={start}
@@ -76,6 +78,7 @@ const CustomDatePicker = ({
                 />
                 <Typography> - </Typography>
                 <DatePicker
+                    fullWidth
                     label="CHECK OUT"
                     inputFormat="MM/DD/YYYY"
                     value={end}
