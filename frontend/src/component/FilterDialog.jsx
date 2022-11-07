@@ -1,88 +1,102 @@
-import React from 'react';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Dialog from '@mui/material/Dialog';
-import Button from '@mui/material/Button';
-import Slider from '@mui/material/Slider';
-import Typography from '@mui/material/Typography';
-import Grid2 from '@mui/material/Unstable_Grid2';
-import TextField from '@mui/material/TextField';
-import DatePicker from './DatePicker';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import React from "react";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
+import Button from "@mui/material/Button";
+import Slider from "@mui/material/Slider";
+import Typography from "@mui/material/Typography";
+import Grid2 from "@mui/material/Unstable_Grid2";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import CustomDatePicker from "./DatePicker";
 
-
-const FilterDialog = ({handleClick, open, handleApply, priceInfo}) => {
+const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
     const [minBedroom, setMinBedroom] = React.useState(null);
     const [maxBedroom, setMaxBedroom] = React.useState(null);
-    const [dateRange, setDateRange] = React.useState({"start": null, "end": null});
+    const [dateRange, setDateRange] = React.useState({
+        start: null,
+        end: null,
+    });
     const [minPrice, setMinPrice] = React.useState(priceInfo.min);
     const [maxPrice, setMaxPrice] = React.useState(priceInfo.max);
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+    const handleCleanFilters = () => {
+        setDateRange({ start: null, end: null });
+
+        handleApply({ isClean: true });
+    };
 
     const handleOnChangeDateStart = (newDate) => {
         const curr = dateRange;
-        curr.start = newDate
-		setDateRange(curr);
-    }
+        curr.start = newDate;
+        setDateRange(curr);
+    };
 
     const handleOnChangeDateEnd = (newDate) => {
         const curr = dateRange;
-        curr.end = newDate
-		setDateRange(curr);
-    }
-    
+        curr.end = newDate;
+        setDateRange(curr);
+    };
+
     if (!open) {
         return null;
     }
 
     const cleanData = () => {
         const bedroom = {
-            isFilter: false
-        }
+            isFilter: false,
+        };
         if (minBedroom && maxBedroom) {
-            bedroom.isFilter = true
-            bedroom.min = minBedroom
-            bedroom.max = maxBedroom
+            bedroom.isFilter = true;
+            bedroom.min = minBedroom;
+            bedroom.max = maxBedroom;
         }
 
         const date = {
-            isFilter: false
-        }
+            isFilter: false,
+        };
         if (dateRange.start && dateRange.end) {
-            date.isFilter = true
+            date.isFilter = true;
             date.dateRange = dateRange;
         }
 
         const price = {
-            isFilter: false
-        }
-        if (parseInt(minPrice) !== parseInt(priceInfo.min) || parseInt(maxPrice) !== parseInt(priceInfo.max)) {
-            price.isFilter = true
-            price.min = parseInt(minPrice)
-            price.max = parseInt(maxPrice)
+            isFilter: false,
+        };
+
+        if (
+            parseInt(minPrice) !== parseInt(priceInfo.min) ||
+            parseInt(maxPrice) !== parseInt(priceInfo.max)
+        ) {
+            price.isFilter = true;
+            price.min = parseInt(minPrice);
+            price.max = parseInt(maxPrice);
         }
 
-        handleApply(bedroom, date, price)
-    }
+        handleApply({ bedroom: bedroom, date: date, price: price });
+    };
     const minDistance = 10;
     const handlePriceChange = (e, newValue, activeThumb) => {
         if (!Array.isArray(newValue)) {
             return;
         }
-    
+
         if (activeThumb === 0) {
-            setMinPrice(Math.min(newValue[0], maxPrice - minDistance))
-            setMaxPrice(maxPrice)
+            setMinPrice(Math.min(newValue[0], maxPrice - minDistance));
+            setMaxPrice(maxPrice);
             // setValue1([Math.min(newValue[0], value1[1] - minDistance), value1[1]]);
         } else {
-            setMinPrice(minPrice)
-            setMaxPrice(Math.max(newValue[1], minPrice + minDistance))
+            setMinPrice(minPrice);
+            setMaxPrice(Math.max(newValue[1], minPrice + minDistance));
             // setValue1([value1[0], Math.max(newValue[1], value1[0] + minDistance)]);
         }
-    }
+    };
 
     return (
         <Dialog
@@ -94,104 +108,68 @@ const FilterDialog = ({handleClick, open, handleApply, priceInfo}) => {
         >
             <DialogTitle>Filters</DialogTitle>
             <DialogContent dividers>
-                {/* 
-                    Filter
-                    1. Number of bedrooms (slider) (UI done)
-                    2. Date range (two dates) - only display available listings
-
-                    Sorting
-                    1. Most relevant
-                    2. Price (lowest - highest, slider)
-                    3. Review Ratings
-                        - Sort from height - lowerest and vice versa
-                        - Order don't matter for the same rated listings
-                */}
-                
-                <Grid2 container spacing={2}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 3,
+                    }}
+                >
+                    <Divider>Date Range</Divider>
                     <Grid2 container>
-                        <Grid2
-                            xs={4}
-                            sx={{
-                                display: 'flex',
-                                alignItems: "center"
-                            }}
-                        >
-                            <Typography>Date Range:</Typography>
-                        </Grid2>
-                        <Grid2
-                            xs={8}
-                        >
-                            <DatePicker 
-                                dateRange={dateRange} 
-                                handleOnChangeDateStart={handleOnChangeDateStart} 
+                        <Grid2 xs={12}>
+                            <CustomDatePicker
+                                dateRange={dateRange}
+                                handleOnChangeDateStart={
+                                    handleOnChangeDateStart
+                                }
                                 handleOnChangeDateEnd={handleOnChangeDateEnd}
                             />
                         </Grid2>
                     </Grid2>
-                    <Grid2 container spacing={1.5}>
-                        <Grid2
-                            xs={4}
-                            sx={{
-                                display: 'flex',
-                                alignItems: "center"
-                            }}
-                        >
-                            <Typography>
-                                Bedrooms:
-                            </Typography>
-                        </Grid2>
-                        <Grid2 xs={4}>
+                    <Divider>Bedrooms</Divider>
+                    <Grid2 container spacing={1.8}>
+                        <Grid2 xs={6}>
                             <TextField
+                                fullWidth
                                 size="small"
-                                label='Min'
+                                label="Min"
                                 onChange={(e) => setMinBedroom(e.target.value)}
                             />
                         </Grid2>
-                        <Grid2 xs={4}>
+                        <Grid2 xs={6}>
                             <TextField
+                                fullWidth
                                 size="small"
-                                label='Max'
+                                label="Max"
                                 onChange={(e) => setMaxBedroom(e.target.value)}
                             />
                         </Grid2>
                     </Grid2>
-
-                    <Grid2 container xs={12}>
-                        <Grid2 xs={4}>
-                            <Typography>
-                                Price:
-                            </Typography>
-                        </Grid2>
-
-                        <Grid2 xs={8}>
-                            <Slider
-                                getAriaLabel={() => 'Minimum distance'}
-                                value={[minPrice, maxPrice]}
-                                onChange={handlePriceChange}
-                                valueLabelDisplay="auto"
-                                max={priceInfo.max}
-                                min={priceInfo.min}
-                                // step={1}
-                                // valueLabelDisplay="on"
-                                disableSwap
-                            />
-                        </Grid2>
+                    <Divider>Price Range</Divider>
+                    <Grid2 xs={12}>
+                        <Slider
+                            getAriaLabel={() => "Minimum distance"}
+                            value={[minPrice, maxPrice]}
+                            onChange={handlePriceChange}
+                            valueLabelDisplay="auto"
+                            max={priceInfo.max}
+                            min={priceInfo.min}
+                            disableSwap
+                        />
                     </Grid2>
-                </Grid2>
-                
-                
+                    <Divider />
+                    <Button onClick={handleCleanFilters}>Clean Filters</Button>
+                </Box>
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleClick}>
                     Cancel
                 </Button>
-                <Button onClick={handleClick}>
-                    Clean Filters
-                </Button>
                 <Button onClick={cleanData}>Apply</Button>
             </DialogActions>
         </Dialog>
     );
-}
+};
 
 export default FilterDialog;
