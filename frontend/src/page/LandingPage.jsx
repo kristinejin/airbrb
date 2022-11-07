@@ -15,7 +15,7 @@ import { withStyles } from "@mui/styles";
 import AllListingCard from "../component/AllListingCard";
 import SideMenu from "../component/SideMenu";
 import SearchIcon from "@mui/icons-material/Search";
-
+import { useNavigate } from "react-router-dom";
 import { apiCall } from "../util/api";
 import Chip from "@mui/material/Chip";
 import FilterDialog from "../component/FilterDialog";
@@ -39,6 +39,7 @@ const LandingPage = (props) => {
     const [appliedDate, setAppliedDate] = React.useState(false);
     const [dateRange, setDateRange] = React.useState(false);
     const [sort, setSort] = React.useState("Most Relevant");
+    const nav = useNavigate();
 
     const sortListings = (listingArray) => {
         const compare = (a, b) => {
@@ -298,7 +299,15 @@ const LandingPage = (props) => {
                 alignItems="center"
                 display="flex"
             >
-                <Typography sx={{ flex: "1" }} component="h1" variant="h4">
+                <Typography
+                    sx={{
+                        flex: "1",
+                        cursor: "pointer",
+                    }}
+                    component="h1"
+                    variant="h4"
+                    onClick={() => nav("/")}
+                >
                     airbrb
                 </Typography>
                 <TextField

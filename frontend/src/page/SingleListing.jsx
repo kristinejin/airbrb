@@ -22,6 +22,7 @@ import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import Sheet from "@mui/joy/Sheet";
 
+import { useNavigate } from "react-router-dom";
 import SideMenu from "../component/SideMenu";
 import CustomDatePicker from "../component/DatePicker";
 
@@ -38,6 +39,7 @@ const SingleListing = () => {
     const listingId = useParams().listingId;
     const dateRange = useParams().dateRange;
     const theme = useTheme();
+    const nav = useNavigate();
 
     const [listing, setListing] = React.useState({});
     const [images, setImages] = React.useState([]);
@@ -323,7 +325,12 @@ const SingleListing = () => {
                 alignItems="center"
                 display="flex"
             >
-                <Typography sx={{ flex: "1" }} component="h1" variant="h4">
+                <Typography
+                    sx={{ flex: "1", cursor: "pointer" }}
+                    component="h1"
+                    variant="h4"
+                    onClick={() => nav("/")}
+                >
                     airbrb
                 </Typography>
 
