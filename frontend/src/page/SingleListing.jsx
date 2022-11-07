@@ -10,9 +10,9 @@ import GradeIcon from "@mui/icons-material/Grade";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import CardContent from "@mui/material/CardContent";
-import SideMenu from "../component/SideMenu";
-import DatePicker from "../component/DatePicker";
-
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Collapse from "@mui/material/Collapse";
 import MobileStepper from "@mui/material/MobileStepper";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
@@ -20,6 +20,9 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import Sheet from "@mui/joy/Sheet";
+
+import SideMenu from "../component/SideMenu";
+import CustomDatePicker from "../component/DatePicker";
 
 // TODO: improve on overall UI + mobile responsiveness
 
@@ -42,11 +45,12 @@ const SingleListing = () => {
     const [bookingStatus, setBookingStatus] = React.useState(false);
     const [openReview, setOpenReview] = React.useState(false);
     const [bookedDates, setBookedDates] = React.useState({
-        start: false,
-        end: false,
+        start: new Date(),
+        end: new Date(),
     });
     const [maxSteps, setMaxSteps] = React.useState(false);
     const [activeStep, setActiveStep] = React.useState(0);
+    const [bookingSuccess, setBookingSuccess] = React.useState(false);
 
     React.useEffect(() => {
         listingInfo()
@@ -71,10 +75,6 @@ const SingleListing = () => {
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleStepChange = (step) => {
-        setActiveStep(step);
     };
 
     const listingInfo = async () => {
@@ -117,6 +117,9 @@ const SingleListing = () => {
             totalPrice: duration * listing.price,
         });
         // popup showing booking status
+        console.log(request);
+        console.log(bookedDates);
+        console.log(listing.availability);
     };
 
     const BookListing = () => {
@@ -197,8 +200,8 @@ const SingleListing = () => {
                                 alignItems: "center",
                             }}
                         >
-                            <DatePicker
-                                dateRange={dateRange}
+                            {console.log(listing)}
+                            <CustomDatePicker
                                 handleOnChangeDateEnd={handleOnChangeDateEnd}
                                 handleOnChangeDateStart={
                                     handleOnChangeDateStart
@@ -218,6 +221,26 @@ const SingleListing = () => {
                                 Total Price: (To be implemented w/ booking)
                             </Typography>
                         </Grid2>
+                        {bookingSuccess && (
+                            <Alert
+                                onClose={() => {
+                                    setBookingSuccess(false);
+                                }}
+                                severity="success"
+                                sx={{
+                                    display: "flex",
+                                    // flexDirection: "column",
+                                    alignItems: "center",
+                                    // width: "60%",
+                                }}
+                            >
+                                <AlertTitle>
+                                    Congrats, this booking has been made.
+                                </AlertTitle>
+                                Your booking id is 38453843, you booking status
+                                will change once the host process your booking
+                            </Alert>
+                        )}
                         <Grid2
                             xs={12}
                             sx={{
@@ -235,42 +258,47 @@ const SingleListing = () => {
                             </Button>
                         </Grid2>
                     </Grid2>
+
                     <Divider sx={{ m: 2 }}>Booking Status</Divider>
+
                     <ShowBookingStatus />
                 </Box>
             );
         };
 
         return (
-            <Card
-                sx={{
-                    width: "60vw",
-                    height: "40vh",
-                }}
-            >
-                <CardContent>
-                    <Box
-                        sx={{
-                            display: "flex",
-                        }}
-                    >
-                        <Typography variant="h5" sx={{ pr: 0.5 }}>
-                            ${price}
-                        </Typography>
-                        <Typography
+            <Grid2 xs={12} md={8}>
+                <Card
+                    fullWidth
+                    sx={{
+                        // width: "60vw",
+                        minHeight: "40vh",
+                    }}
+                >
+                    <CardContent>
+                        <Box
                             sx={{
                                 display: "flex",
-                                // flexDirection:'column',
-                                alignItems: "center",
                             }}
                         >
-                            {priceLabel}
-                        </Typography>
-                    </Box>
-                    <Divider sx={{ m: 2 }}>Make a Booking</Divider>
-                    <BookingSection />
-                </CardContent>
-            </Card>
+                            <Typography variant="h5" sx={{ pr: 0.5 }}>
+                                ${price}
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    display: "flex",
+                                    // flexDirection:'column',
+                                    alignItems: "center",
+                                }}
+                            >
+                                {priceLabel}
+                            </Typography>
+                        </Box>
+                        <Divider sx={{ m: 2 }}>Make a Booking</Divider>
+                        <BookingSection />
+                    </CardContent>
+                </Card>
+            </Grid2>
         );
     };
 
@@ -353,6 +381,7 @@ const SingleListing = () => {
                     alignItems: "center",
                     alignSelf: "center",
                     gap: 3,
+                    m: 2,
                 }}
             >
                 <Typography variant="h2">{listing.title}</Typography>

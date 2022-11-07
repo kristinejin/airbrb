@@ -9,9 +9,10 @@ import Typography from "@mui/material/Typography";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import DatePicker from "./DatePicker";
+import Divider from "@mui/material/Divider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import CustomDatePicker from "./DatePicker";
 
 const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
     const [minBedroom, setMinBedroom] = React.useState(null);
@@ -107,19 +108,6 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
         >
             <DialogTitle>Filters</DialogTitle>
             <DialogContent dividers>
-                {/* 
-                    Filter
-                    - 1. Number of bedrooms (slider) (UI done)
-                    - 2. Date range (two dates) - only display available listings
-                    - 2. Price range
-
-                    Sorting
-                    1. Most relevant
-                    2. Review Ratings
-                        - Sort from height - lowerest and vice versa
-                        - Order don't matter for the same rated listings
-                */}
-
                 <Box
                     sx={{
                         display: "flex",
@@ -127,18 +115,10 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
                         gap: 3,
                     }}
                 >
+                    <Divider>Date Range</Divider>
                     <Grid2 container>
-                        <Grid2
-                            xs={4}
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Typography>Date Range:</Typography>
-                        </Grid2>
-                        <Grid2 xs={8}>
-                            <DatePicker
+                        <Grid2 xs={12}>
+                            <CustomDatePicker
                                 dateRange={dateRange}
                                 handleOnChangeDateStart={
                                     handleOnChangeDateStart
@@ -147,56 +127,45 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
                             />
                         </Grid2>
                     </Grid2>
-                    <Grid2 container spacing={1.9}>
-                        <Grid2
-                            xs={3.88}
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Typography>Bedrooms:</Typography>
-                        </Grid2>
-                        <Grid2 xs={4.05}>
+                    <Divider>Bedrooms</Divider>
+                    <Grid2 container spacing={1.8}>
+                        <Grid2 xs={6}>
                             <TextField
+                                fullWidth
                                 size="small"
                                 label="Min"
                                 onChange={(e) => setMinBedroom(e.target.value)}
                             />
                         </Grid2>
-                        <Grid2 xs={4.05}>
+                        <Grid2 xs={6}>
                             <TextField
+                                fullWidth
                                 size="small"
                                 label="Max"
                                 onChange={(e) => setMaxBedroom(e.target.value)}
                             />
                         </Grid2>
                     </Grid2>
-
-                    <Grid2 container xs={12}>
-                        <Grid2 xs={4.1}>
-                            <Typography>Price:</Typography>
-                        </Grid2>
-
-                        <Grid2 xs={7.8}>
-                            <Slider
-                                getAriaLabel={() => "Minimum distance"}
-                                value={[minPrice, maxPrice]}
-                                onChange={handlePriceChange}
-                                valueLabelDisplay="auto"
-                                max={priceInfo.max}
-                                min={priceInfo.min}
-                                disableSwap
-                            />
-                        </Grid2>
+                    <Divider>Price Range</Divider>
+                    <Grid2 xs={12}>
+                        <Slider
+                            getAriaLabel={() => "Minimum distance"}
+                            value={[minPrice, maxPrice]}
+                            onChange={handlePriceChange}
+                            valueLabelDisplay="auto"
+                            max={priceInfo.max}
+                            min={priceInfo.min}
+                            disableSwap
+                        />
                     </Grid2>
+                    <Divider />
+                    <Button onClick={handleCleanFilters}>Clean Filters</Button>
                 </Box>
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleClick}>
                     Cancel
                 </Button>
-                <Button onClick={handleCleanFilters}>Clean Filters</Button>
                 <Button onClick={cleanData}>Apply</Button>
             </DialogActions>
         </Dialog>

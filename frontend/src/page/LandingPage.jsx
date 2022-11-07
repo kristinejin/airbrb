@@ -4,6 +4,10 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 import TuneIcon from "@mui/icons-material/Tune";
 
 import { withStyles } from "@mui/styles";
@@ -34,6 +38,7 @@ const LandingPage = (props) => {
     const [showFilters, setShowFileters] = React.useState(false);
     const [appliedDate, setAppliedDate] = React.useState(false);
     const [dateRange, setDateRange] = React.useState(false);
+    const [sort, setSort] = React.useState("Most Relevant");
 
     const sortListings = (listingArray) => {
         const compare = (a, b) => {
@@ -267,6 +272,15 @@ const LandingPage = (props) => {
         handleClickFilters();
     };
 
+    const handleApplySort = (e) => {
+        const newSort = e.target.value;
+        if (newSort === "Most Relevant") {
+        } else if (newSort === "Rating DESC") {
+        } else if (newSort === "Rating ASC") {
+        }
+        setSort(e.target.value);
+    };
+
     React.useEffect(() => {
         getListings();
     }, []);
@@ -323,6 +337,32 @@ const LandingPage = (props) => {
                     handleApply={handleApplyFilters}
                     priceInfo={priceRange}
                 />
+
+                {/* 
+                    2. Review Ratings
+                        - Sort from height - lowerest and vice versa
+                        - Order don't matter for the same rated listings
+                */}
+
+                <FormControl sx={{ ml: 1, maxWidth: 170 }} size="small">
+                    <Select
+                        sx={{ maxWidth: 170 }}
+                        labelId="demo-select-small"
+                        id="demo-select-small"
+                        value={sort}
+                        onChange={handleApplySort}
+                    >
+                        <MenuItem value={"Most Relevant"}>
+                            Most Relevant
+                        </MenuItem>
+                        <MenuItem value={"Rating DESC"}>
+                            Rating - Highest to Lowest
+                        </MenuItem>
+                        <MenuItem value={"Rating ASC"}>
+                            Rating - Lowest to Highest
+                        </MenuItem>
+                    </Select>
+                </FormControl>
                 <Box sx={{ flex: "1" }}>
                     <SideMenu />
                 </Box>

@@ -7,42 +7,44 @@ import Grid2 from "@mui/material/Unstable_Grid2";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const DatePicker = ({
-    dateRange,
+const CustomDatePicker = ({
     handleOnChangeDateStart,
     handleOnChangeDateEnd,
     availability,
 }) => {
-    const [start, setStart] = React.useState(dateRange.start);
-    const [end, setEnd] = React.useState(dateRange.end);
-    const avaiList = [];
+    const [start, setStart] = React.useState(new Date());
+    const [end, setEnd] = React.useState(new Date());
     const parseAvailability = () => {
         // push all the available dates?
+        const list = [];
+        if (!availability) {
+            return [];
+        }
         availability.forEach((a) => {
             const start = new Date(a.start);
             const end = new Date(a.end);
             while (start <= end) {
                 const date = new Date(start);
-                avaiList.push(date.toISOString().split("T")[0]);
+                list.push(date.toISOString().split("T")[0]);
                 start.setDate(date.getDate() + 1);
             }
         });
-
-        return avaiList;
+        return list;
     };
+
+    const avaiList = parseAvailability();
+
     const getDisabledDates = (date) => {
         const ISODate = date.toISOString().split("T")[0];
         if (!availability) {
             return false;
         }
-        const avaiList = parseAvailability();
 
         if (avaiList.includes(ISODate)) {
             return false;
         }
-
         return true;
     };
 
@@ -55,7 +57,7 @@ const DatePicker = ({
             }}
         >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker
+                <DatePicker
                     label="CHECK IN"
                     inputFormat="MM/DD/YYYY"
                     value={start}
@@ -70,9 +72,10 @@ const DatePicker = ({
                     }}
                     renderInput={(params) => <TextField {...params} />}
                     shouldDisableDate={(date) => getDisabledDates(date)}
+                    disablePast={true}
                 />
                 <Typography> - </Typography>
-                <DesktopDatePicker
+                <DatePicker
                     label="CHECK OUT"
                     inputFormat="MM/DD/YYYY"
                     value={end}
@@ -82,10 +85,11 @@ const DatePicker = ({
                     }}
                     renderInput={(params) => <TextField {...params} />}
                     shouldDisableDate={(date) => getDisabledDates(date)}
+                    disablePast={true}
                 />
             </LocalizationProvider>
         </Grid2>
     );
 };
 
-export default DatePicker;
+export default CustomDatePicker;
