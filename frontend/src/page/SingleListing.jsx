@@ -25,6 +25,7 @@ import Sheet from "@mui/joy/Sheet";
 import { useNavigate } from "react-router-dom";
 import SideMenu from "../component/SideMenu";
 import CustomDatePicker from "../component/DatePicker";
+import Youtube from "../component/YouTube";
 
 // TODO: improve on overall UI + mobile responsiveness
 
@@ -428,18 +429,33 @@ const SingleListing = () => {
                 </Grid2>
 
                 <Box sx={{ maxWidth: 500, flexGrow: 1 }}>
-                    <Box
-                        component="img"
-                        sx={{
-                            height: 300,
-                            display: "block",
-                            maxWidth: 500,
-                            overflow: "hidden",
-                            width: "100%",
-                        }}
-                        src={images[activeStep]}
-                        alt="Listing Images"
-                    />
+                    {activeStep === 0 && listing.metadata.video ? (
+                        <Box
+                            sx={{
+                                height: 300,
+                                display: "block",
+                                maxWidth: 500,
+                                overflow: "hidden",
+                                width: "100%",
+                            }}
+                        >
+                            <Youtube code={listing.metadata.video} />
+                        </Box>
+                    ) : (
+                        <Box
+                            component="img"
+                            sx={{
+                                height: 300,
+                                display: "block",
+                                maxWidth: 500,
+                                overflow: "hidden",
+                                width: "100%",
+                            }}
+                            src={images[activeStep]}
+                            alt="Listing Images"
+                        />
+                    )}
+
                     <MobileStepper
                         steps={maxSteps}
                         position="static"

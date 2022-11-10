@@ -10,6 +10,7 @@ import StarIcon from "@mui/icons-material/Star";
 import CribIcon from "@mui/icons-material/Crib";
 import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroomNormal";
 import { useNavigate } from "react-router-dom";
+import { getYoutubeCodeFromUrl } from "../util/youtubeCode";
 
 const AllListingCard = (props) => {
     const listing = props.listing;
@@ -18,6 +19,19 @@ const AllListingCard = (props) => {
 
     const handleSelect = () => {
         nav(`listings/${listing.id}/${dateRange}`);
+    };
+
+    const Video = () => {
+        const codeShort = listing.metadata.video.includes("https")
+            ? getYoutubeCodeFromUrl(listing.metadata.video)
+            : listing.metadata.video;
+        return (
+            <CardMedia
+                component="iframe"
+                src={`https://www.youtube.com/embed/${codeShort}`}
+                alt="Listing thumbnail"
+            />
+        );
     };
 
     return (
@@ -34,11 +48,19 @@ const AllListingCard = (props) => {
                     title={listing.title}
                     titleTypographyProps={{ noWrap: true }}
                 />
-                <CardMedia
-                    component="img"
-                    image={listing.thumbnail}
-                    alt="Listing thumbnail"
-                />
+                {listing.metadata.video ? (
+                    <Video />
+                ) : (
+                    <CardMedia
+                        component="img"
+                        image={listing.thumbnail}
+                        alt="Listing thumbnail"
+                        sx={{
+                            minHeight: "400",
+                        }}
+                    />
+                )}
+
                 <CardContent>
                     <Box
                         justifyContent="space-between"
