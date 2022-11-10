@@ -35,7 +35,6 @@ const Login = (props) => {
             email: email,
             password: password,
         }).then((data) => {
-            console.log(data.token);
             localStorage.setItem("token", data.token);
             localStorage.setItem("email", email);
             window.location.href = "/hostedlistings";

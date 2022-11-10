@@ -37,7 +37,6 @@ const clickable = {
 };
 
 const SingleListing = () => {
-    // console.log(dateRange)
     const listingId = useParams().listingId;
     const dateRange = useParams().dateRange;
     const theme = useTheme();
@@ -76,12 +75,12 @@ const SingleListing = () => {
     }, []);
 
     const returnStars = () => {
-      let totalStars = 0;
-      listing.reviews.forEach((review) => {
-        totalStars += review.stars;
-      })
-      return (totalStars/listing.reviews.length).toFixed(2);
-    }
+        let totalStars = 0;
+        listing.reviews.forEach((review) => {
+            totalStars += review.stars;
+        });
+        return (totalStars / listing.reviews.length).toFixed(2);
+    };
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -97,11 +96,10 @@ const SingleListing = () => {
     };
 
     const refreshListing = () => {
-      listingInfo()
-        .then((data) => {
-          setListing(data.listing);
-        })  
-    }
+        listingInfo().then((data) => {
+            setListing(data.listing);
+        });
+    };
 
     const addressStr = () => {
         return `${listing.address.street}, ${listing.address.city}, ${listing.address.country} ${listing.address.postcode}`;
@@ -147,7 +145,6 @@ const SingleListing = () => {
     const getAllBookings = async () => {
         const resp = await apiCall("bookings", "GET");
         const bookings = resp.bookings;
-        console.log(bookings);
         bookings.forEach((b) => {
             if (
                 b.owner === localStorage.getItem("email") &&
@@ -358,7 +355,13 @@ const SingleListing = () => {
 
             {/* Review Modal:  https://mui.com/joy-ui/react-modal/ */}
 
-            <ReviewModal open={openReview} setOpen={setOpenReview} refresh={refreshListing} listingId={listingId} listing={listing}></ReviewModal>
+            <ReviewModal
+                open={openReview}
+                setOpen={setOpenReview}
+                refresh={refreshListing}
+                listingId={listingId}
+                listing={listing}
+            ></ReviewModal>
 
             <Box
                 sx={{
