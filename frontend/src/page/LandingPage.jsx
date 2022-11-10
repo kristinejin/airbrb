@@ -20,6 +20,7 @@ import { apiCall } from "../util/api";
 import Chip from "@mui/material/Chip";
 import FilterDialog from "../component/FilterDialog";
 import { getMinPrice, getMaxPrice } from "../util/priceData";
+import { getAverageRating } from "../util/averageRating";
 
 const styles = (theme) => ({
     searchBox: {
@@ -273,11 +274,57 @@ const LandingPage = (props) => {
         handleClickFilters();
     };
 
+    const sortListingDesc = (list) => {
+        // sort high low
+        // console.log(list);
+
+        const compare = (a, b) => {
+            const averageA = getAverageRating(a.reviews);
+            const averageB = getAverageRating(b.reviews);
+            if (averageA > averageB) {
+                return -1;
+            } else if (averageA < averageB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        };
+        list.sort(compare);
+    };
+
+    const sortListingAsc = (list) => {
+        // sort high low
+        // console.log(list);
+
+        const compare = (a, b) => {
+            const averageA = getAverageRating(a.reviews);
+            const averageB = getAverageRating(b.reviews);
+            if (averageA < averageB) {
+                return -1;
+            } else if (averageA > averageB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        };
+        list.sort(compare);
+    };
+
     const handleApplySort = (e) => {
         const newSort = e.target.value;
         if (newSort === "Most Relevant") {
+            const newL = [...listings];
+            const newBookedL = [...bookedListings];
+            sortListings(newL);
+            setListings(newL);
+            sortListings(newBookedL);
+            setListings(newL);
         } else if (newSort === "Rating DESC") {
+            sortListingDesc(listings);
+            sortListingDesc(bookedListings);
         } else if (newSort === "Rating ASC") {
+            sortListingAsc(listings);
+            sortListingAsc(bookedListings);
         }
         setSort(e.target.value);
     };
@@ -355,20 +402,20 @@ const LandingPage = (props) => {
 
                 <FormControl sx={{ ml: 1, maxWidth: 170 }} size="small">
                     <Select
-                        sx={{ maxWidth: 170 }}
+                        sx={{ maxWidth: 160 }}
                         labelId="demo-select-small"
                         id="demo-select-small"
                         value={sort}
                         onChange={handleApplySort}
                     >
                         <MenuItem value={"Most Relevant"}>
-                            Most Relevant
+                            Most relevant
                         </MenuItem>
                         <MenuItem value={"Rating DESC"}>
-                            Rating - Highest to Lowest
+                            Rating (Highest - Lowest)
                         </MenuItem>
                         <MenuItem value={"Rating ASC"}>
-                            Rating - Lowest to Highest
+                            Rating (Lowest - Highest)
                         </MenuItem>
                     </Select>
                 </FormControl>

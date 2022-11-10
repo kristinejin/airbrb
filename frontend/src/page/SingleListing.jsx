@@ -60,6 +60,7 @@ const SingleListing = () => {
     React.useEffect(() => {
         listingInfo()
             .then((data) => {
+                console.log(data.listing);
                 setListing(data.listing);
                 setMaxSteps(data.listing.metadata.images.length + 1);
                 setImages([
@@ -73,6 +74,10 @@ const SingleListing = () => {
                 alert(data);
             });
     }, []);
+
+    React.useEffect(() => {
+        getAllBookings();
+    }, [isBooked]);
 
     const returnStars = () => {
         let totalStars = 0;
@@ -145,19 +150,17 @@ const SingleListing = () => {
     const getAllBookings = async () => {
         const resp = await apiCall("bookings", "GET");
         const bookings = resp.bookings;
+
         bookings.forEach((b) => {
             if (
                 b.owner === localStorage.getItem("email") &&
-                b.listingId === parseInt(listingId)
+                parseInt(b.listingId) === parseInt(listingId)
             ) {
                 setIsBooked(true);
                 setBookingStatus(b.status);
             }
         });
     };
-    React.useEffect(() => {
-        getAllBookings();
-    }, []);
 
     const ShowBookingStatus = () => {
         if (!localStorage.getItem("token")) {

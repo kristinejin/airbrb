@@ -16,6 +16,7 @@ import CribIcon from "@mui/icons-material/Crib";
 import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroomNormal";
 import { useNavigate } from "react-router-dom";
 import Video from "./Video";
+import { getAverageRating } from "../util/averageRating";
 
 const HostedListingCard = (props) => {
     const listing = props.listing;
@@ -81,7 +82,7 @@ const HostedListingCard = (props) => {
                     >
                         <Typography>{listing.metadata.propertyType}</Typography>
                         <Typography>
-                            5.8
+                            {getAverageRating(listing.reviews)}
                             <StarIcon style={{ verticalAlign: "middle" }} />
                         </Typography>
                     </Box>
