@@ -149,7 +149,6 @@ const HostedListings = (props) => {
 		return <>Loading...</>
 	}
 	const setCreateOpen = () => {
-		console.log("aaaaa");
 		setCreate(true);
 	}
 	const setCreateClose = () => {

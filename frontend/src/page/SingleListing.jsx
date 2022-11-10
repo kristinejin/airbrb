@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import SideMenu from "../component/SideMenu";
 import ReviewModal from "../component/ReviewModal";
 import CustomDatePicker from "../component/DatePicker";
+import Youtube from "../component/YouTube";
 
 // TODO: improve on overall UI + mobile responsiveness
 
@@ -36,7 +37,6 @@ const clickable = {
 };
 
 const SingleListing = () => {
-    // console.log(dateRange)
     const listingId = useParams().listingId;
     const dateRange = useParams().dateRange;
     const theme = useTheme();
@@ -75,12 +75,12 @@ const SingleListing = () => {
     }, []);
 
     const returnStars = () => {
-      let totalStars = 0;
-      listing.reviews.forEach((review) => {
-        totalStars += review.stars;
-      })
-      return (totalStars/listing.reviews.length).toFixed(2);
-    }
+        let totalStars = 0;
+        listing.reviews.forEach((review) => {
+            totalStars += review.stars;
+        });
+        return (totalStars / listing.reviews.length).toFixed(2);
+    };
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -96,11 +96,10 @@ const SingleListing = () => {
     };
 
     const refreshListing = () => {
-      listingInfo()
-        .then((data) => {
-          setListing(data.listing);
-        })  
-    }
+        listingInfo().then((data) => {
+            setListing(data.listing);
+        });
+    };
 
     const addressStr = () => {
         return `${listing.address.street}, ${listing.address.city}, ${listing.address.country} ${listing.address.postcode}`;
@@ -146,7 +145,6 @@ const SingleListing = () => {
     const getAllBookings = async () => {
         const resp = await apiCall("bookings", "GET");
         const bookings = resp.bookings;
-        console.log(bookings);
         bookings.forEach((b) => {
             if (
                 b.owner === localStorage.getItem("email") &&
@@ -357,7 +355,13 @@ const SingleListing = () => {
 
             {/* Review Modal:  https://mui.com/joy-ui/react-modal/ */}
 
-            <ReviewModal open={openReview} setOpen={setOpenReview} refresh={refreshListing} listingId={listingId} listing={listing}></ReviewModal>
+            <ReviewModal
+                open={openReview}
+                setOpen={setOpenReview}
+                refresh={refreshListing}
+                listingId={listingId}
+                listing={listing}
+            ></ReviewModal>
 
             <Box
                 sx={{
@@ -397,18 +401,33 @@ const SingleListing = () => {
                 </Grid2>
 
                 <Box sx={{ maxWidth: 500, flexGrow: 1 }}>
-                    <Box
-                        component="img"
-                        sx={{
-                            height: 300,
-                            display: "block",
-                            maxWidth: 500,
-                            overflow: "hidden",
-                            width: "100%",
-                        }}
-                        src={images[activeStep]}
-                        alt="Listing Images"
-                    />
+                    {activeStep === 0 && listing.metadata.video ? (
+                        <Box
+                            sx={{
+                                height: 300,
+                                display: "block",
+                                maxWidth: 500,
+                                overflow: "hidden",
+                                width: "100%",
+                            }}
+                        >
+                            <Youtube code={listing.metadata.video} />
+                        </Box>
+                    ) : (
+                        <Box
+                            component="img"
+                            sx={{
+                                height: 300,
+                                display: "block",
+                                maxWidth: 500,
+                                overflow: "hidden",
+                                width: "100%",
+                            }}
+                            src={images[activeStep]}
+                            alt="Listing Images"
+                        />
+                    )}
+
                     <MobileStepper
                         steps={maxSteps}
                         position="static"

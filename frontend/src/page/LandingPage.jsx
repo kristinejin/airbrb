@@ -410,7 +410,13 @@ const LandingPage = (props) => {
                 <Typography component="h1" variant="h5">
                     All hosted listings
                 </Typography>
-                <Grid container rowSpacing={3} columnSpacing={3}>
+                <Grid
+                    container
+                    rowSpacing={3}
+                    columnSpacing={3}
+                    direction="row"
+                    alignItems="stretch"
+                >
                     {listings.map((data) => (
                         <Grid
                             item

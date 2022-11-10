@@ -10,6 +10,7 @@ import StarIcon from "@mui/icons-material/Star";
 import CribIcon from "@mui/icons-material/Crib";
 import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroomNormal";
 import { useNavigate } from "react-router-dom";
+import Video from "./Video";
 
 const AllListingCard = (props) => {
     const listing = props.listing;
@@ -34,11 +35,19 @@ const AllListingCard = (props) => {
                     title={listing.title}
                     titleTypographyProps={{ noWrap: true }}
                 />
-                <CardMedia
-                    component="img"
-                    image={listing.thumbnail}
-                    alt="Listing thumbnail"
-                />
+                {listing.metadata.video ? (
+                    <Video url={listing.metadata.video} />
+                ) : (
+                    <CardMedia
+                        component="img"
+                        image={listing.thumbnail}
+                        alt="Listing thumbnail"
+                        sx={{
+                            minHeight: "400",
+                        }}
+                    />
+                )}
+
                 <CardContent>
                     <Box
                         justifyContent="space-between"
