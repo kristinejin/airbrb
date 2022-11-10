@@ -24,6 +24,7 @@ import Sheet from "@mui/joy/Sheet";
 
 import { useNavigate } from "react-router-dom";
 import SideMenu from "../component/SideMenu";
+import ReviewModal from "../component/ReviewModal";
 import CustomDatePicker from "../component/DatePicker";
 import Youtube from "../component/YouTube";
 
@@ -74,6 +75,14 @@ const SingleListing = () => {
             });
     }, []);
 
+    const returnStars = () => {
+      let totalStars = 0;
+      listing.reviews.forEach((review) => {
+        totalStars += review.stars;
+      })
+      return (totalStars/listing.reviews.length).toFixed(2);
+    }
+
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
@@ -86,6 +95,13 @@ const SingleListing = () => {
         const info = await apiCall(`listings/${listingId}`, "GET");
         return info;
     };
+
+    const refreshListing = () => {
+      listingInfo()
+        .then((data) => {
+          setListing(data.listing);
+        })  
+    }
 
     const addressStr = () => {
         return `${listing.address.street}, ${listing.address.city}, ${listing.address.country} ${listing.address.postcode}`;
@@ -341,55 +357,8 @@ const SingleListing = () => {
             </Box>
 
             {/* Review Modal:  https://mui.com/joy-ui/react-modal/ */}
-            <React.Fragment>
-                <Modal
-                    aria-labelledby="modal-title"
-                    aria-describedby="modal-desc"
-                    open={openReview}
-                    onClose={() => setOpenReview(false)}
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    <Sheet
-                        variant="outlined"
-                        sx={{
-                            maxWidth: 500,
-                            borderRadius: "md",
-                            p: 3,
-                            boxShadow: "lg",
-                        }}
-                    >
-                        <ModalClose
-                            variant="outlined"
-                            sx={{
-                                top: "calc(-1/4 * var(--IconButton-size))",
-                                right: "calc(-1/4 * var(--IconButton-size))",
-                                boxShadow: "0 2px 12px 0 rgba(0 0 0 / 0.2)",
-                                borderRadius: "50%",
-                                bgcolor: "white",
-                            }}
-                        />
-                        <Typography
-                            component="h2"
-                            id="modal-title"
-                            level="h4"
-                            textColor="inherit"
-                            fontWeight="lg"
-                            mb={1}
-                        >
-                            This is the modal title
-                        </Typography>
-                        <Typography id="modal-desc" textColor="text.tertiary">
-                            Make sure to use <code>aria-labelledby</code> on the
-                            modal dialog with an optional{" "}
-                            <code>aria-describedby</code> attribute.
-                        </Typography>
-                    </Sheet>
-                </Modal>
-            </React.Fragment>
+
+            <ReviewModal open={openReview} setOpen={setOpenReview} refresh={refreshListing} listingId={listingId} listing={listing}></ReviewModal>
 
             <Box
                 sx={{
@@ -406,7 +375,7 @@ const SingleListing = () => {
                     <Grid2 sx={{ display: "flex" }}>
                         <GradeIcon fontSize="small" sx={{ pr: 0.4 }} />
                         {/* TODO: get average reviews */}
-                        <Typography>5.8</Typography>
+                        <Typography>{returnStars()}</Typography>
                     </Grid2>
                     <Grid2>
                         <Typography>|</Typography>
