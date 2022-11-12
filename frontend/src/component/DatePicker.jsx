@@ -10,14 +10,15 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const CustomDatePicker = ({
+    dateRange,
     handleOnChangeDateStart,
     handleOnChangeDateEnd,
     availability,
 }) => {
-    const [start, setStart] = React.useState(new Date());
-    const [end, setEnd] = React.useState(new Date());
+    console.log(dateRange);
+    const [start, setStart] = React.useState(dateRange.start);
+    const [end, setEnd] = React.useState(dateRange.end);
     const parseAvailability = () => {
-        // push all the available dates?
         const list = [];
         if (!availability) {
             return [];
