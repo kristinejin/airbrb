@@ -41,7 +41,8 @@ const ReviewModal = (props) => {
                 data.bookings.forEach((booking) => {
                     if (
                         booking.owner === localStorage.getItem("email") &&
-                        parseInt(booking.listingId) === parseInt(listingId)
+                        parseInt(booking.listingId) === parseInt(listingId) &&
+                        booking.status === "accepted"
                     ) {
                         bookingId = booking.id;
                     }
