@@ -8,27 +8,20 @@ import Box from "@mui/material/Box";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import GradeIcon from "@mui/icons-material/Grade";
 import Card from "@mui/material/Card";
-import { CardActions } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import CardContent from "@mui/material/CardContent";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import Collapse from "@mui/material/Collapse";
 import MobileStepper from "@mui/material/MobileStepper";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import * as dayjs from "dayjs";
-import Modal from "@mui/joy/Modal";
-import ModalClose from "@mui/joy/ModalClose";
-import Sheet from "@mui/joy/Sheet";
 
 import { useNavigate } from "react-router-dom";
 import SideMenu from "../component/SideMenu";
 import ReviewModal from "../component/ReviewModal";
 import CustomDatePicker from "../component/DatePicker";
 import Youtube from "../component/YouTube";
-
-// TODO: improve on overall UI + mobile responsiveness
 
 const clickable = {
     cursor: "pointer",
@@ -60,6 +53,7 @@ const SingleListing = () => {
     React.useEffect(() => {
         listingInfo()
             .then((data) => {
+                console.log(data.listing);
                 setListing(data.listing);
                 setMaxSteps(data.listing.metadata.images.length + 1);
                 setImages([
@@ -73,6 +67,10 @@ const SingleListing = () => {
                 alert(data);
             });
     }, []);
+
+    React.useEffect(() => {
+        getAllBookings();
+    }, [isBooked]);
 
     const returnStars = () => {
         let totalStars = 0;
@@ -145,19 +143,17 @@ const SingleListing = () => {
     const getAllBookings = async () => {
         const resp = await apiCall("bookings", "GET");
         const bookings = resp.bookings;
+
         bookings.forEach((b) => {
             if (
                 b.owner === localStorage.getItem("email") &&
-                b.listingId === parseInt(listingId)
+                parseInt(b.listingId) === parseInt(listingId)
             ) {
                 setIsBooked(true);
                 setBookingStatus(b.status);
             }
         });
     };
-    React.useEffect(() => {
-        getAllBookings();
-    }, []);
 
     const ShowBookingStatus = () => {
         if (!localStorage.getItem("token")) {
@@ -226,6 +222,7 @@ const SingleListing = () => {
                         >
                             <CustomDatePicker
                                 fullWidth
+                                dateRange={{ start: null, end: null }}
                                 handleOnChangeDateEnd={handleOnChangeDateEnd}
                                 handleOnChangeDateStart={
                                     handleOnChangeDateStart

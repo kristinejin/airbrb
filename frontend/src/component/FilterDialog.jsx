@@ -28,7 +28,11 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
 
     const handleCleanFilters = () => {
         setDateRange({ start: null, end: null });
-
+        setMinBedroom(null);
+        setMaxBedroom(null);
+        setDateRange({ start: null, end: null });
+        setMinPrice(priceInfo.min);
+        setMaxPrice(priceInfo.max);
         handleApply({ isClean: true });
     };
 

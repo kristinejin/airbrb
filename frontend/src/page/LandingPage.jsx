@@ -20,6 +20,7 @@ import { apiCall } from "../util/api";
 import Chip from "@mui/material/Chip";
 import FilterDialog from "../component/FilterDialog";
 import { getMinPrice, getMaxPrice } from "../util/priceData";
+import { getAverageRating } from "../util/averageRating";
 
 const styles = (theme) => ({
     searchBox: {
@@ -120,40 +121,16 @@ const LandingPage = (props) => {
         });
     };
 
-    const pushListings = async (data) => {
-        let AllListingsPromises = [];
-        let allListingsIds = [];
-        data.forEach((listing) => {
-            AllListingsPromises.push(apiCall(`listings/${listing.id}`, "GET"));
-            allListingsIds.push(listing.id);
-        });
-        const responses = await Promise.all(AllListingsPromises);
-        let allListings = [];
-        let i = 0;
-        responses.forEach((listing) => {
-            if (listing.listing.published) {
-                listing.listing.id = allListingsIds[i];
-                allListings.push(listing.listing);
-            }
-            i += 1;
-        });
-
-        sortListings(allListings);
-        putBookedListingsFirst(allListings);
-    };
-
     const searchAction = async () => {
-        const resp = await apiCall("listings", "GET");
-        const listings = resp.listings;
         const wordsList = searchStr.toLowerCase().split(" ");
-
-        const filteredListings = listings.filter((l) => {
+        const newL = [...listings, ...bookedListings];
+        const filteredListings = newL.filter((l) => {
             return (
                 wordsList.some((w) => l.title.toLowerCase().includes(w)) ||
                 wordsList.some((w) => l.address.city.toLowerCase().includes(w))
             );
         });
-        pushListings(filteredListings);
+        putBookedListingsFirst(filteredListings);
     };
 
     const handleSearchStrUpdate = (e) => {
@@ -162,15 +139,6 @@ const LandingPage = (props) => {
 
     const handleClickFilters = () => {
         setShowFileters(showFilters ? false : true);
-    };
-
-    const addIdToListing = (listings, ids) => {
-        const listingList = [];
-        for (const [i, l] of listings.entries()) {
-            l.listing.id = ids[i];
-            listingList.push(l.listing);
-        }
-        return listingList;
     };
 
     const filterNumBedrooms = (min, max, listingData) => {
@@ -195,12 +163,15 @@ const LandingPage = (props) => {
     };
 
     const filterDate = (dateRange, listingData) => {
+        console.log("hey");
+        console.log(listingData);
         const filteredListings = listingData.filter((l) => {
             const avai = l.availability;
             return avai.some((a) => checkDates(a, dateRange));
         });
 
-        setDateRange(dateRange.start.diff(dateRange.end, "day"));
+        const dateDiff = dateRange.start.diff(dateRange.end, "day") === 0;
+        setDateRange(dateDiff ? 1 : dateDiff);
         setAppliedDate(true);
         return filteredListings;
     };
@@ -220,65 +191,81 @@ const LandingPage = (props) => {
             return null;
         }
 
-        const resp = await apiCall("listings", "GET");
-        const promises = [];
-        const ids = [];
-        const getListingDets = async (id) => {
-            const listing = await apiCall(`listings/${id}`, "GET");
-            return listing;
-        };
-        resp.listings.forEach((l) => {
-            promises.push(getListingDets(l.id));
-            ids.push(l.id);
-        });
-
-        const listingData = await Promise.all(promises);
-        const finalListingInfo = addIdToListing(listingData, ids);
+        const newL = [...listings, ...bookedListings];
 
         // setListings(finalListingInfo);
-        let filteredListings = null;
-        let applied = false;
+        let filteredListings = newL;
         if (bedroom.isFilter) {
             filteredListings = filterNumBedrooms(
                 bedroom.min,
                 bedroom.max,
-                finalListingInfo
+                filteredListings
             );
-            applied = true;
         }
 
         if (date.isFilter) {
             // apply num bed filters
-            filteredListings = filterDate(
-                date.dateRange,
-                filteredListings ? filteredListings : finalListingInfo
-            );
-            applied = true;
+            filteredListings = filterDate(date.dateRange, filteredListings);
         }
         if (price.isFilter) {
             filteredListings = filterPrice(
                 price.min,
                 price.max,
-                filteredListings ? filteredListings : finalListingInfo
+                filteredListings
             );
-            applied = true;
         }
 
-        if (applied) {
-            setBookedListings([]);
-        }
-
-        sortListings(filteredListings);
-        setListings(filteredListings);
+        putBookedListingsFirst(filteredListings);
         handleClickFilters();
+    };
+
+    const sortListingDesc = (list) => {
+        // sort high low
+        // console.log(list);
+
+        const compare = (a, b) => {
+            const averageA = getAverageRating(a.reviews);
+            const averageB = getAverageRating(b.reviews);
+            if (averageA > averageB) {
+                return -1;
+            } else if (averageA < averageB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        };
+        list.sort(compare);
+    };
+
+    const sortListingAsc = (list) => {
+        // sort high low
+        // console.log(list);
+
+        const compare = (a, b) => {
+            const averageA = getAverageRating(a.reviews);
+            const averageB = getAverageRating(b.reviews);
+            if (averageA < averageB) {
+                return -1;
+            } else if (averageA > averageB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        };
+        list.sort(compare);
     };
 
     const handleApplySort = (e) => {
         const newSort = e.target.value;
+        const newL = [...listings, ...bookedListings];
         if (newSort === "Most Relevant") {
+            sortListings(newL);
         } else if (newSort === "Rating DESC") {
+            sortListingDesc(newL);
         } else if (newSort === "Rating ASC") {
+            sortListingAsc(newL);
         }
+        putBookedListingsFirst(newL);
         setSort(e.target.value);
     };
 
@@ -306,7 +293,9 @@ const LandingPage = (props) => {
                     }}
                     component="h1"
                     variant="h4"
-                    onClick={() => nav("/")}
+                    onClick={() => {
+                        getListings();
+                    }}
                 >
                     airbrb
                 </Typography>
@@ -347,28 +336,22 @@ const LandingPage = (props) => {
                     priceInfo={priceRange}
                 />
 
-                {/* 
-                    2. Review Ratings
-                        - Sort from height - lowerest and vice versa
-                        - Order don't matter for the same rated listings
-                */}
-
                 <FormControl sx={{ ml: 1, maxWidth: 170 }} size="small">
                     <Select
-                        sx={{ maxWidth: 170 }}
+                        sx={{ maxWidth: 160 }}
                         labelId="demo-select-small"
                         id="demo-select-small"
                         value={sort}
                         onChange={handleApplySort}
                     >
                         <MenuItem value={"Most Relevant"}>
-                            Most Relevant
+                            Most relevant
                         </MenuItem>
                         <MenuItem value={"Rating DESC"}>
-                            Rating - Highest to Lowest
+                            Rating (Highest - Lowest)
                         </MenuItem>
                         <MenuItem value={"Rating ASC"}>
-                            Rating - Lowest to Highest
+                            Rating (Lowest - Highest)
                         </MenuItem>
                     </Select>
                 </FormControl>
