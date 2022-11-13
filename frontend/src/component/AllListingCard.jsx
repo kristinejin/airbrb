@@ -6,8 +6,11 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import { CardActionArea } from "@mui/material";
+import Button from "@mui/material/Button";
+import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import CribIcon from "@mui/icons-material/Crib";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroomNormal";
 import { useNavigate } from "react-router-dom";
 import Video from "./Video";
@@ -55,10 +58,15 @@ const AllListingCard = (props) => {
                         display="flex"
                     >
                         <Typography>{listing.metadata.propertyType}</Typography>
-                        <Typography>
-                            {getAverageRating(listing.reviews)}
-                            <StarIcon style={{ verticalAlign: "middle" }} />
-                        </Typography>
+                        <Button sx={{position: 'relative', left: '9px'}}>
+                          <Rating
+                              size="small"
+                              value={getAverageRating(listing.reviews)}
+                              precision={0.5}
+                              readOnly
+                          />
+                          <KeyboardArrowDown sx={{fill: 'gray'}}/>
+                        </Button>
                     </Box>
                     <Box
                         justifyContent="space-between"

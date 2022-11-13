@@ -275,7 +275,7 @@ const HostedListings = (props) => {
 				</Box>
 			</Box>
 
-			<Box sx={{width: '100%', height: '100%', padding: '40px'}}>
+			<Box sx={{width: '100%', height: '100%'}}>
 				<Plot
         	data={[
 						{

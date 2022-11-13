@@ -15,6 +15,8 @@ import AlertTitle from "@mui/material/AlertTitle";
 import MobileStepper from "@mui/material/MobileStepper";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import Rating from "@mui/material/Rating";
 import * as dayjs from "dayjs";
 
 import { useNavigate } from "react-router-dom";
@@ -73,11 +75,14 @@ const SingleListing = () => {
     }, [isBooked]);
 
     const returnStars = () => {
-        let totalStars = 0;
-        listing.reviews.forEach((review) => {
-            totalStars += review.stars;
-        });
-        return (totalStars / listing.reviews.length).toFixed(2);
+      if (listing.reviews.length === 0) {
+        return 0;
+      }
+      let totalStars = 0;
+      listing.reviews.forEach((review) => {
+          totalStars += review.stars;
+      });
+      return (totalStars / listing.reviews.length).toFixed(2);
     };
 
     const handleNext = () => {
@@ -131,7 +136,7 @@ const SingleListing = () => {
         const request = await apiCall(`bookings/new/${listingId}`, "POST", {
             dateRange: {
                 startdate: bookedDates.start,
-                enddate: bookedDates.end,
+                enddate: bookedDates.enddate,
             },
             totalPrice: total,
         });
@@ -373,9 +378,15 @@ const SingleListing = () => {
                 <Typography variant="h2">{listing.title}</Typography>
                 <Grid2 container spacing={1}>
                     <Grid2 sx={{ display: "flex" }}>
-                        <GradeIcon fontSize="small" sx={{ pr: 0.4 }} />
-                        {/* TODO: get average reviews */}
-                        <Typography>{returnStars()}</Typography>
+                        <Button sx={{position: 'relative', bottom: '5px', left: '5px'}}>
+                          <Rating
+                            size="small"
+                            value={returnStars()}
+                            precision={0.5}
+                            readOnly
+                          />
+                          <KeyboardArrowDown sx={{fill: 'gray'}}/>
+                        </Button>
                     </Grid2>
                     <Grid2>
                         <Typography>|</Typography>
@@ -386,7 +397,7 @@ const SingleListing = () => {
                             onClick={handleOpenReview}
                             style={clickable}
                         >
-                            {listing.reviews.length} reviews
+                            View all {listing.reviews.length} reviews
                         </Typography>
                     </Grid2>
                     <Grid2>

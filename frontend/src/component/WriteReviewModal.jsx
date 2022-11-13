@@ -90,7 +90,6 @@ const WriteReviewModal = (props) => {
                         onChange={(event, newValue) => {
                             setRatingValue(newValue);
                         }}
-                        precision={0.5}
                     />
                 </Box>
 
