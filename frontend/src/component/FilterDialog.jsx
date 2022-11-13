@@ -5,7 +5,6 @@ import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
 import Button from "@mui/material/Button";
 import Slider from "@mui/material/Slider";
-import Typography from "@mui/material/Typography";
 import Grid2 from "@mui/material/Unstable_Grid2";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
