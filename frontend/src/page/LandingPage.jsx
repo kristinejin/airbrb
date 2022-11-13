@@ -162,8 +162,6 @@ const LandingPage = (props) => {
     };
 
     const filterDate = (dateRange, listingData) => {
-        console.log("hey");
-        console.log(listingData);
         const filteredListings = listingData.filter((l) => {
             const avai = l.availability;
             return avai.some((a) => checkDates(a, dateRange));

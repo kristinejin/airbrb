@@ -193,7 +193,11 @@ const HostedListings = (props) => {
     const { classes } = props;
     return (
         <Box>
-            <UploadListing open={upload} handleClose={setUpload} />
+            <UploadListing
+                open={upload}
+                handleClose={setUpload}
+                handleCreate={callCreateListing}
+            />
             <Box
                 sx={{ border: "1px solid rgb(230, 230, 230)", padding: "30px" }}
                 justifyContent="space-between"
