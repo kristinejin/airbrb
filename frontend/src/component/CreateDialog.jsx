@@ -21,6 +21,7 @@ import { Box } from "@mui/system";
 
 import { fileToDataUrl } from "../util/fileToUrl";
 import EditImageList from "./HostedListingImageList.jsx";
+import { defaultThumbnail } from "../util/defaultThumbnail";
 
 const imageStyle = {
     width: "20vw",
@@ -30,10 +31,9 @@ const imageStyle = {
 const CreateDialog = ({ callCreateListing, listingInfo }) => {
     const [title, setTitle] = useState(listingInfo ? listingInfo.title : "");
     const [price, setPrice] = useState(listingInfo ? listingInfo.price : "");
-    const defaultThumbnail =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
-    const [thumbnail, setThumbnail] = useState(defaultThumbnail);
-
+    const [thumbnail, setThumbnail] = useState(
+        listingInfo ? listingInfo.thumbnail : defaultThumbnail
+    );
     const [street, setStreet] = useState(
         listingInfo ? listingInfo.address.street : ""
     );
@@ -518,6 +518,16 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
 
                 {isVideo ? (
                     <Grid2 xs={12}>
+                        <TextField
+                            size="small"
+                            variant="standard"
+                            label="Video URL"
+                            value={videoURL}
+                            onChange={(e) => setVideoURL(e.target.value)}
+                        />
+                    </Grid2>
+                ) : (
+                    <Grid2 xs={12}>
                         <input
                             type="file"
                             accept="image/*"
@@ -530,16 +540,6 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
                                 Upload Image
                             </Button>
                         </label>
-                    </Grid2>
-                ) : (
-                    <Grid2 xs={12}>
-                        <TextField
-                            size="small"
-                            variant="standard"
-                            label="Video URL"
-                            value={videoURL}
-                            onChange={(e) => setVideoURL(e.target.value)}
-                        />
                     </Grid2>
                 )}
                 <ListingEditImagesTitle />

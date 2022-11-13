@@ -6,7 +6,6 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import TuneIcon from "@mui/icons-material/Tune";
 
@@ -163,8 +162,6 @@ const LandingPage = (props) => {
     };
 
     const filterDate = (dateRange, listingData) => {
-        console.log("hey");
-        console.log(listingData);
         const filteredListings = listingData.filter((l) => {
             const avai = l.availability;
             return avai.some((a) => checkDates(a, dateRange));
