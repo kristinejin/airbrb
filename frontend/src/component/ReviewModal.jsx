@@ -30,9 +30,25 @@ const ReviewModal = (props) => {
     const listingInfo = props.listing;
     const listingId = props.listingId;
     const refresh = props.refresh;
+    const stars = props.stars;
     const [childOpen, setChildOpen] = React.useState(false);
     const [bookingId, setBookingId] = React.useState(null);
-    const [reviews, setReviews] = React.useState(listingInfo.reviews);
+    const [reviews, setReviews] = React.useState('');
+    const setAllReviews = () => {
+
+      console.log(stars);
+      if (stars === "all") {
+          setReviews(listingInfo.reviews);
+      } else {
+        let reviewsToShow = [];
+        listingInfo.reviews.forEach((review) => {
+          if (review.stars === stars) {
+            reviewsToShow.push(review);
+          }
+        })
+        setReviews(reviewsToShow);
+      }
+    }
 
     const handleOpenWrite = () => {
         apiCall("bookings", "GET")
@@ -64,15 +80,30 @@ const ReviewModal = (props) => {
     const isoToDate = (isoString) => {
         const newDate = new Date(isoString);
         const dateArr = newDate.toString().split(" ");
-        const dateString =
-            "(" + dateArr[1] + " " + dateArr[2] + ") " + dateArr[3];
+        const dateString = "(" + dateArr[1] + " " + dateArr[2] + ") " + dateArr[3];
         return dateString;
     };
+
+    React.useEffect(() => {
+      setAllReviews();
+    }, [])
+
+    if (!reviews) {
+      return <>Loading...</>
+    }
 
     return (
         <Dialog
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              setOpen(false);
+            }}
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+            }}
             fullWidth
             maxWidth="sm"
         >

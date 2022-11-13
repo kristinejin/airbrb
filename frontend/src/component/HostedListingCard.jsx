@@ -112,7 +112,7 @@ const HostedListingCard = (props) => {
                           />
                           <KeyboardArrowDown sx={{fill: 'gray'}}/>
                         </Button>
-                        <AdvancedRatingPopup anchorEl={anchorEl} openPopover={openPopover} closePopover={closePopover}/>
+                        <AdvancedRatingPopup anchorEl={anchorEl} openPopover={openPopover} closePopover={closePopover} listing={listing}/>
                     </Box>
                     <Box
                         justifyContent="space-between"

@@ -363,7 +363,8 @@ const SingleListing = () => {
                 refresh={refreshListing}
                 listingId={listingId}
                 listing={listing}
-            ></ReviewModal>
+                stars={"all"}
+            />
 
             <Box
                 sx={{
