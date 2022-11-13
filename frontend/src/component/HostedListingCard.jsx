@@ -17,6 +17,7 @@ import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroom
 import { useNavigate } from "react-router-dom";
 import Video from "./Video";
 import { getAverageRating } from "../util/averageRating";
+import AspectRatio from "@mui/joy/AspectRatio";
 
 const HostedListingCard = (props) => {
     const listing = props.listing;
@@ -64,14 +65,16 @@ const HostedListingCard = (props) => {
                 {listing.metadata.video ? (
                     <Video url={listing.metadata.video} />
                 ) : (
-                    <CardMedia
-                        component="img"
-                        image={listing.thumbnail}
-                        alt="Listing thumbnail"
-                        sx={{
-                            minHeight: "400",
-                        }}
-                    />
+                    <AspectRatio>
+                        <CardMedia
+                            component="img"
+                            image={listing.thumbnail}
+                            alt="Listing thumbnail"
+                            sx={{
+                                minHeight: "400",
+                            }}
+                        />
+                    </AspectRatio>
                 )}
 
                 <CardContent>
