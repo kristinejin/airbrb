@@ -76,24 +76,25 @@ const BookingHistory = (props) => {
 
   const calcTotalProfit = () => {
     let totalProfit = 0;
-
     pastBookings.forEach((pastBooking) => {
       if (pastBooking.status === "accepted") {
-        totalProfit += pastBooking.totalPrice - listingInfo.price;
+        totalProfit += pastBooking.totalPrice;
       }
     });
-    
-    
     return totalProfit;
   }
+
   const calcTotalDaysBooked = () => {
     let totalDaysBooked = 0;
-//    pastBookings.forEach((pastBooking) => {
-//      if (pastBooking.status === "accepted") {
-
-//      }
-//    });
-    return 5;
+    pastBookings.forEach((pastBooking) => {
+      if (pastBooking.status === "accepted") {
+        const startDate = new Date(pastBooking.dateRange.startdate);
+        const endDate = new Date(pastBooking.dateRange.enddate);
+        const daysBooked = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
+        totalDaysBooked += daysBooked;
+      }
+    });
+    return totalDaysBooked;
   }
 
   const totalDaysOnline = () => {
