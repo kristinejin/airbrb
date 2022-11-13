@@ -133,16 +133,30 @@ const SingleListing = () => {
         setBookedDates(newBooked);
     };
 
+    const getAdjustedDate = (current) => {
+        let adjusted = new Date(current);
+        adjusted = new Date(
+            adjusted.getTime() - adjusted.getTimezoneOffset() * 60000
+        );
+        adjusted = adjusted.toISOString();
+        adjusted = adjusted.slice(0, -1);
+        return adjusted;
+    };
+
     const handleBook = async () => {
         const start = dayjs(bookedDates.start);
         const end = dayjs(bookedDates.end);
         const duration =
             end.diff(start, "day") > 0 ? end.diff(start, "day") : 1;
         const total = duration * parseInt(listing.price);
+
+        const correctStart = getAdjustedDate(start.toISOString());
+        const correctEnd = getAdjustedDate(end.toISOString());
+
         const request = await apiCall(`bookings/new/${listingId}`, "POST", {
             dateRange: {
-                startdate: bookedDates.start,
-                enddate: bookedDates.enddate,
+                startdate: correctStart,
+                enddate: correctEnd,
             },
             totalPrice: total,
         });

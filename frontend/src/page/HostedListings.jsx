@@ -7,15 +7,8 @@ import Grid from '@mui/material/Grid';
 
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteIcon from '@mui/icons-material/Delete';
-import StarIcon from '@mui/icons-material/Star';
-import CribIcon from '@mui/icons-material/Crib';
-import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
 import HomeIcon from '@mui/icons-material/Home';
 import { withStyles } from '@mui/styles';
-import { styled } from '@mui/material/styles';
-import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Plot from 'react-plotly.js';
@@ -23,7 +16,6 @@ import Plot from 'react-plotly.js';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import CloseIcon from '@mui/icons-material/Close';
@@ -31,12 +23,13 @@ import Toolbar from '@mui/material/Toolbar';
 
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
-
-import HostedListingCard from '../component/HostedListingCard';
-import SideMenu from '../component/SideMenu';
-import CreateDialog from '../component/CreateDialog';
+import HostedListingCard from "../component/HostedListingCard";
+import SideMenu from "../component/SideMenu";
+import CreateDialog from "../component/CreateDialog";
+import UploadListing from "../component/UploadListing";
 
 import { apiCall } from '../util/api';
+
 // import FullScreenDialog from './ListingCreate';
 
 const styles = theme => ({
@@ -50,8 +43,8 @@ const HostedListings = (props) => {
 	const user_email = localStorage.getItem("email");
 	const [listings, setListings] = React.useState('');
 	const [create, setCreate] = React.useState(false);
-	
 	const [open, setOpen] = React.useState(false);
+  const [upload, setUpload] = React.useState(false);
 	const [publishId, setPublishId] = React.useState(null);
 	let correctDate = new Date();
 	correctDate = new Date(correctDate.getTime() - correctDate.getTimezoneOffset()*60000);
@@ -72,7 +65,6 @@ const HostedListings = (props) => {
 		for (let i = 1; i <= 30; i++) {
 			x.push(i);
 		}
-
 		setXAxis(x);
 
 		const data = await apiCall('bookings', 'GET');
@@ -84,7 +76,6 @@ const HostedListings = (props) => {
 		}); 
 
 		let y = [];
-
 		x.forEach((day) => {
 			let currDay = new Date();
 			let totalProfit = 0;
@@ -95,14 +86,12 @@ const HostedListings = (props) => {
 				const listingPrice = bookedListing.price;
 				const startDate = new Date(booking.dateRange.startdate);
 				const endDate = new Date(booking.dateRange.enddate);
-
 				if (currDay <= endDate && currDay >= startDate) {
 					totalProfit += parseInt(listingPrice, 10);
 				}
 			})
 			y.push(totalProfit);
 		})
-
 		setYAxis(y);
 	}
 
@@ -151,7 +140,6 @@ const HostedListings = (props) => {
 		setAvailability(currentAvailabilities);
 	}
 
-
 	const getListings = () => {
 		apiCall('listings', 'GET')
 			.then((data) => {
@@ -187,6 +175,8 @@ const HostedListings = (props) => {
 			)
 		});
 	}
+
+	/*
 
 	/*
 		Publish / Unpublish Listings
@@ -265,6 +255,12 @@ const HostedListings = (props) => {
 	const {classes} = props;
 	return (
 		<Box sx={{width: '100%', height: '100%'}}>
+      <UploadListing
+        open={upload}
+        handleClose={setUpload}
+        handleCreate={callCreateListing}
+      />
+
 			<Box sx={{border: '1px solid rgb(230, 230, 230)', padding: '30px'}} justifyContent="space-between" alignItems="center" display="flex">
 				<Box sx={{flex: '1'}} >
 					<Button sx={{fontSize: "20px"}} onClick={() => {window.location.href="/"}}><HomeIcon sx={{height:"30px", width:"30px", verticalAlign:"middle"}}/>Go Home</Button>
@@ -275,7 +271,8 @@ const HostedListings = (props) => {
 				</Box>
 			</Box>
 
-			<Box sx={{width: '100%', height: '100%'}}>
+
+			<Box sx={{width: '100%', height: '100%', padding: '40px'}}>
 				<Plot
         	data={[
 						{
@@ -291,8 +288,25 @@ const HostedListings = (props) => {
 					style={{width:'100%', height:'100%'}}
 				/>
 			</Box>
+
+      <Box
+        sx={{
+            padding: "30px 40px 0 40px",
+            // display: "flex",
+            // flexDirection: "column",
+            // alignItems: "flex-start",
+        }}
+      >
+        <Button onClick={() => setCreate(true)}>
+          Create New Listing
+        </Button>
+        <Button onClick={() => setUpload(true)}>
+          Upload New Listing
+        </Button>
+      </Box>
+
+
 			<Box sx={{padding: '40px'}}>
-				<Button onClick={setCreateOpen}>Create New Listing</Button>
 				<Grid container rowSpacing={3} columnSpacing={3}>
 					{listings.map((data) => (
 						<Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={data.id}>

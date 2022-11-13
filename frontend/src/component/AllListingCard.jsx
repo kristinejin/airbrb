@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import Video from "./Video";
 import AdvancedRatingPopup from "../component/AdvancedRatingPopup";
 import { getAverageRating } from "../util/averageRating";
+import AspectRatio from "@mui/joy/AspectRatio";
 const AllListingCard = (props) => {
     const listing = props.listing;
     const dateRange = props.dateRange;
@@ -54,16 +55,20 @@ const AllListingCard = (props) => {
                     titleTypographyProps={{ noWrap: true }}
                 />
                 {listing.metadata.video ? (
-                    <Video url={listing.metadata.video} />
+                    <AspectRatio>
+                        <Video url={listing.metadata.video} />
+                    </AspectRatio>
                 ) : (
-                    <CardMedia
-                        component="img"
-                        image={listing.thumbnail}
-                        alt="Listing thumbnail"
-                        sx={{
-                            minHeight: "400",
-                        }}
-                    />
+                    <AspectRatio>
+                        <CardMedia
+                            component="img"
+                            image={listing.thumbnail}
+                            alt="Listing thumbnail"
+                            sx={{
+                                minHeight: "400",
+                            }}
+                        />
+                    </AspectRatio>
                 )}
 
                 <CardContent>
