@@ -14,10 +14,25 @@ import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroomNormal";
 import { useNavigate } from "react-router-dom";
 import Video from "./Video";
+import AdvancedRatingPopup from "../component/AdvancedRatingPopup";
 import { getAverageRating } from "../util/averageRating";
 const AllListingCard = (props) => {
     const listing = props.listing;
     const dateRange = props.dateRange;
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const openPopover = (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      setAnchorEl(anchorEl ? null : event.currentTarget);
+    }
+    const closePopover = (event) => {
+      if (event !== undefined) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      setAnchorEl(null);
+    }
+
     const nav = useNavigate();
 
     const handleSelect = () => {
@@ -58,7 +73,10 @@ const AllListingCard = (props) => {
                         display="flex"
                     >
                         <Typography>{listing.metadata.propertyType}</Typography>
-                        <Button sx={{position: 'relative', left: '9px'}}>
+                        <Button sx={{position: 'relative', left: '9px'}}
+                            onClick={openPopover}
+                            onMouseEnter={openPopover}
+                        >
                           <Rating
                               size="small"
                               value={getAverageRating(listing.reviews)}
@@ -67,6 +85,7 @@ const AllListingCard = (props) => {
                           />
                           <KeyboardArrowDown sx={{fill: 'gray'}}/>
                         </Button>
+                        <AdvancedRatingPopup anchorEl={anchorEl} openPopover={openPopover} closePopover={closePopover} listing={listing}/>
                     </Box>
                     <Box
                         justifyContent="space-between"

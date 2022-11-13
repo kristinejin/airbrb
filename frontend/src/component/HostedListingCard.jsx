@@ -35,8 +35,10 @@ const HostedListingCard = (props) => {
     }
 
     const closePopover = (event) => {
-      event.stopPropagation();
-      event.preventDefault();
+      if (event !== undefined) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
       setAnchorEl(null);
     }
 
