@@ -15,6 +15,10 @@ import AlertTitle from "@mui/material/AlertTitle";
 import MobileStepper from "@mui/material/MobileStepper";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
+import AdvancedRatingPopup from "../component/AdvancedRatingPopup";
+import { getAverageRating } from "../util/averageRating";
+import Rating from "@mui/material/Rating";
 import * as dayjs from "dayjs";
 
 import { useNavigate } from "react-router-dom";
@@ -49,11 +53,12 @@ const SingleListing = () => {
     const [activeStep, setActiveStep] = React.useState(0);
     const [bookingSuccess, setBookingSuccess] = React.useState(false);
     const [newBid, setNewBid] = React.useState(0);
+    const [allReviews, setAllReviews] = React.useState('');
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
     React.useEffect(() => {
         listingInfo()
             .then((data) => {
-                console.log(data.listing);
                 setListing(data.listing);
                 setMaxSteps(data.listing.metadata.images.length + 1);
                 setImages([
@@ -61,6 +66,7 @@ const SingleListing = () => {
                     ...data.listing.metadata.images,
                 ]);
                 setIsLoaded(true);
+                setAllReviews(data.listing.reviews);
             })
             .catch((data) => {
                 setIsLoaded(false);
@@ -71,14 +77,6 @@ const SingleListing = () => {
     React.useEffect(() => {
         getAllBookings();
     }, [isBooked]);
-
-    const returnStars = () => {
-        let totalStars = 0;
-        listing.reviews.forEach((review) => {
-            totalStars += review.stars;
-        });
-        return (totalStars / listing.reviews.length).toFixed(2);
-    };
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -106,6 +104,19 @@ const SingleListing = () => {
     const handleOpenReview = () => {
         setOpenReview(true);
     };
+
+    const openPopover = (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      setAnchorEl(anchorEl ? null : event.currentTarget);
+    }
+    const closePopover = (event) => {
+      if (event !== undefined) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      setAnchorEl(null);
+    }
 
     // For booking
     const handleOnChangeDateStart = (date) => {
@@ -372,7 +383,8 @@ const SingleListing = () => {
                 refresh={refreshListing}
                 listingId={listingId}
                 listing={listing}
-            ></ReviewModal>
+                reviewsToShow={allReviews}
+            />
 
             <Box
                 sx={{
@@ -387,9 +399,19 @@ const SingleListing = () => {
                 <Typography variant="h2">{listing.title}</Typography>
                 <Grid2 container spacing={1}>
                     <Grid2 sx={{ display: "flex" }}>
-                        <GradeIcon fontSize="small" sx={{ pr: 0.4 }} />
-                        {/* TODO: get average reviews */}
-                        <Typography>{returnStars()}</Typography>
+                        <Button sx={{position: 'relative', bottom: '5px', left: '5px'}}
+                          onClick={openPopover}
+                          onMouseEnter={openPopover}
+                        >
+                          <Rating
+                            size="small"
+                            value={getAverageRating(listing.reviews)}
+                            precision={0.5}
+                            readOnly
+                          />
+                          <KeyboardArrowDown sx={{fill: 'gray'}}/>
+                        </Button>
+                        <AdvancedRatingPopup anchorEl={anchorEl} openPopover={openPopover} closePopover={closePopover} listing={listing}/>
                     </Grid2>
                     <Grid2>
                         <Typography>|</Typography>
@@ -400,7 +422,7 @@ const SingleListing = () => {
                             onClick={handleOpenReview}
                             style={clickable}
                         >
-                            {listing.reviews.length} reviews
+                            View all {listing.reviews.length} reviews
                         </Typography>
                     </Grid2>
                     <Grid2>

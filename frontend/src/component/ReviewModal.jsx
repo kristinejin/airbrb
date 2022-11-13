@@ -23,49 +23,65 @@ const ReviewModal = (props) => {
     const listingInfo = props.listing;
     const listingId = props.listingId;
     const refresh = props.refresh;
+    const reviewsToShow = props.reviewsToShow;
     const [childOpen, setChildOpen] = React.useState(false);
     const [bookingId, setBookingId] = React.useState(null);
-    const [reviews, setReviews] = React.useState(listingInfo.reviews);
+    const [reviews, setReviews] = React.useState('');
+
+    if (reviews !== reviewsToShow) {
+      setReviews(reviewsToShow);
+    }
 
     const handleOpenWrite = () => {
-        apiCall("bookings", "GET")
-            .then((data) => {
-                let bookingId = null;
-                data.bookings.forEach((booking) => {
-                    if (
-                        booking.owner === localStorage.getItem("email") &&
-                        parseInt(booking.listingId) === parseInt(listingId) &&
-                        booking.status === "accepted"
-                    ) {
-                        bookingId = booking.id;
-                    }
-                });
-                return bookingId;
-            })
-            .then((data) => {
-                if (data !== null) {
-                    setBookingId(data);
-                    setChildOpen(true);
-                } else {
-                    alert(
-                        "You do not have an accepted booking for this listing"
-                    );
-                }
-            });
+      apiCall("bookings", "GET")
+        .then((data) => {
+          let bookingId = null;
+          data.bookings.forEach((booking) => {
+            if (
+              booking.owner === localStorage.getItem("email") &&
+              parseInt(booking.listingId) === parseInt(listingId) &&
+              booking.status === "accepted"
+            ) {
+              bookingId = booking.id;
+            }
+          });
+          return bookingId;
+        })
+        .then((data) => {
+          if (data !== null) {
+            setBookingId(data);
+            setChildOpen(true);
+          } else {
+            alert(
+              "You do not have an accepted booking for this listing"
+            );
+          }
+        });
     };
 
     const isoToDate = (isoString) => {
-        const newDate = new Date(isoString);
-        const dateArr = newDate.toString().split(" ");
-        const dateString =
-            "(" + dateArr[1] + " " + dateArr[2] + ") " + dateArr[3];
-        return dateString;
+      const newDate = new Date(isoString);
+      const dateArr = newDate.toString().split(" ");
+      const dateString = "(" + dateArr[1] + " " + dateArr[2] + ") " + dateArr[3];
+      return dateString;
     };
+
+    if (!reviews) {
+      return <>Loading...</>
+    }
 
     return (
         <Dialog
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+              setOpen(false);
+            }}
+            onClick={(event) => {
+              event.stopPropagation();
+              event.preventDefault();
+            }}
             fullWidth
             maxWidth="sm"
         >
@@ -80,7 +96,7 @@ const ReviewModal = (props) => {
                         />
                         {getAverageRating(reviews)} | {reviews.length} reviews
                     </Typography>
-                    <Button onClick={handleOpenWrite}>Write review</Button>
+                    {refresh !== null && <Button onClick={handleOpenWrite}>Write review</Button>}
                 </Box>
             </DialogTitle>
             <DialogContent>

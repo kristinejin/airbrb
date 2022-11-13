@@ -6,16 +6,34 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import { CardActionArea } from "@mui/material";
+import Button from "@mui/material/Button";
+import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import CribIcon from "@mui/icons-material/Crib";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroomNormal";
 import { useNavigate } from "react-router-dom";
 import Video from "./Video";
+import AdvancedRatingPopup from "../component/AdvancedRatingPopup";
 import { getAverageRating } from "../util/averageRating";
 import AspectRatio from "@mui/joy/AspectRatio";
 const AllListingCard = (props) => {
     const listing = props.listing;
     const dateRange = props.dateRange;
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const openPopover = (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      setAnchorEl(anchorEl ? null : event.currentTarget);
+    }
+    const closePopover = (event) => {
+      if (event !== undefined) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      setAnchorEl(null);
+    }
+
     const nav = useNavigate();
 
     const handleSelect = () => {
@@ -60,10 +78,19 @@ const AllListingCard = (props) => {
                         display="flex"
                     >
                         <Typography>{listing.metadata.propertyType}</Typography>
-                        <Typography>
-                            {getAverageRating(listing.reviews)}
-                            <StarIcon style={{ verticalAlign: "middle" }} />
-                        </Typography>
+                        <Button sx={{position: 'relative', left: '9px'}}
+                            onClick={openPopover}
+                            onMouseEnter={openPopover}
+                        >
+                          <Rating
+                              size="small"
+                              value={getAverageRating(listing.reviews)}
+                              precision={0.5}
+                              readOnly
+                          />
+                          <KeyboardArrowDown sx={{fill: 'gray'}}/>
+                        </Button>
+                        <AdvancedRatingPopup anchorEl={anchorEl} openPopover={openPopover} closePopover={closePopover} listing={listing}/>
                     </Box>
                     <Box
                         justifyContent="space-between"
