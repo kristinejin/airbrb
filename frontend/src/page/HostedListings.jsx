@@ -18,6 +18,7 @@ import { styled } from '@mui/material/styles';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Plot from 'react-plotly.js';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -52,7 +53,59 @@ const HostedListings = (props) => {
 	
 	const [open, setOpen] = React.useState(false);
 	const [publishId, setPublishId] = React.useState(null);
-	const [availability, setAvailability] = React.useState([{"start": new Date(), "end": new Date()}]);
+	let correctDate = new Date();
+	correctDate = new Date(correctDate.getTime() - correctDate.getTimezoneOffset()*60000);
+	correctDate = correctDate.toISOString()
+	correctDate = correctDate.slice(0,-1);
+	const [availability, setAvailability] = React.useState([{"start": correctDate, "end": correctDate}]);
+
+	const [xAxis, setXAxis] = React.useState('');
+	const [yAxis, setYAxis] = React.useState('');
+
+	const createGraph = async (allListings) => {
+		let allListingIds = [];
+		allListings.forEach((listing) => {
+			allListingIds.push(listing.id);
+		}); 
+
+		let x = [];
+		for (let i = 1; i <= 30; i++) {
+			x.push(i);
+		}
+
+		setXAxis(x);
+
+		const data = await apiCall('bookings', 'GET');
+		let bookings = [];
+		data.bookings.forEach((booking) => {
+			if (booking.status === "accepted" && allListingIds.includes(parseInt(booking.listingId, 10))) {
+				bookings.push(booking);
+			}
+		}); 
+
+		let y = [];
+
+		x.forEach((day) => {
+			let currDay = new Date();
+			let totalProfit = 0;
+			currDay.setDate(currDay.getDate() - 30 + day);
+			bookings.forEach((booking) => {
+				const idIndex = allListingIds.indexOf(parseInt(booking.listingId, 10));
+				const bookedListing = allListings[idIndex];
+				const listingPrice = bookedListing.price;
+				const startDate = new Date(booking.dateRange.startdate);
+				const endDate = new Date(booking.dateRange.enddate);
+
+				if (currDay <= endDate && currDay >= startDate) {
+					totalProfit += parseInt(listingPrice, 10);
+				}
+			})
+			y.push(totalProfit);
+		})
+
+		setYAxis(y);
+	}
+
 	const handleOpen = (pId) => {
 		setOpen(true);
 		setPublishId(pId);
@@ -60,23 +113,39 @@ const HostedListings = (props) => {
 	const handleClose = () => {
 		setOpen(false); 
 		setPublishId(null);
-		setAvailability([{"start": new Date(), "end": new Date()}]);
+		let correctDate = new Date();
+		correctDate = new Date(correctDate.getTime() - correctDate.getTimezoneOffset()*60000);
+		correctDate = correctDate.toISOString()
+		correctDate = correctDate.slice(0,-1);
+		setAvailability([{"start": correctDate, "end": correctDate}]);
 	}
 
 	const handleOnChangeDateStart = (index, newDate) => {
 		const currentAvailabilities = [...availability];
-		currentAvailabilities[index].start = newDate;
+		let correctDate = newDate.$d;
+		correctDate = new Date(correctDate.getTime() - correctDate.getTimezoneOffset()*60000);
+		correctDate = correctDate.toISOString()
+		correctDate = correctDate.slice(0,-1);
+		currentAvailabilities[index].start = correctDate;
 		setAvailability(currentAvailabilities);
 	}
 
 	const handleOnChangeDateEnd = (index, newDate) => {
 		const currentAvailabilities = [...availability];
-		currentAvailabilities[index].end = newDate;
+		let correctDate = newDate.$d;
+		correctDate = new Date(correctDate.getTime() - correctDate.getTimezoneOffset()*60000);
+		correctDate = correctDate.toISOString()
+		correctDate = correctDate.slice(0,-1);
+		currentAvailabilities[index].end = correctDate;
 		setAvailability(currentAvailabilities);
 	}
 
 	const addAvailability = () => {
-		const newAvailabilityObj = {"start": new Date(), "end": new Date()};
+		let correctDate = new Date();
+		correctDate = new Date(correctDate.getTime() - correctDate.getTimezoneOffset()*60000);
+		correctDate = correctDate.toISOString()
+		correctDate = correctDate.slice(0,-1);
+		const newAvailabilityObj = {"start": correctDate, "end": correctDate};
 		const currentAvailabilities = [...availability];
 		currentAvailabilities.push(newAvailabilityObj);
 		setAvailability(currentAvailabilities);
@@ -104,7 +173,9 @@ const HostedListings = (props) => {
 						i += 1;
 					});
 
-					setListings(hostedListings);
+					createGraph(hostedListings).then(() => {
+						setListings(hostedListings);
+					})
 					})
 				});
 	};
@@ -141,13 +212,6 @@ const HostedListings = (props) => {
 		});
 	}
 
-	React.useEffect(() => {
-			getListings();
-	}, [])
-
-	if (!listings) {
-		return <>Loading...</>
-	}
 	const setCreateOpen = () => {
 		setCreate(true);
 	}
@@ -160,6 +224,14 @@ const HostedListings = (props) => {
 				setCreateClose();
 				getListings();
 			})
+	}
+
+	React.useEffect(() => {
+		getListings();
+	}, [])
+
+	if (!listings || !xAxis || !yAxis) {
+		return <>Loading...</>
 	}
 
 	if (create) {
@@ -192,7 +264,7 @@ const HostedListings = (props) => {
 
 	const {classes} = props;
 	return (
-		<Box>
+		<Box sx={{width: '100%', height: '100%'}}>
 			<Box sx={{border: '1px solid rgb(230, 230, 230)', padding: '30px'}} justifyContent="space-between" alignItems="center" display="flex">
 				<Box sx={{flex: '1'}} >
 					<Button sx={{fontSize: "20px"}} onClick={() => {window.location.href="/"}}><HomeIcon sx={{height:"30px", width:"30px", verticalAlign:"middle"}}/>Go Home</Button>
@@ -201,6 +273,23 @@ const HostedListings = (props) => {
 				<Box sx={{flex: '1'}}>
 					<SideMenu/>
 				</Box>
+			</Box>
+
+			<Box sx={{width: '100%', height: '100%', padding: '40px'}}>
+				<Plot
+        	data={[
+						{
+							x: xAxis,
+							y: yAxis,
+							type: 'bar',
+							mode: 'lines+markers',
+							marker: {color: 'red'},
+						},
+					]}
+					layout={ {autosize: true, title: 'Your listing profits'} }
+					useResizeHandler={true}
+					style={{width:'100%', height:'100%'}}
+				/>
 			</Box>
 			<Box sx={{padding: '40px'}}>
 				<Button onClick={setCreateOpen}>Create New Listing</Button>
