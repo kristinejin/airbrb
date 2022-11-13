@@ -7,7 +7,7 @@
         "postcode": 2020,
         "country": "Australia"
     },
-    "propertyType": "House/Apartment/Single Room/Other",
+    "propertyType": "House",
     "price": 200,
     "bathrooms": 2,
     "amenities": "example amenities",
