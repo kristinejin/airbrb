@@ -131,7 +131,7 @@ const SingleListing = () => {
         const request = await apiCall(`bookings/new/${listingId}`, "POST", {
             dateRange: {
                 startdate: bookedDates.start,
-                enddate: bookedDates.enddate,
+                enddate: bookedDates.end,
             },
             totalPrice: total,
         });
