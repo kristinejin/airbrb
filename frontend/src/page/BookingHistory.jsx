@@ -76,8 +76,11 @@ const BookingHistory = (props) => {
 
   const calcTotalProfit = () => {
     let totalProfit = 0;
+    let lastYear = new Date();
+    lastYear.setFullYear(lastYear.getFullYear() - 1);
     pastBookings.forEach((pastBooking) => {
-      if (pastBooking.status === "accepted") {
+      const startDate = new Date(pastBooking.dateRange.startdate);
+      if (pastBooking.status === "accepted" && startDate >= lastYear) {
         totalProfit += pastBooking.totalPrice;
       }
     });
@@ -86,15 +89,21 @@ const BookingHistory = (props) => {
 
   const calcTotalDaysBooked = () => {
     let totalDaysBooked = 0;
+    let lastYear = new Date();
+    lastYear.setFullYear(lastYear.getFullYear() - 1);
     pastBookings.forEach((pastBooking) => {
-      if (pastBooking.status === "accepted") {
-        const startDate = new Date(pastBooking.dateRange.startdate);
+      const startDate = new Date(pastBooking.dateRange.startdate);
+      if (pastBooking.status === "accepted" && startDate >= lastYear) {
         const endDate = new Date(pastBooking.dateRange.enddate);
         const daysBooked = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
         totalDaysBooked += daysBooked;
       }
     });
     return totalDaysBooked;
+  }
+
+  const turnIntoDate = (isoString) => {
+    return isoString.replace(/T.*/,'').split('-').reverse().join('-');
   }
 
   const totalDaysOnline = () => {
@@ -246,9 +255,9 @@ const BookingHistory = (props) => {
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>Requester</TableCell>
-                          <TableCell align="right">Start Date</TableCell>
-                          <TableCell align="right">End Date</TableCell>
+                          <TableCell sx={{ display: { sm: "none", md: "table-cell" } }}>Requester</TableCell>
+                          <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="right">Start Date</TableCell>
+                          <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="right">End Date</TableCell>
                           <TableCell align="right">Price</TableCell>
                           <TableCell align="right">Status</TableCell>
                         </TableRow>
@@ -257,11 +266,11 @@ const BookingHistory = (props) => {
                         {pastBookings.slice(pastBookingPage * rowsPerPastBookingPage, pastBookingPage * rowsPerPastBookingPage + rowsPerPastBookingPage)
                         .map((row) => (
                           <TableRow key={row.id}>
-                            <TableCell component="th" scope="row">
+                            <TableCell sx={{ display: { sm: "none", md: "table-cell" } }} component="th" scope="row">
                               {row.owner}
                             </TableCell>
-                            <TableCell align="right">{row.dateRange.start}</TableCell>
-                            <TableCell align="right">{row.dateRange.start}</TableCell>
+                            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="right">{turnIntoDate(row.dateRange.startdate)}</TableCell>
+                            <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="right">{turnIntoDate(row.dateRange.enddate)}</TableCell>
                             <TableCell align="right">{row.totalPrice}</TableCell>
                             <TableCell align="right">{row.status}</TableCell>
                           </TableRow>
@@ -296,9 +305,9 @@ const BookingHistory = (props) => {
           <Table aria-label="bookingTable">
             <TableHead>
               <TableRow> 
-                <TableCell>Requester</TableCell>
-                <TableCell align="right">Start Date</TableCell>
-                <TableCell align="right">End Date</TableCell>
+                <TableCell sx={{ display: { sm: "none", md: "table-cell" } }}>Requester</TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="right">Start Date</TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="right">End Date</TableCell>
                 <TableCell align="right">Price</TableCell>
                 <TableCell align="right">Accept/Deny</TableCell>
               </TableRow>
@@ -307,11 +316,11 @@ const BookingHistory = (props) => {
               {bookings.slice(bookingPage * rowsPerBookingPage, bookingPage * rowsPerBookingPage + rowsPerBookingPage)
               .map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell component="th" scope="row">
+                  <TableCell sx={{ display: { sm: "none", md: "table-cell" } }} component="th" scope="row">
                     {row.owner}
                   </TableCell>
-                  <TableCell align="right">{row.dateRange.start}</TableCell>
-                  <TableCell align="right">{row.dateRange.start}</TableCell>
+                  <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="right">{turnIntoDate(row.dateRange.startdate)}</TableCell>
+                  <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }} align="right">{turnIntoDate(row.dateRange.enddate)}</TableCell>
                   <TableCell align="right">{row.totalPrice}</TableCell>
                   <TableCell align="right">
                     <Button color="success" onClick={() => handleBookingStatus(row.id, "accept")}>
