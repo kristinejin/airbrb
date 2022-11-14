@@ -38,9 +38,9 @@ const ImageListElement = ({ image, i, removeImage }) => {
 }
 
 ImageListElement.propTypes = {
-  image: PropTypes.image,
-  i: PropTypes.i,
-  removeImage: PropTypes.removeImage
+  image: PropTypes.string,
+  i: PropTypes.number,
+  removeImage: PropTypes.func
 };
 
 export default ImageListElement;

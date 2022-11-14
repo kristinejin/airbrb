@@ -103,7 +103,7 @@ const ReviewModal = (props) => {
       <DialogContent>
         <List>
           {reviews.map((data, index) => (
-            <ListItem key={index} divider='true'>
+            <ListItem key={index} divider={true}>
               <Box sx={{ width: '100%' }}>
                 <ListItemText
                   primary={
@@ -146,11 +146,11 @@ const ReviewModal = (props) => {
 };
 
 ReviewModal.propTypes = {
-  open: PropTypes.open,
-  setOpen: PropTypes.setOpen,
-  listingId: PropTypes.listingId,
-  refresh: PropTypes.refresh,
-  reviewsToShow: PropTypes.reviewsToShow
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
+  listingId: PropTypes.number,
+  refresh: PropTypes.func,
+  reviewsToShow: PropTypes.array
 };
 
 export default ReviewModal;

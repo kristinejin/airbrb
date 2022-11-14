@@ -42,6 +42,6 @@ export const ErrorPopup = ({ errMsg, setMsg }) => {
 };
 
 ErrorPopup.propTypes = {
-  errMsg: PropTypes.images,
-  setMsg: PropTypes.saveImage
+  errMsg: PropTypes.string,
+  setMsg: PropTypes.func
 };

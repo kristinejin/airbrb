@@ -13,8 +13,8 @@ const Login = (props) => {
   const [userPassword, setUserPassword] = React.useState('');
   const signIn = (email, password) => {
     apiCall('user/auth/login', 'POST', {
-      email: email,
-      password: password,
+      email,
+      password,
     }).then((data) => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('email', email);

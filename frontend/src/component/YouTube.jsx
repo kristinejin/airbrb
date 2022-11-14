@@ -30,7 +30,7 @@ const Youtube = ({ code }) => {
 };
 
 Youtube.propTypes = {
-  code: PropTypes.code
+  code: PropTypes.string
 };
 
 export default Youtube;

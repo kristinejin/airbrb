@@ -190,9 +190,9 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
 };
 
 UploadListing.propTypes = {
-  open: PropTypes.open,
-  handleClose: PropTypes.handleClose,
-  handleCreate: PropTypes.handleCreate
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  handleCreate: PropTypes.func
 };
 
 export default UploadListing;

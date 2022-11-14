@@ -195,10 +195,10 @@ const HostedListingCard = (props) => {
 };
 
 HostedListingCard.propTypes = {
-  listing: PropTypes.images,
-  deleteListing: PropTypes.saveImage,
-  unPublishListing: PropTypes.removeImage,
-  handleOpen: PropTypes.removeImage
+  listing: PropTypes.object,
+  deleteListing: PropTypes.func,
+  unPublishListing: PropTypes.func,
+  handleOpen: PropTypes.func
 };
 
 export default HostedListingCard;

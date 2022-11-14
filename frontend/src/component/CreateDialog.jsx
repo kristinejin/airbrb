@@ -159,24 +159,24 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
       totalBeds += parseInt(room.numBeds);
     });
     const data = {
-      title: title,
+      title,
       address: {
-        street: street,
-        city: city,
-        state: state,
-        postcode: postcode,
-        country: country,
+        street,
+        city,
+        state,
+        postcode,
+        country,
       },
-      price: price,
-      thumbnail: thumbnail,
+      price,
+      thumbnail,
       metadata: {
         propertyType: type,
         numBaths: bathrooms,
-        numBedrooms: numBedrooms,
+        numBedrooms,
         numBeds: totalBeds,
-        amenities: amenities,
+        amenities,
         bedrooms: roomList,
-        images: images,
+        images,
         video: videoURL,
       },
     };
@@ -555,8 +555,8 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
 };
 
 CreateDialog.propTypes = {
-  callCreateListing: PropTypes.callCreateListing,
-  listingInfo: PropTypes.listingInfo
+  callCreateListing: PropTypes.func,
+  listingInfo: PropTypes.object
 };
 
 export default CreateDialog;

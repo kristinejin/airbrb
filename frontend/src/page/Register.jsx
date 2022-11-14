@@ -21,8 +21,8 @@ const Register = () => {
 
   const doRegister = () => {
     const body = {
-      email: email,
-      password: password,
+      email,
+      password,
       name: username,
     };
 

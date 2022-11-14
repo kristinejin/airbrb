@@ -4,7 +4,7 @@ export const apiCall = (route, method, body) => {
   const userToken = localStorage.getItem('token');
   return new Promise((resolve, reject) => {
     fetch(`http://localhost:${config.BACKEND_PORT}/${route}`, {
-      method: method,
+      method,
       headers: {
         'Content-Type': 'application/json',
         Authorization: userToken

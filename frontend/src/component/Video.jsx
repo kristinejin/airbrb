@@ -18,7 +18,7 @@ const Video = ({ url }) => {
 };
 
 Video.propTypes = {
-  url: PropTypes.url
+  url: PropTypes.string
 };
 
 export default Video;

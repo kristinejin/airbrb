@@ -215,9 +215,9 @@ const AdvancedRatingPopup = (props) => {
 };
 
 AdvancedRatingPopup.propTypes = {
-  anchorEl: PropTypes.anchorEl,
-  closePopover: PropTypes.closePopover,
-  listing: PropTypes.listing,
+  anchorEl: PropTypes.object,
+  closePopover: PropTypes.func,
+  listing: PropTypes.object,
 };
 
 export default AdvancedRatingPopup;

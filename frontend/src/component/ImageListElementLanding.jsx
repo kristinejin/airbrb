@@ -22,8 +22,8 @@ const ImageListElement = ({ image, i }) => {
 }
 
 ImageListElement.propTypes = {
-  image: PropTypes.open,
-  i: PropTypes.setOpen
+  image: PropTypes.string,
+  i: PropTypes.number
 };
 
 export default ImageListElement;

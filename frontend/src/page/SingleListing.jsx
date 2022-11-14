@@ -51,7 +51,7 @@ const SingleListing = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [bookingSuccess, setBookingSuccess] = React.useState(false);
   const [newBid, setNewBid] = React.useState(0);
-  const [allReviews, setAllReviews] = React.useState('');
+  const [allReviews, setAllReviews] = React.useState([]);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   React.useEffect(() => {
@@ -379,7 +379,7 @@ const SingleListing = () => {
         open={openReview}
         setOpen={setOpenReview}
         refresh={refreshListing}
-        listingId={listingId}
+        listingId={parseInt(listingId)}
         listing={listing}
         reviewsToShow={allReviews}
       />
@@ -403,7 +403,7 @@ const SingleListing = () => {
             >
               <Rating
               size='small'
-              value={getAverageRating(listing.reviews)}
+              value={parseFloat(getAverageRating(listing.reviews), 10)}
               precision={0.5}
               readOnly
               />

@@ -83,7 +83,7 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
       price.max = parseInt(maxPrice);
     }
 
-    handleApply({ bedroom: bedroom, date: date, price: price });
+    handleApply({ bedroom, date, price });
   };
   const minDistance = 10;
   const handlePriceChange = (e, newValue, activeThumb) => {
@@ -177,10 +177,10 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
 };
 
 FilterDialog.propTypes = {
-  handleClick: PropTypes.images,
-  open: PropTypes.saveImage,
-  handleApply: PropTypes.removeImage,
-  priceInfo: PropTypes.removeImage
+  handleClick: PropTypes.func,
+  open: PropTypes.bool,
+  handleApply: PropTypes.func,
+  priceInfo: PropTypes.object
 };
 
 export default FilterDialog;

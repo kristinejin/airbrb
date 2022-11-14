@@ -30,10 +30,10 @@ const WriteReviewModal = (props) => {
     const email = localStorage.getItem('email');
     const postedOn = new Date().toISOString();
     const newReview = {
-      email: email,
+      email,
       message: textValue,
       stars: ratingValue,
-      postedOn: postedOn,
+      postedOn,
     };
 
     apiCall(`listings/${listingId}/review/${bookingId}`, 'PUT', {
@@ -92,13 +92,13 @@ const WriteReviewModal = (props) => {
 };
 
 WriteReviewModal.propTypes = {
-  open: PropTypes.open,
-  setOpen: PropTypes.setOpen,
-  reviews: PropTypes.reviews,
-  setReviews: PropTypes.setReviews,
-  bookingId: PropTypes.bookingId,
-  listingId: PropTypes.listingId,
-  refresh: PropTypes.refresh
+  open: PropTypes.bool,
+  setOpen: PropTypes.func,
+  reviews: PropTypes.array,
+  setReviews: PropTypes.func,
+  bookingId: PropTypes.string,
+  listingId: PropTypes.number,
+  refresh: PropTypes.func
 };
 
 export default WriteReviewModal;

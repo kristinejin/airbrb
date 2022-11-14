@@ -22,12 +22,12 @@ const CustomDatePicker = ({
       return [];
     }
     availability.forEach((a) => {
-      let start = new Date(a.start);
+      const start = new Date(a.start);
       const end = new Date(a.end);
-      while (start <= end) {
+      while (start <= end) { // eslint-disable-line no-unmodified-loop-condition
         const date = new Date(start);
         list.push(date.toISOString().split('T')[0]);
-        start = date.getDate() + 1;
+        start.setDate(date.getDate() + 1);
       }
     });
     return list;
@@ -95,10 +95,10 @@ const CustomDatePicker = ({
 };
 
 CustomDatePicker.propTypes = {
-  dateRange: PropTypes.images,
-  handleOnChangeDateStart: PropTypes.saveImage,
-  handleOnChangeDateEnd: PropTypes.removeImage,
-  availability: PropTypes.removeImage
+  dateRange: PropTypes.object,
+  handleOnChangeDateStart: PropTypes.func,
+  handleOnChangeDateEnd: PropTypes.func,
+  availability: PropTypes.array
 };
 
 export default CustomDatePicker;

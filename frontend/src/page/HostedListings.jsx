@@ -183,7 +183,7 @@ const HostedListings = (props) => {
   */
 
   const publishListing = (listingId) => {
-    const allAvailability = { availability: availability };
+    const allAvailability = { availability };
     apiCall(`listings/publish/${listingId}`, 'PUT', allAvailability).then(_ => {
       const currentListing = [...listings];
       const getIndex = currentListing.findIndex(obj => obj.id === listingId);
@@ -280,7 +280,7 @@ const HostedListings = (props) => {
           ]}
           layout={{ autosize: true, title: 'Your listing profits' }}
           useResizeHandler={true}
-          sx={{ width: '100%', height: '100%' }}
+          style={{ width: '100%', height: '100%' }}
         />
       </Box>
 

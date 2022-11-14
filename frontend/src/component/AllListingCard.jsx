@@ -89,7 +89,7 @@ const AllListingCard = (props) => {
             >
               <Rating
                 size='small'
-                value={getAverageRating(listing.reviews)}
+                value={parseFloat(getAverageRating(listing.reviews), 10)}
                 precision={0.5}
                 readOnly
               />
@@ -152,8 +152,8 @@ const AllListingCard = (props) => {
 };
 
 AllListingCard.propTypes = {
-  dateRange: PropTypes.dateRange,
-  listing: PropTypes.listing
+  dateRange: PropTypes.bool,
+  listing: PropTypes.object
 };
 
 export default AllListingCard;

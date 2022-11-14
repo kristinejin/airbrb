@@ -29,9 +29,9 @@ const EditImageList = ({ images, saveImage, removeImage }) => {
 }
 
 EditImageList.propTypes = {
-  images: PropTypes.images,
-  saveImage: PropTypes.saveImage,
-  removeImage: PropTypes.removeImage
+  images: PropTypes.array,
+  saveImage: PropTypes.func,
+  removeImage: PropTypes.func
 };
 
 export default EditImageList;
