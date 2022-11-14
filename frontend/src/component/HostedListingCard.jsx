@@ -13,7 +13,6 @@ import Rating from "@mui/material/Rating";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import StarIcon from "@mui/icons-material/Star";
 import CribIcon from "@mui/icons-material/Crib";
 import AirlineSeatLegroomNormalIcon from "@mui/icons-material/AirlineSeatLegroomNormal";
 import { useNavigate } from "react-router-dom";
