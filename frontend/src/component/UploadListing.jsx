@@ -1,17 +1,17 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
-import CloseIcon from "@mui/icons-material/Close";
-import React from "react";
-import { parseJsonFile, validateJsonFile } from "../util/jsonFileReader";
-import { listingSchema, addressSchema, bedroomSchema } from "../util/schema";
-import { defaultThumbnail } from "../util/defaultThumbnail";
-import { ErrorPopup } from "./ErrorPopup";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close';
+import React from 'react';
+import { parseJsonFile, validateJsonFile } from '../util/jsonFileReader';
+import { listingSchema, addressSchema, bedroomSchema } from '../util/schema';
+import { defaultThumbnail } from '../util/defaultThumbnail';
+import { ErrorPopup } from './ErrorPopup';
 
 const UploadListing = ({ open, handleClose, handleCreate }) => {
     const [file, setFile] = React.useState(false);
@@ -27,7 +27,7 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
             console.log(isValid.errorMsg);
             return {
                 error: true,
-                msg: "Missing required fields",
+                msg: 'Missing required fields',
             };
         }
         // validate each fields
@@ -37,7 +37,7 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
             console.log(isValidAddress.errorMsg);
             return {
                 error: true,
-                msg: "Invalid address",
+                msg: 'Invalid address',
             };
         }
         // bedrooms
@@ -47,7 +47,7 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
                 console.log(isValidBedroom.errorMsg);
                 return {
                     error: true,
-                    msg: "Invalid bedroom information",
+                    msg: 'Invalid bedroom information',
                 };
             }
         });
@@ -68,7 +68,7 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
             // );
             return {
                 error: true,
-                msg: "Video url not provided when thumbnail type is video",
+                msg: 'Video url not provided when thumbnail type is video',
             };
         }
         return { error: false };
@@ -76,7 +76,7 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
 
     const uploadFile = async () => {
         if (!file) {
-            alert("Please provide a listing data file.");
+            alert('Please provide a listing data file.');
             // setErrMsg("Please provide a listing data file.");
             return;
         }
@@ -151,18 +151,18 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
                 <DialogContent>
                     <Box
                         sx={{
-                            display: "flex",
-                            flexDirection: "column",
+                            display: 'flex',
+                            flexDirection: 'column',
                             gap: 2,
                         }}
                     >
-                        <Box sx={{ display: "flex", gap: 1 }}>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
                             <Typography>Sample JSON listing file: </Typography>
                             <a href="sample.json" download>
                                 Sample.json
                             </a>
                         </Box>
-                        <Box sx={{ display: "flex", gap: 1 }}>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
                             <Typography>Upload a new listing:</Typography>
                             <input type="file" onChange={updateFile} />
                         </Box>

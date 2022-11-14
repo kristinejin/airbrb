@@ -1,13 +1,12 @@
-import React from "react";
-import { useState } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Grid2 from "@mui/material/Unstable_Grid2";
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Grid2 from '@mui/material/Unstable_Grid2';
 
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const CustomDatePicker = ({
     dateRange,
@@ -28,7 +27,7 @@ const CustomDatePicker = ({
             const end = new Date(a.end);
             while (start <= end) {
                 const date = new Date(start);
-                list.push(date.toISOString().split("T")[0]);
+                list.push(date.toISOString().split('T')[0]);
                 start.setDate(date.getDate() + 1);
             }
         });
@@ -38,7 +37,7 @@ const CustomDatePicker = ({
     const avaiList = parseAvailability();
 
     const getDisabledDates = (date) => {
-        const ISODate = date.toISOString().split("T")[0];
+        const ISODate = date.toISOString().split('T')[0];
         if (!availability) {
             return false;
         }
@@ -53,9 +52,9 @@ const CustomDatePicker = ({
         <Grid2
             fullWidth
             sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
             }}
         >
             <LocalizationProvider dateAdapter={AdapterDayjs}>

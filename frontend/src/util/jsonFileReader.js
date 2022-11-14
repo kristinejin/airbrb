@@ -1,4 +1,4 @@
-import Ajv from "ajv"
+import Ajv from 'ajv';
 export const parseJsonFile = async (file) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -6,16 +6,15 @@ export const parseJsonFile = async (file) => {
         reader.onerror = (e) => reject(e);
         reader.readAsText(file);
     });
-}
+};
 
 export const validateJsonFile = (schema, data) => {
-    
     const ajv = new Ajv();
     const validate = ajv.compile(schema);
-    const valid = validate(data)
+    const valid = validate(data);
     if (!valid) {
-        return {isError: true, errorMsg: validate.errors}
+        return { isError: true, errorMsg: validate.errors };
     }
 
-    return {isError: false}
-}
+    return { isError: false };
+};

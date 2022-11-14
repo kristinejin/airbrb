@@ -1,24 +1,24 @@
-import React from "react";
+import React from 'react';
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
-import DehazeIcon from "@mui/icons-material/Dehaze";
+import DehazeIcon from '@mui/icons-material/Dehaze';
 
-import { apiCall } from "../util/api";
+import { apiCall } from '../util/api';
 
-import { withStyles } from "@mui/styles";
+import { withStyles } from '@mui/styles';
 
 const styles = (theme) => ({
     sideMenu: {
-        float: "right",
+        float: 'right',
     },
 });
 
 const SideMenu = (props) => {
-    const user_email = localStorage.getItem("email");
+    const user_email = localStorage.getItem('email');
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -30,16 +30,16 @@ const SideMenu = (props) => {
     };
 
     const handleLogout = () => {
-        apiCall("user/auth/logout", "POST").then((_) => {
+        apiCall('user/auth/logout', 'POST').then((_) => {
             handleClose();
             localStorage.clear();
-            window.location.href = "/";
+            window.location.href = '/';
         });
     };
 
     const handleViewListings = () => {
         handleClose();
-        window.location.href = "/hostedlistings";
+        window.location.href = '/hostedlistings';
     };
 
     const { classes } = props;
@@ -50,9 +50,9 @@ const SideMenu = (props) => {
                     id="sideButton"
                     className={classes.sideMenu}
                     onClick={handleClick}
-                    aria-controls={open ? "sideMenu" : undefined}
+                    aria-controls={open ? 'sideMenu' : undefined}
                     aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
+                    aria-expanded={open ? 'true' : undefined}
                 >
                     <DehazeIcon />
                 </Button>
@@ -61,7 +61,7 @@ const SideMenu = (props) => {
                     anchorEl={anchorEl}
                     open={open}
                     MenuListProps={{
-                        "aria-labelledby": "sideButton",
+                        'aria-labelledby': 'sideButton',
                     }}
                     onClose={handleClose}
                 >
@@ -76,17 +76,17 @@ const SideMenu = (props) => {
         return (
             <Box>
                 <Button
-                    sx={{ float: "right" }}
+                    sx={{ float: 'right' }}
                     onClick={() => {
-                        window.location.href = "/register";
+                        window.location.href = '/register';
                     }}
                 >
                     Register
                 </Button>
                 <Button
-                    sx={{ float: "right" }}
+                    sx={{ float: 'right' }}
                     onClick={() => {
-                        window.location.href = "/login";
+                        window.location.href = '/login';
                     }}
                 >
                     Sign in

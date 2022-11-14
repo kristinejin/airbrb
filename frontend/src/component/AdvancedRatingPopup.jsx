@@ -1,13 +1,13 @@
-import Typography from "@mui/material/Typography";
+import Typography from '@mui/material/Typography';
 
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { makeStyles, withStyles } from "@mui/styles";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { makeStyles, withStyles } from '@mui/styles';
 
-import ReviewModal from "../component/ReviewModal";
-import LinearProgress from "@mui/material/LinearProgress";
+import ReviewModal from '../component/ReviewModal';
+import LinearProgress from '@mui/material/LinearProgress';
 
-import React from "react";
+import React from 'react';
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,
@@ -21,7 +21,7 @@ const AdvancedRatingPopup = (props) => {
             borderRadius: 3,
         },
         bar: {
-            backgroundColor: "orange !important",
+            backgroundColor: 'orange !important',
         },
     }))(LinearProgress);
 
@@ -31,7 +31,7 @@ const AdvancedRatingPopup = (props) => {
     const listing = props.listing;
 
     const [openReview, setOpenReview] = React.useState(false);
-    const [currReviews, setCurrReviews] = React.useState("");
+    const [currReviews, setCurrReviews] = React.useState('');
     const open = Boolean(anchorEl);
     const [reviewTotal, setReviewTotal] = React.useState([
         [],
@@ -43,7 +43,7 @@ const AdvancedRatingPopup = (props) => {
     ]);
 
     const setAllReviews = () => {
-        let allReviews = [[], [], [], [], [], []];
+        const allReviews = [[], [], [], [], [], []];
         listing.reviews.forEach((review) => {
             allReviews[review.stars].push(review);
         });
@@ -81,11 +81,11 @@ const AdvancedRatingPopup = (props) => {
                     event.stopPropagation();
                     event.preventDefault();
                 }}
-                transformOrigin={{ horizontal: "left", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "top" }}
+                transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
                 <MenuItem
-                    sx={{ gap: "10px" }}
+                    sx={{ gap: '10px' }}
                     onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -93,10 +93,10 @@ const AdvancedRatingPopup = (props) => {
                         closePopover();
                     }}
                 >
-                    <Typography sx={{ color: "#172B4D" }}>5 star</Typography>
+                    <Typography sx={{ color: '#172B4D' }}>5 star</Typography>
                     <div className={classes.root}>
                         <BorderLinearProgress
-                            sx={{ height: "20px", width: "200px" }}
+                            sx={{ height: '20px', width: '200px' }}
                             variant="determinate"
                             value={calcPercentage(5)}
                         />
@@ -104,7 +104,7 @@ const AdvancedRatingPopup = (props) => {
                     <Typography>{calcPercentage(5)}%</Typography>
                 </MenuItem>
                 <MenuItem
-                    sx={{ gap: "10px" }}
+                    sx={{ gap: '10px' }}
                     onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -112,10 +112,10 @@ const AdvancedRatingPopup = (props) => {
                         closePopover();
                     }}
                 >
-                    <Typography sx={{ color: "#172B4D" }}>4 star</Typography>
+                    <Typography sx={{ color: '#172B4D' }}>4 star</Typography>
                     <div className={classes.root}>
                         <BorderLinearProgress
-                            sx={{ height: "20px", width: "200px" }}
+                            sx={{ height: '20px', width: '200px' }}
                             variant="determinate"
                             value={calcPercentage(4)}
                         />
@@ -123,7 +123,7 @@ const AdvancedRatingPopup = (props) => {
                     <Typography>{calcPercentage(4)}%</Typography>
                 </MenuItem>
                 <MenuItem
-                    sx={{ gap: "10px" }}
+                    sx={{ gap: '10px' }}
                     onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -131,10 +131,10 @@ const AdvancedRatingPopup = (props) => {
                         closePopover();
                     }}
                 >
-                    <Typography sx={{ color: "#172B4D" }}>3 star</Typography>
+                    <Typography sx={{ color: '#172B4D' }}>3 star</Typography>
                     <div className={classes.root}>
                         <BorderLinearProgress
-                            sx={{ height: "20px", width: "200px" }}
+                            sx={{ height: '20px', width: '200px' }}
                             variant="determinate"
                             value={calcPercentage(3)}
                         />
@@ -142,7 +142,7 @@ const AdvancedRatingPopup = (props) => {
                     <Typography>{calcPercentage(3)}%</Typography>
                 </MenuItem>
                 <MenuItem
-                    sx={{ gap: "10px" }}
+                    sx={{ gap: '10px' }}
                     onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -150,10 +150,10 @@ const AdvancedRatingPopup = (props) => {
                         closePopover();
                     }}
                 >
-                    <Typography sx={{ color: "#172B4D" }}>2 star</Typography>
+                    <Typography sx={{ color: '#172B4D' }}>2 star</Typography>
                     <div className={classes.root}>
                         <BorderLinearProgress
-                            sx={{ height: "20px", width: "200px" }}
+                            sx={{ height: '20px', width: '200px' }}
                             variant="determinate"
                             value={calcPercentage(2)}
                         />
@@ -161,7 +161,7 @@ const AdvancedRatingPopup = (props) => {
                     <Typography>{calcPercentage(2)}%</Typography>
                 </MenuItem>
                 <MenuItem
-                    sx={{ gap: "10px" }}
+                    sx={{ gap: '10px' }}
                     onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -169,10 +169,10 @@ const AdvancedRatingPopup = (props) => {
                         closePopover();
                     }}
                 >
-                    <Typography sx={{ color: "#172B4D" }}>1 star</Typography>
+                    <Typography sx={{ color: '#172B4D' }}>1 star</Typography>
                     <div className={classes.root}>
                         <BorderLinearProgress
-                            sx={{ height: "20px", width: "200px" }}
+                            sx={{ height: '20px', width: '200px' }}
                             variant="determinate"
                             value={calcPercentage(1)}
                         />
@@ -180,7 +180,7 @@ const AdvancedRatingPopup = (props) => {
                     <Typography>{calcPercentage(1)}%</Typography>
                 </MenuItem>
                 <MenuItem
-                    sx={{ gap: "10px" }}
+                    sx={{ gap: '10px' }}
                     onClick={(event) => {
                         event.stopPropagation();
                         event.preventDefault();
@@ -188,10 +188,10 @@ const AdvancedRatingPopup = (props) => {
                         closePopover();
                     }}
                 >
-                    <Typography sx={{ color: "#172B4D" }}>0 star</Typography>
+                    <Typography sx={{ color: '#172B4D' }}>0 star</Typography>
                     <div className={classes.root}>
                         <BorderLinearProgress
-                            sx={{ height: "20px", width: "200px" }}
+                            sx={{ height: '20px', width: '200px' }}
                             variant="determinate"
                             value={calcPercentage(0)}
                         />

@@ -7,9 +7,9 @@ const imageStyle = {
     height: 'auto'
 }
 
-const ImageListElement = ({image, i}) => {
-	return (
-		<ImageListItem key={i}>
+const ImageListElement = ({ image, i }) => {
+    return (
+        <ImageListItem key={i}>
             <img
                 id={`image-${i}`}
                 src={image}
@@ -18,7 +18,7 @@ const ImageListElement = ({image, i}) => {
                 loading="loading..."
             />
         </ImageListItem>
-	);
+    );
 }
 
 export default ImageListElement;

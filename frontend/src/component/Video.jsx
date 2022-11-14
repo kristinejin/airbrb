@@ -1,8 +1,8 @@
-import { getYoutubeCodeFromUrl } from "../util/youtubeCode";
-import CardMedia from "@mui/material/CardMedia";
-import AspectRatio from "@mui/joy/AspectRatio";
+import { getYoutubeCodeFromUrl } from '../util/youtubeCode';
+import CardMedia from '@mui/material/CardMedia';
+import AspectRatio from '@mui/joy/AspectRatio';
 const Video = ({ url }) => {
-    const codeShort = url.includes("https") ? getYoutubeCodeFromUrl(url) : url;
+    const codeShort = url.includes('https') ? getYoutubeCodeFromUrl(url) : url;
     return (
         <AspectRatio>
             <CardMedia

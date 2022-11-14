@@ -1,17 +1,17 @@
-import React from "react";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import Dialog from "@mui/material/Dialog";
-import Button from "@mui/material/Button";
-import Slider from "@mui/material/Slider";
-import Grid2 from "@mui/material/Unstable_Grid2";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
-import CustomDatePicker from "./DatePicker";
+import React from 'react';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
+import Slider from '@mui/material/Slider';
+import Grid2 from '@mui/material/Unstable_Grid2';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import CustomDatePicker from './DatePicker';
 
 const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
     const [minBedroom, setMinBedroom] = React.useState(null);
@@ -23,7 +23,7 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
     const [minPrice, setMinPrice] = React.useState(priceInfo.min);
     const [maxPrice, setMaxPrice] = React.useState(priceInfo.max);
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const handleCleanFilters = () => {
         setDateRange({ start: null, end: null });
@@ -82,7 +82,7 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
             price.max = parseInt(maxPrice);
         }
 
-        handleApply({ bedroom: bedroom, date: date, price: price });
+        handleApply({ bedroom, date, price });
     };
     const minDistance = 10;
     const handlePriceChange = (e, newValue, activeThumb) => {
@@ -113,8 +113,8 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
             <DialogContent dividers>
                 <Box
                     sx={{
-                        display: "flex",
-                        flexDirection: "column",
+                        display: 'flex',
+                        flexDirection: 'column',
                         gap: 3,
                     }}
                 >
@@ -152,7 +152,7 @@ const FilterDialog = ({ handleClick, open, handleApply, priceInfo }) => {
                     <Divider>Price Range</Divider>
                     <Grid2 xs={12}>
                         <Slider
-                            getAriaLabel={() => "Minimum distance"}
+                            getAriaLabel={() => 'Minimum distance'}
                             value={[minPrice, maxPrice]}
                             onChange={handlePriceChange}
                             valueLabelDisplay="auto"

@@ -1,50 +1,48 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from 'react';
 
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
-import { apiCall } from "../util/api.js";
-import { useNavigate } from "react-router-dom";
+import { apiCall } from '../util/api.js';
+import { useNavigate } from 'react-router-dom';
 
 export const setLogin = (token, email) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("email", email);
+    localStorage.setItem('token', token);
+    localStorage.setItem('email', email);
 };
 
 const Register = () => {
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPass, setConfirmPass] = useState("");
-    const [err, setErrMsg] = useState("");
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPass, setConfirmPass] = useState('');
 
     const doRegister = () => {
         const body = {
-            email: email,
-            password: password,
+            email,
+            password,
             name: username,
         };
 
-        apiCall("user/auth/register", "POST", body).then((data) => {
+        apiCall('user/auth/register', 'POST', body).then((data) => {
             setLogin(data.token, email);
             // redirect to logged in page
-            nav("/HostedListings");
+            nav('/HostedListings');
         });
     };
 
     const nav = useNavigate();
     const validateInput = () => {
         if (!username) {
-            alert("Name cannot be empty");
+            alert('Name cannot be empty');
             return;
             // change the input field to error mode?
         }
         // password matching
         if (password !== confirmPass) {
-            alert("Password does not match");
+            alert('Password does not match');
             return;
         }
 
@@ -55,22 +53,22 @@ const Register = () => {
         <Box
             sx={{
                 // '& .MuiTextField-root': { m: 1, width: '25ch' },
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "auto",
-                height: "auto",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 'auto',
+                height: 'auto',
             }}
         >
             <Box
                 component="form"
                 sx={{
                     // '& .MuiTextField-root': { m: 1, width: '25ch' },
-                    marginTop: "20px",
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "400px",
-                    gap: "10px",
+                    marginTop: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '400px',
+                    gap: '10px',
                 }}
                 noValidate
                 autoComplete="off"
@@ -108,7 +106,7 @@ const Register = () => {
                     <Button variant="contained" onClick={validateInput}>
                         Register
                     </Button>
-                    <Button onClick={() => nav("/login")}>Sign in</Button>
+                    <Button onClick={() => nav('/login')}>Sign in</Button>
                 </Box>
             </Box>
         </Box>

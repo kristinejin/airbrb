@@ -1,28 +1,28 @@
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Divider from "@mui/material/Divider";
-import GradeIcon from "@mui/icons-material/Grade";
-import Grid from "@mui/material/Grid";
-import Rating from "@mui/material/Rating";
-import TextField from "@mui/material/TextField";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+import GradeIcon from '@mui/icons-material/Grade';
+import Grid from '@mui/material/Grid';
+import Rating from '@mui/material/Rating';
+import TextField from '@mui/material/TextField';
 
-import { apiCall } from "../util/api";
+import { apiCall } from '../util/api';
 
-import React from "react";
+import React from 'react';
 
 const WriteReviewModal = (props) => {
     const open = props.open;
@@ -33,20 +33,20 @@ const WriteReviewModal = (props) => {
     const listingId = props.listingId;
     const refresh = props.refresh;
 
-    const [textValue, setTextValue] = React.useState("");
+    const [textValue, setTextValue] = React.useState('');
     const [ratingValue, setRatingValue] = React.useState(0);
 
     const submitReview = () => {
-        const email = localStorage.getItem("email");
+        const email = localStorage.getItem('email');
         const postedOn = new Date().toISOString();
         const newReview = {
-            email: email,
+            email,
             message: textValue,
             stars: ratingValue,
-            postedOn: postedOn,
+            postedOn,
         };
 
-        apiCall(`listings/${listingId}/review/${bookingId}`, "PUT", {
+        apiCall(`listings/${listingId}/review/${bookingId}`, 'PUT', {
             review: newReview,
         }).then(() => {
             const allReviews = [...reviews];
@@ -83,7 +83,7 @@ const WriteReviewModal = (props) => {
                     fullWidth
                 />
 
-                <Box sx={{ paddingTop: "10px", display: "flex" }}>
+                <Box sx={{ paddingTop: '10px', display: 'flex' }}>
                     <Typography>Rate your stay: </Typography>
                     <Rating
                         value={ratingValue}
@@ -93,7 +93,7 @@ const WriteReviewModal = (props) => {
                     />
                 </Box>
 
-                <Button sx={{ float: "right" }} onClick={submitReview}>
+                <Button sx={{ float: 'right' }} onClick={submitReview}>
                     Submit review
                 </Button>
             </DialogContent>

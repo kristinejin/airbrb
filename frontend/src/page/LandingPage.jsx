@@ -1,45 +1,43 @@
-import React from "react";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import Select from "@mui/material/Select";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
-import TuneIcon from "@mui/icons-material/Tune";
+import React from 'react';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import TuneIcon from '@mui/icons-material/Tune';
 
-import { withStyles } from "@mui/styles";
+import { withStyles } from '@mui/styles';
 
-import AllListingCard from "../component/AllListingCard";
-import SideMenu from "../component/SideMenu";
-import SearchIcon from "@mui/icons-material/Search";
-import { useNavigate } from "react-router-dom";
-import { apiCall } from "../util/api";
-import Chip from "@mui/material/Chip";
-import FilterDialog from "../component/FilterDialog";
-import { getMinPrice, getMaxPrice } from "../util/priceData";
-import { getAverageRating } from "../util/averageRating";
+import AllListingCard from '../component/AllListingCard';
+import SideMenu from '../component/SideMenu';
+import SearchIcon from '@mui/icons-material/Search';
+import { apiCall } from '../util/api';
+import Chip from '@mui/material/Chip';
+import FilterDialog from '../component/FilterDialog';
+import { getMinPrice, getMaxPrice } from '../util/priceData';
+import { getAverageRating } from '../util/averageRating';
 
 const styles = (theme) => ({
     searchBox: {
-        flex: "1",
-        width: "100%",
-        border: "1px solid black",
+        flex: '1',
+        width: '100%',
+        border: '1px solid black',
     },
 });
 
 const LandingPage = (props) => {
-    const user_email = localStorage.getItem("email");
-    const [bookedListings, setBookedListings] = React.useState("");
-    const [listings, setListings] = React.useState("");
+    const userEmail = localStorage.getItem('email');
+    const [bookedListings, setBookedListings] = React.useState('');
+    const [listings, setListings] = React.useState('');
     const [priceRange, setPriceRange] = React.useState({ min: 0, max: 0 });
-    const [searchStr, setSearchStr] = React.useState("");
+    const [searchStr, setSearchStr] = React.useState('');
     const [showFilters, setShowFileters] = React.useState(false);
     const [appliedDate, setAppliedDate] = React.useState(false);
     const [dateRange, setDateRange] = React.useState(false);
-    const [sort, setSort] = React.useState("Most Relevant");
-    const nav = useNavigate();
+    const [sort, setSort] = React.useState('Most Relevant');
 
     const sortListings = (listingArray) => {
         const compare = (a, b) => {
@@ -55,16 +53,16 @@ const LandingPage = (props) => {
     };
 
     const putBookedListingsFirst = (listingArray) => {
-        if (!user_email) {
+        if (!userEmail) {
             setListings(listingArray);
             setBookedListings([]);
             return {};
         }
 
-        apiCall("bookings", "GET").then((data) => {
+        apiCall('bookings', 'GET').then((data) => {
             const bookedListingIds = [];
             data.bookings.forEach((booking) => {
-                if (booking.owner === user_email) {
+                if (booking.owner === userEmail) {
                     bookedListingIds.push(booking.listingId);
                 }
             });
@@ -88,23 +86,23 @@ const LandingPage = (props) => {
     };
 
     const getListings = () => {
-        apiCall("listings", "GET").then((data) => {
+        apiCall('listings', 'GET').then((data) => {
             const minPrice = getMinPrice(data.listings);
             const maxPrice = getMaxPrice(data.listings);
             setPriceRange({ min: minPrice, max: maxPrice });
 
-            let AllListingsPromises = [];
-            let allListingsIds = [];
+            const AllListingsPromises = [];
+            const allListingsIds = [];
             data.listings.forEach((listing) => {
                 AllListingsPromises.push(
-                    apiCall(`listings/${listing.id}`, "GET")
+                    apiCall(`listings/${listing.id}`, 'GET')
                 );
                 allListingsIds.push(listing.id);
             });
 
             const responses = Promise.all(AllListingsPromises);
             responses.then((response) => {
-                let allListings = [];
+                const allListings = [];
                 let i = 0;
                 response.forEach((listing) => {
                     if (listing.listing.published) {
@@ -121,7 +119,7 @@ const LandingPage = (props) => {
     };
 
     const searchAction = async () => {
-        const wordsList = searchStr.toLowerCase().split(" ");
+        const wordsList = searchStr.toLowerCase().split(' ');
         const newL = [...listings, ...bookedListings];
         const filteredListings = newL.filter((l) => {
             return (
@@ -137,7 +135,7 @@ const LandingPage = (props) => {
     };
 
     const handleClickFilters = () => {
-        setShowFileters(showFilters ? false : true);
+        setShowFileters(!showFilters);
     };
 
     const filterNumBedrooms = (min, max, listingData) => {
@@ -167,7 +165,7 @@ const LandingPage = (props) => {
             return avai.some((a) => checkDates(a, dateRange));
         });
 
-        const dateDiff = dateRange.start.diff(dateRange.end, "day") === 0;
+        const dateDiff = dateRange.start.diff(dateRange.end, 'day') === 0;
         setDateRange(dateDiff ? 1 : dateDiff);
         setAppliedDate(true);
         return filteredListings;
@@ -255,11 +253,11 @@ const LandingPage = (props) => {
     const handleApplySort = (e) => {
         const newSort = e.target.value;
         const newL = [...listings, ...bookedListings];
-        if (newSort === "Most Relevant") {
+        if (newSort === 'Most Relevant') {
             sortListings(newL);
-        } else if (newSort === "Rating DESC") {
+        } else if (newSort === 'Rating DESC') {
             sortListingDesc(newL);
-        } else if (newSort === "Rating ASC") {
+        } else if (newSort === 'Rating ASC') {
             sortListingAsc(newL);
         }
         putBookedListingsFirst(newL);
@@ -274,19 +272,18 @@ const LandingPage = (props) => {
         return <>Loading...</>;
     }
 
-    const { classes } = props;
     return (
         <Box>
             <Box
-                sx={{ border: "1px solid rgb(230, 230, 230)", padding: "30px" }}
+                sx={{ border: '1px solid rgb(230, 230, 230)', padding: '30px' }}
                 justifyContent="space-between"
                 alignItems="center"
                 display="flex"
             >
                 <Typography
                     sx={{
-                        flex: "1",
-                        cursor: "pointer",
+                        flex: '1',
+                        cursor: 'pointer',
                     }}
                     component="h1"
                     variant="h4"
@@ -300,7 +297,7 @@ const LandingPage = (props) => {
                     placeholder="Search..."
                     size="small"
                     sx={{
-                        width: "30vw",
+                        width: '30vw',
                     }}
                     InputProps={{
                         endAdornment: (
@@ -341,22 +338,22 @@ const LandingPage = (props) => {
                         value={sort}
                         onChange={handleApplySort}
                     >
-                        <MenuItem value={"Most Relevant"}>
+                        <MenuItem value={'Most Relevant'}>
                             Most relevant
                         </MenuItem>
-                        <MenuItem value={"Rating DESC"}>
+                        <MenuItem value={'Rating DESC'}>
                             Rating (Highest - Lowest)
                         </MenuItem>
-                        <MenuItem value={"Rating ASC"}>
+                        <MenuItem value={'Rating ASC'}>
                             Rating (Lowest - Highest)
                         </MenuItem>
                     </Select>
                 </FormControl>
-                <Box sx={{ flex: "1" }}>
+                <Box sx={{ flex: '1' }}>
                     <SideMenu />
                 </Box>
             </Box>
-            <Box sx={{ padding: "40px" }}>
+            <Box sx={{ padding: '40px' }}>
                 {bookedListings.length !== 0 && (
                     <Typography component="h1" variant="h5">
                         Your booked listings
@@ -366,7 +363,7 @@ const LandingPage = (props) => {
                     container
                     rowSpacing={3}
                     columnSpacing={3}
-                    sx={{ paddingBottom: "30px" }}
+                    sx={{ paddingBottom: '30px' }}
                 >
                     {bookedListings.map((data) => (
                         <Grid
