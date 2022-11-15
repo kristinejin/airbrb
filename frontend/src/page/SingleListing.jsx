@@ -17,9 +17,10 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import AdvancedRatingPopup from '../component/AdvancedRatingPopup';
 import { getAverageRating } from '../util/averageRating';
 import Rating from '@mui/material/Rating';
+import HomeIcon from '@mui/icons-material/Home';
 import * as dayjs from 'dayjs';
 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { SideMenu } from '../component/SideMenu';
 import ReviewModal from '../component/ReviewModal';
 import CustomDatePicker from '../component/DatePicker';
@@ -35,7 +36,6 @@ const SingleListing = () => {
   const listingId = useParams().listingId;
   const dateRange = useParams().dateRange;
   const theme = useTheme();
-  const nav = useNavigate();
 
   const [listing, setListing] = React.useState({});
   const [images, setImages] = React.useState([]);
@@ -360,14 +360,7 @@ const SingleListing = () => {
         alignItems='center'
         display='flex'
       >
-        <Typography
-          sx={{ flex: '1', cursor: 'pointer' }}
-          component='h1'
-          variant='h4'
-          onClick={() => nav('/')}
-        >
-          airbrb
-        </Typography>
+        <Button id='goHomeButton' sx={{ fontSize: '20px' }} onClick={() => { window.location.href = '/' }}><HomeIcon sx={{ height: '30px', width: '30px', verticalAlign: 'middle' }}/><Typography sx={{ fontSize: '20px' }}>Go Home</Typography></Button>
 
         <Box sx={{ flex: '1' }}>
           <SideMenu />

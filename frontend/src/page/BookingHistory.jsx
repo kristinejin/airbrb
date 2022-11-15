@@ -165,7 +165,7 @@ const BookingHistory = (props) => {
     <Box>
       <Box sx={{ border: '1px solid rgb(230, 230, 230)', padding: '30px' }} justifyContent='space-between' alignItems='center' display='flex'>
         <Box sx={{ flex: '0.5' }} >
-          <Button sx={{ fontSize: '20px' }} onClick={() => { window.location.href = '/' }}><HomeIcon sx={{ height: '30px', width: '30px', verticalAlign: 'middle' }}/>Go Home</Button>
+        <Button id='goHomeButton' sx={{ fontSize: '20px' }} onClick={() => { window.location.href = '/' }}><HomeIcon sx={{ height: '30px', width: '30px', verticalAlign: 'middle' }}/><Typography sx={{ fontSize: '20px', display: { xs: 'none', sm: 'none', md: 'block' } }}>Go Home</Typography></Button>
         </Box>
         <Typography sx={{ flex: '2', textAlign: 'center' }} component='h1' variant='h4'>Bookings and Statistics</Typography>
         <Box sx={{ flex: '0.5' }}>
