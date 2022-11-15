@@ -29,10 +29,11 @@ const WriteReviewModal = (props) => {
   const submitReview = () => {
     const email = localStorage.getItem('email');
     const postedOn = new Date().toISOString();
+
     const newReview = {
       email,
       message: textValue,
-      stars: ratingValue,
+      stars: ratingValue === null ? 0 : ratingValue,
       postedOn,
     };
 
@@ -83,22 +84,31 @@ const WriteReviewModal = (props) => {
           />
         </Box>
 
-        <Button sx={{ float: 'right' }} onClick={submitReview}>
-          Submit review
-        </Button>
+        <SubmitButton onClick={submitReview}/>
       </DialogContent>
     </Dialog>
   );
 };
+
+export const SubmitButton = ({ onClick }) => {
+  return (
+    <Button sx={{ float: 'right' }} onClick={onClick}>
+      Submit review
+    </Button>
+  )
+}
 
 WriteReviewModal.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
   reviews: PropTypes.array,
   setReviews: PropTypes.func,
-  bookingId: PropTypes.string,
+  bookingId: PropTypes.number,
   listingId: PropTypes.number,
   refresh: PropTypes.func
 };
+SubmitButton.propTypes = {
+  onClick: PropTypes.func
+}
 
 export default WriteReviewModal;

@@ -8,7 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import { CardActionArea } from '@mui/material';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
-import CribIcon from '@mui/icons-material/Crib';
+import HotelIcon from '@mui/icons-material/Hotel';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
 import { useNavigate } from 'react-router-dom';
@@ -115,7 +115,7 @@ const AllListingCard = (props) => {
             >
               <Typography>
                 {listing.metadata.numBeds}
-                <CribIcon style={{ verticalAlign: 'middle' }} />
+                <HotelIcon style={{ position: 'relative', left: '2px', bottom: '3px', verticalAlign: 'middle' }} />
               </Typography>
               <Typography>
                 {listing.metadata.numBaths}

@@ -1,22 +1,22 @@
-import { apiCall } from '../util/api';
-import CreateDialog from '../component/CreateDialog';
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { apiCall } from '../util/api'
+import CreateDialog from '../component/CreateDialog'
+import React, { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import Grid2 from '@mui/material/Unstable_Grid2/Grid2'
 
-import Typography from '@mui/material/Typography';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import IconButton from '@mui/material/IconButton'
 
 const ListingEdit = (props) => {
-  const listingId = useParams().listingId;
-  const [listing, setListing] = useState({});
-  const [isLoaded, setIsLoaded] = useState(false);
+  const listingId = useParams().listingId
+  const [listing, setListing] = useState({})
+  const [isLoaded, setIsLoaded] = useState(false)
   // // display all the listing information
   const getListing = async () => {
-    const resp = await apiCall(`listings/${listingId}`, 'GET');
-    return resp;
+    const resp = await apiCall(`listings/${listingId}`, 'GET')
+    return resp
   }
 
   useEffect(() => {
@@ -26,38 +26,36 @@ const ListingEdit = (props) => {
         setIsLoaded(true)
       })
       .catch((data) => {
-        setIsLoaded(false);
+        setIsLoaded(false)
         alert(data)
       })
   }, [])
 
-  const nav = useNavigate();
+  const nav = useNavigate()
   const doEdit = async (body) => {
     // request to edit
     // go back to hosted listing page
-    await apiCall(`listings/${listingId}`, 'PUT', body);
-    nav('/hostedListings');
+    await apiCall(`listings/${listingId}`, 'PUT', body)
+    nav('/HostedListings')
   }
 
   if (!isLoaded) {
-    return (
-      <p>loading...</p>
-    )
+    return <p>loading...</p>
   }
 
   return (
     <Grid2
       container
       spacing={0}
-      direction='column'
-      alignItems='center'
+      direction="column"
+      alignItems="center"
       sx={{
         mb: 8,
       }}
     >
       <Typography
-        component='h1'
-        variant='h4'
+        component="h1"
+        variant="h4"
         sx={{
           mt: 8,
         }}
@@ -70,14 +68,16 @@ const ListingEdit = (props) => {
           mb: 4,
         }}
       >
-        <IconButton
-          onClick={() => nav('/hostedlistings')}>
-          <ArrowBackIcon/>
+        <IconButton onClick={() => nav('/hostedlistings')}>
+          <ArrowBackIcon />
         </IconButton>
       </Grid2>
-      <CreateDialog callCreateListing={e => doEdit(e)} listingInfo={listing}/>
+      <CreateDialog
+        callCreateListing={(e) => doEdit(e)}
+        listingInfo={listing}
+      />
     </Grid2>
   )
 }
 
-export default ListingEdit;
+export default ListingEdit

@@ -24,7 +24,7 @@ import Toolbar from '@mui/material/Toolbar'
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 
 import HostedListingCard from '../component/HostedListingCard'
-import SideMenu from '../component/SideMenu'
+import { SideMenu } from '../component/SideMenu'
 import CreateDialog from '../component/CreateDialog'
 import UploadListing from '../component/UploadListing'
 
@@ -251,7 +251,12 @@ const HostedListings = (props) => {
             >
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            <Typography
+              name="createANewlisting"
+              sx={{ ml: 2, flex: 1 }}
+              variant="h6"
+              component="div"
+            >
               Create a new listing
             </Typography>
           </Toolbar>
@@ -277,6 +282,7 @@ const HostedListings = (props) => {
       >
         <Box sx={{ flex: '1' }}>
           <Button
+            id="goHomeButton"
             sx={{ fontSize: '20px' }}
             onClick={() => {
               window.location.href = '/'
@@ -285,7 +291,11 @@ const HostedListings = (props) => {
             <HomeIcon
               sx={{ height: '30px', width: '30px', verticalAlign: 'middle' }}
             />
-            Go Home
+            <Typography
+              sx={{ fontSize: '20px', display: { xs: 'none', sm: 'block' } }}
+            >
+              Go Home
+            </Typography>
           </Button>
         </Box>
         <Typography
@@ -325,7 +335,9 @@ const HostedListings = (props) => {
           // alignItems: 'flex-start',
         }}
       >
-        <Button onClick={() => setCreate(true)}>Create New Listing</Button>
+        <Button name="createListing" onClick={() => setCreate(true)}>
+          Create New Listing
+        </Button>
         <Button onClick={() => setUpload(true)}>Upload New Listing</Button>
       </Box>
 
@@ -354,10 +366,11 @@ const HostedListings = (props) => {
         </Grid>
       </Box>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Set availability</DialogTitle>
+        <DialogTitle name="availabilityTitle">Set availability</DialogTitle>
         <DialogContent>
           {availability.map((data, index) => (
             <Box
+              name="availability"
               key={index}
               sx={{
                 paddingTop: '20px',
@@ -392,7 +405,9 @@ const HostedListings = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={addAvailability}>Add an availability</Button>
-          <Button onClick={() => publishListing(publishId)}>Submit</Button>
+          <Button name="submit" onClick={() => publishListing(publishId)}>
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

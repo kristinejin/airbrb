@@ -12,14 +12,13 @@ import TuneIcon from '@mui/icons-material/Tune'
 import { withStyles } from '@mui/styles'
 
 import AllListingCard from '../component/AllListingCard'
-import SideMenu from '../component/SideMenu'
+import { SideMenu } from '../component/SideMenu'
 import SearchIcon from '@mui/icons-material/Search'
 import { apiCall } from '../util/api'
 import Chip from '@mui/material/Chip'
 import FilterDialog from '../component/FilterDialog'
 import { getMinPrice, getMaxPrice } from '../util/priceData'
 import { getAverageRating } from '../util/averageRating'
-import { isMobileWidth } from '../util/screen'
 
 const styles = (theme) => ({
   searchBox: {
@@ -277,6 +276,7 @@ const LandingPage = (props) => {
           sx={{
             flex: '1',
             cursor: 'pointer',
+            display: { xs: 'none', sm: 'none', md: 'block' },
           }}
           component="h1"
           variant="h4"
@@ -284,13 +284,13 @@ const LandingPage = (props) => {
             getListings()
           }}
         >
-          {isMobileWidth() ? 'a' : 'airbnb'}
+          airbrb
         </Typography>
         <TextField
           placeholder="Search..."
           size="small"
           sx={{
-            width: '30vw',
+            width: '40vw',
           }}
           InputProps={{
             endAdornment: (

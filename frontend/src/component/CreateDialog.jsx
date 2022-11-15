@@ -184,7 +184,12 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
   const ListingActionButton = () => {
     return (
       <Grid2 xs={12}>
-        <Button variant="outlined" fullWidth onClick={setNewListingData}>
+        <Button
+          name="submit"
+          variant="outlined"
+          fullWidth
+          onClick={setNewListingData}
+        >
           Save
         </Button>
       </Grid2>
@@ -302,6 +307,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={12}>
           <TextField
             fullWidth
+            name="title"
             label="Title"
             defaultValue={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -315,6 +321,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={12}>
           <TextField
             fullWidth
+            name="address"
             label="Address Line"
             defaultValue={street}
             required
@@ -325,6 +332,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={6} md={3}>
           <TextField
             fullWidth
+            name="city"
             label="City/Suburb"
             defaultValue={city}
             required
@@ -334,6 +342,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={6} md={3}>
           <TextField
             fullWidth
+            name="state"
             label="State"
             defaultValue={state}
             required
@@ -343,6 +352,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={6} md={3}>
           <TextField
             fullWidth
+            name="postcode"
             label="Postcode"
             defaultValue={postcode}
             required
@@ -352,6 +362,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={6} md={3}>
           <TextField
             fullWidth
+            name="country"
             label="Country"
             defaultValue={country}
             required
@@ -387,6 +398,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
             <InputLabel htmlFor="Price">Price (per night)</InputLabel>
             <OutlinedInput
               fullWidth
+              name="price"
               id="Price"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
@@ -402,6 +414,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={12} md={4}>
           <TextField
             fullWidth
+            name="bathrooms"
             label="Number of Bathrooms"
             defaultValue={bathrooms}
             required
@@ -412,6 +425,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={12}>
           <TextField
             fullWidth
+            name="amenities"
             label="Amenities"
             defaultValue={amenities}
             multiline
@@ -439,6 +453,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
                     value={room.roomType}
                     defaultValue={room.roomType}
                     id={i}
+                    name="roomType"
                     label="Type of Room"
                   ></TextField>
                 </Grid2>
@@ -452,6 +467,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
                     value={room.numBeds}
                     defaultValue={room.numBeds}
                     id={i}
+                    name="beds"
                     label="Number of beds"
                   ></TextField>
                 </Grid2>
@@ -506,7 +522,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
               id="thumbnailUpload"
               onChange={updateThumbnail}
             />
-            <label htmlFor="thumbnailUpload">
+            <label id="thumbnailUploadButton" htmlFor="thumbnailUpload">
               <Button color="primary" component="span">
                 Upload Image
               </Button>
