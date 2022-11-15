@@ -23,7 +23,6 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
     // validate each compulsory field exist
     const isValid = validateJsonFile(listingSchema, l);
     if (isValid.isError) {
-      console.log(isValid.errorMsg);
       return {
         error: true,
         msg: 'Missing required fields',
@@ -33,7 +32,6 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
     // address
     const isValidAddress = validateJsonFile(addressSchema, l.address);
     if (isValidAddress.isError) {
-      console.log(isValidAddress.errorMsg);
       return {
         error: true,
         msg: 'Invalid address',
@@ -43,7 +41,6 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
     l.bedrooms.forEach((b) => {
       const isValidBedroom = validateJsonFile(bedroomSchema, b);
       if (isValidBedroom.isError) {
-        console.log(isValidBedroom.errorMsg);
         return {
           error: true,
           msg: 'Invalid bedroom information',
