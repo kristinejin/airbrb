@@ -84,13 +84,19 @@ const WriteReviewModal = (props) => {
           />
         </Box>
 
-        <Button sx={{ float: 'right' }} onClick={submitReview}>
-          Submit review
-        </Button>
+        <SubmitButton onClick={submitReview}/>
       </DialogContent>
     </Dialog>
   );
 };
+
+export const SubmitButton = ({ onClick }) => {
+  return (
+    <Button sx={{ float: 'right' }} onClick={onClick}>
+      Submit review
+    </Button>
+  )
+}
 
 WriteReviewModal.propTypes = {
   open: PropTypes.bool,
@@ -101,5 +107,8 @@ WriteReviewModal.propTypes = {
   listingId: PropTypes.number,
   refresh: PropTypes.func
 };
+SubmitButton.propTypes = {
+  onClick: PropTypes.func
+}
 
 export default WriteReviewModal;
