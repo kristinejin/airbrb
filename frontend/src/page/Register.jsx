@@ -77,18 +77,21 @@ const Register = () => {
           Register your Airbnb account
         </Typography>
         <TextField
+          name='email'
           label='Email'
           placeholder='Email'
           onChange={(e) => setEmail(e.target.value)}
         />
 
         <TextField
+          name='name'
           label='Name'
           placeholder='Name'
           onChange={(e) => setUsername(e.target.value)}
         />
 
         <TextField
+          name='password'
           label='Password'
           placeholder='Password'
           type='password'
@@ -96,6 +99,7 @@ const Register = () => {
         />
 
         <TextField
+          name='confirmPassword'
           label='Confirm Password'
           placeholder='Confirm Password'
           type='password'
@@ -103,7 +107,7 @@ const Register = () => {
         />
 
         <Box>
-          <Button variant='contained' onClick={validateInput}>
+          <Button name='submit' variant='contained' onClick={validateInput}>
             Register
           </Button>
           <Button onClick={() => nav('/login')}>Sign in</Button>

@@ -166,6 +166,7 @@ const HostedListingCard = (props) => {
             {listing.published
               ? (
                 <Button
+                  name='unpublish'
                   onClick={(event) => {
                     event.stopPropagation();
                     event.preventDefault();
@@ -177,6 +178,7 @@ const HostedListingCard = (props) => {
                 )
               : (
                 <Button
+                  name='publish'
                   onClick={(event) => {
                     event.stopPropagation();
                     event.preventDefault();
@@ -184,7 +186,7 @@ const HostedListingCard = (props) => {
                     // publishListing(listing.id);
                   }}
                 >
-                  publish
+                  Publish
                 </Button>
                 )}
           </Box>

@@ -36,7 +36,7 @@ const ListingEdit = (props) => {
     // request to edit
     // go back to hosted listing page
     await apiCall(`listings/${listingId}`, 'PUT', body);
-    nav('/hostedListings');
+    nav('/HostedListings');
   }
 
   if (!isLoaded) {

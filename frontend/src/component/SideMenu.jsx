@@ -57,8 +57,8 @@ export const SideMenu = (props) => {
           }}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleViewListings}>Your Listings</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem id='yourListingsButton' onClick={handleViewListings}>Your Listings</MenuItem>
+          <MenuItem id='logoutButton' onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Box>
     );
@@ -75,6 +75,7 @@ export const SideMenu = (props) => {
 export const RegisterButton = ({ onClick }) => {
   return (
     <Button
+      name='registerButton'
       sx={{ float: 'right' }}
       onClick={onClick}
     >
@@ -86,6 +87,7 @@ export const RegisterButton = ({ onClick }) => {
 export const SignInButton = ({ onClick }) => {
   return (
     <Button
+      name='signInButton'
       sx={{ float: 'right' }}
       onClick={onClick}
     >

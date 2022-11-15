@@ -18,7 +18,7 @@ const Login = (props) => {
     }).then((data) => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('email', email);
-      window.location.href = '/hostedlistings';
+      window.location.href = '/HostedListings';
     });
   };
 
@@ -47,7 +47,7 @@ const Login = (props) => {
         ></TextField>
 
         <Box>
-          <Button onClick={() => signIn(userEmail, userPassword)}>
+          <Button name='submit' onClick={() => signIn(userEmail, userPassword)}>
             Sign in
           </Button>
           <Button onClick={() => navigate('/register')}>
