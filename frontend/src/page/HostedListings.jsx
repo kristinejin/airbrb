@@ -24,7 +24,7 @@ import Toolbar from '@mui/material/Toolbar';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 import HostedListingCard from '../component/HostedListingCard';
-import SideMenu from '../component/SideMenu';
+import { SideMenu } from '../component/SideMenu';
 import CreateDialog from '../component/CreateDialog';
 import UploadListing from '../component/UploadListing';
 

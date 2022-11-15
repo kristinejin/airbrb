@@ -12,7 +12,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import { withStyles } from '@mui/styles';
 
 import AllListingCard from '../component/AllListingCard';
-import SideMenu from '../component/SideMenu';
+import { SideMenu } from '../component/SideMenu';
 import SearchIcon from '@mui/icons-material/Search';
 import { apiCall } from '../util/api';
 import Chip from '@mui/material/Chip';

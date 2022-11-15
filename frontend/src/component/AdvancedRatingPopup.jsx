@@ -58,13 +58,12 @@ const AdvancedRatingPopup = (props) => {
   const calcPercentage = (star) => {
     return reviewTotal[star].length === 0
       ? 0
-      : (reviewTotal[star].length / listing.reviews.length).toFixed(2) *
-          100;
+      : ((reviewTotal[star].length / listing.reviews.length) * 100).toFixed(2);
   };
 
   React.useEffect(() => {
     setAllReviews();
-  }, []);
+  }, [props.listing]);
 
   const classes = useStyles();
   if (!reviewTotal) {

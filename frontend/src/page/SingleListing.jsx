@@ -20,7 +20,7 @@ import Rating from '@mui/material/Rating';
 import * as dayjs from 'dayjs';
 
 import { useParams, useNavigate } from 'react-router-dom';
-import SideMenu from '../component/SideMenu';
+import { SideMenu } from '../component/SideMenu';
 import ReviewModal from '../component/ReviewModal';
 import CustomDatePicker from '../component/DatePicker';
 import Youtube from '../component/YouTube';
@@ -51,7 +51,7 @@ const SingleListing = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [bookingSuccess, setBookingSuccess] = React.useState(false);
   const [newBid, setNewBid] = React.useState(0);
-  const [allReviews, setAllReviews] = React.useState([]);
+  const [allReviews, setAllReviews] = React.useState('');
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   React.useEffect(() => {
@@ -347,7 +347,7 @@ const SingleListing = () => {
     );
   };
 
-  if (!isLoaded || !maxSteps || images.length === 0) {
+  if (!isLoaded || !maxSteps || images.length === 0 || !allReviews) {
     return <p>loading...</p>;
   }
 

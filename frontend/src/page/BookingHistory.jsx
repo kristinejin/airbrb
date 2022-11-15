@@ -22,7 +22,7 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import HomeIcon from '@mui/icons-material/Home';
 import { withStyles } from '@mui/styles';
-import SideMenu from '../component/SideMenu';
+import { SideMenu } from '../component/SideMenu';
 import { apiCall } from '../util/api';
 import { useParams } from 'react-router-dom';
 
