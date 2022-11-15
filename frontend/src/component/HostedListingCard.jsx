@@ -13,7 +13,7 @@ import Rating from '@mui/material/Rating';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import CribIcon from '@mui/icons-material/Crib';
+import HotelIcon from '@mui/icons-material/Hotel';
 import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
 import { useNavigate } from 'react-router-dom';
 import Video from './Video';
@@ -133,7 +133,7 @@ const HostedListingCard = (props) => {
             >
               <Typography>
                 {listing.metadata.numBeds}
-                <CribIcon style={{ verticalAlign: 'middle' }} />
+                <HotelIcon style={{ position: 'relative', left: '2px', bottom: '3px', verticalAlign: 'middle' }} />
               </Typography>
               <Typography>
                 {listing.metadata.numBaths}

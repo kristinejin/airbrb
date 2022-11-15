@@ -284,6 +284,7 @@ const LandingPage = (props) => {
           sx={{
             flex: '1',
             cursor: 'pointer',
+            display: { xs: 'none', sm: 'none', md: 'block' }
           }}
           component='h1'
           variant='h4'
@@ -297,7 +298,7 @@ const LandingPage = (props) => {
           placeholder='Search...'
           size='small'
           sx={{
-            width: '30vw',
+            width: '40vw',
           }}
           InputProps={{
             endAdornment: (
