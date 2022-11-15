@@ -29,10 +29,6 @@ const ReviewModal = (props) => {
   const [bookingId, setBookingId] = React.useState(null);
   const [reviews, setReviews] = React.useState('');
 
-  if (reviews !== reviewsToShow) {
-    setReviews(reviewsToShow);
-  }
-
   const handleOpenWrite = () => {
     apiCall('bookings', 'GET')
       .then((data) => {
@@ -67,6 +63,10 @@ const ReviewModal = (props) => {
     return dateString;
   };
 
+  React.useEffect(() => {
+    setReviews(reviewsToShow);
+  }, [])
+
   if (!reviews) {
     return <>Loading...</>
   }
@@ -81,7 +81,6 @@ const ReviewModal = (props) => {
       }}
       onClick={(event) => {
         event.stopPropagation();
-        event.preventDefault();
       }}
       fullWidth
       maxWidth='sm'

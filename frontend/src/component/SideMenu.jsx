@@ -5,10 +5,12 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import DehazeIcon from '@mui/icons-material/Dehaze';
+import PropTypes from 'prop-types';
 
 import { apiCall } from '../util/api';
 
-const SideMenu = (props) => {
+export const SideMenu = (props) => {
+  const testProp = props.showMenu;
   const userEmail = localStorage.getItem('email');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -33,7 +35,7 @@ const SideMenu = (props) => {
     window.location.href = '/hostedlistings';
   };
 
-  if (userEmail) {
+  if (userEmail || testProp) {
     return (
       <Box>
         <Button
@@ -55,9 +57,7 @@ const SideMenu = (props) => {
           }}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleViewListings}>
-            Your Listings
-          </MenuItem>
+          <MenuItem onClick={handleViewListings}>Your Listings</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Box>
@@ -65,25 +65,41 @@ const SideMenu = (props) => {
   } else {
     return (
       <Box>
-        <Button
-          sx={{ float: 'right' }}
-          onClick={() => {
-            window.location.href = '/register';
-          }}
-        >
-          Register
-        </Button>
-        <Button
-          sx={{ float: 'right' }}
-          onClick={() => {
-            window.location.href = '/login';
-          }}
-        >
-          Sign in
-        </Button>
+        <RegisterButton onClick={() => { window.location.href = '/register' }} />
+        <SignInButton onClick={() => { window.location.href = '/login' }} />
       </Box>
     );
   }
 };
 
-export default SideMenu;
+export const RegisterButton = ({ onClick }) => {
+  return (
+    <Button
+      sx={{ float: 'right' }}
+      onClick={onClick}
+    >
+      Register
+    </Button>
+  )
+}
+
+export const SignInButton = ({ onClick }) => {
+  return (
+    <Button
+      sx={{ float: 'right' }}
+      onClick={onClick}
+    >
+      Sign in
+    </Button>
+  )
+}
+
+SideMenu.propTypes = {
+  showMenu: PropTypes.bool
+};
+RegisterButton.propTypes = {
+  onClick: PropTypes.func
+};
+SignInButton.propTypes = {
+  onClick: PropTypes.func
+};

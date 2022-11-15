@@ -29,10 +29,11 @@ const WriteReviewModal = (props) => {
   const submitReview = () => {
     const email = localStorage.getItem('email');
     const postedOn = new Date().toISOString();
+
     const newReview = {
       email,
       message: textValue,
-      stars: ratingValue,
+      stars: ratingValue === null ? 0 : ratingValue,
       postedOn,
     };
 
@@ -96,7 +97,7 @@ WriteReviewModal.propTypes = {
   setOpen: PropTypes.func,
   reviews: PropTypes.array,
   setReviews: PropTypes.func,
-  bookingId: PropTypes.string,
+  bookingId: PropTypes.number,
   listingId: PropTypes.number,
   refresh: PropTypes.func
 };
