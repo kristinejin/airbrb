@@ -1,66 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
-import FormControl from '@mui/material/FormControl';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
-import IconButton from '@mui/material/IconButton';
-import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
-import Switch from '@mui/material/Switch';
-import Stack from '@mui/material/Stack';
-import { Box } from '@mui/system';
+import React, { useEffect, useState } from 'react'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import InputAdornment from '@mui/material/InputAdornment'
+import Grid2 from '@mui/material/Unstable_Grid2/Grid2'
+import FormControl from '@mui/material/FormControl'
+import ImageListItem from '@mui/material/ImageListItem'
+import ImageListItemBar from '@mui/material/ImageListItemBar'
+import IconButton from '@mui/material/IconButton'
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp'
+import Switch from '@mui/material/Switch'
+import Stack from '@mui/material/Stack'
+import { Box } from '@mui/system'
 
-import { fileToDataUrl } from '../util/fileToUrl';
-import EditImageList from './HostedListingImageList.jsx';
-import { defaultThumbnail } from '../util/defaultThumbnail';
-import PropTypes from 'prop-types';
+import { fileToDataUrl } from '../util/fileToUrl'
+import EditImageList from './HostedListingImageList.jsx'
+import { defaultThumbnail } from '../util/defaultThumbnail'
+import PropTypes from 'prop-types'
 
 const imageStyle = {
   width: '20vw',
   height: 'auto',
-};
+}
 
 const CreateDialog = ({ callCreateListing, listingInfo }) => {
-  const [title, setTitle] = useState(listingInfo ? listingInfo.title : '');
-  const [price, setPrice] = useState(listingInfo ? listingInfo.price : '');
+  const [title, setTitle] = useState(listingInfo ? listingInfo.title : '')
+  const [price, setPrice] = useState(listingInfo ? listingInfo.price : '')
   const [thumbnail, setThumbnail] = useState(
     listingInfo ? listingInfo.thumbnail : defaultThumbnail
-  );
+  )
   const [street, setStreet] = useState(
     listingInfo ? listingInfo.address.street : ''
-  );
-  const [city, setCity] = useState(
-    listingInfo ? listingInfo.address.city : ''
-  );
+  )
+  const [city, setCity] = useState(listingInfo ? listingInfo.address.city : '')
   const [state, setState] = useState(
     listingInfo ? listingInfo.address.state : ''
-  );
+  )
   const [postcode, setPostcode] = useState(
     listingInfo ? listingInfo.address.postcode : ''
-  );
+  )
   const [country, setCountry] = useState(
     listingInfo ? listingInfo.address.country : ''
-  );
+  )
 
   const [type, setType] = useState(
     listingInfo ? listingInfo.metadata.propertyType : ''
-  );
+  )
   const [amenities, setAmenities] = useState(
     listingInfo ? listingInfo.metadata.amenities : ''
-  );
+  )
   const [bathrooms, setBathrooms] = useState(
     listingInfo ? listingInfo.metadata.numBaths : ''
-  );
+  )
   const [images, setImages] = useState(
     listingInfo ? listingInfo.metadata.images : []
-  );
+  )
   const [roomList, setRoomList] = useState(
     listingInfo
       ? listingInfo.metadata.bedrooms
@@ -71,19 +69,19 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
             index: 0,
           },
         ]
-  );
+  )
 
   const [videoURL, setVideoURL] = useState(
     listingInfo ? listingInfo.metadata.video : ''
-  );
+  )
 
-  const [isVideo, setIsVideo] = useState(false);
+  const [isVideo, setIsVideo] = useState(false)
 
   useEffect(() => {
     if (listingInfo) {
-      document.getElementById('thumbnail').src = thumbnail;
+      document.getElementById('thumbnail').src = thumbnail
     }
-  }, [thumbnail]);
+  }, [thumbnail])
 
   const handleRoomAdd = () => {
     setRoomList([
@@ -93,71 +91,71 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         roomType: '',
         index: null,
       },
-    ]);
-  };
+    ])
+  }
 
   const handleRoomTypeChange = (event, index) => {
-    const type = event.target.value;
-    const newRoomList = [...roomList];
-    newRoomList[index].roomType = type;
-    newRoomList[index].index = index + 1;
-    setRoomList(newRoomList);
-  };
+    const type = event.target.value
+    const newRoomList = [...roomList]
+    newRoomList[index].roomType = type
+    newRoomList[index].index = index + 1
+    setRoomList(newRoomList)
+  }
 
   const handleNumsBedsChange = (event, index) => {
-    const numBeds = event.target.value;
-    const newRoomList = [...roomList];
-    newRoomList[index].numBeds = numBeds;
-    newRoomList[index].index = index + 1;
-    setRoomList(newRoomList);
-  };
+    const numBeds = event.target.value
+    const newRoomList = [...roomList]
+    newRoomList[index].numBeds = numBeds
+    newRoomList[index].index = index + 1
+    setRoomList(newRoomList)
+  }
 
   const handleRoomRemove = (e, index) => {
-    const newList = [...roomList];
-    newList.splice(index, 1);
-    setRoomList(newList);
-  };
+    const newList = [...roomList]
+    newList.splice(index, 1)
+    setRoomList(newList)
+  }
 
   const handleTypeChange = (e) => {
-    setType(e.target.value);
-  };
+    setType(e.target.value)
+  }
 
   const updateThumbnail = (e) => {
     //  convert data
-    const upload = e.target.files[0];
+    const upload = e.target.files[0]
 
     fileToDataUrl(upload).then((data) => {
-      setThumbnail(data);
-    });
-  };
+      setThumbnail(data)
+    })
+  }
 
   const removeThumbnail = () => {
-    setThumbnail(defaultThumbnail);
-    document.getElementById('thumbnail').src = thumbnail;
-  };
+    setThumbnail(defaultThumbnail)
+    document.getElementById('thumbnail').src = thumbnail
+  }
 
   const handleAmenitiesChange = (e) => {
-    setAmenities(e.target.value);
-  };
+    setAmenities(e.target.value)
+  }
 
   const updateImages = async (e) => {
-    const imageData = await fileToDataUrl(e.target.files[0]);
-    const newImages = [...images, imageData];
-    setImages(newImages);
-  };
+    const imageData = await fileToDataUrl(e.target.files[0])
+    const newImages = [...images, imageData]
+    setImages(newImages)
+  }
 
   const removeImage = (i) => {
     // const newImages = [...images]
-    const img = images[i];
-    setImages(images.filter((image) => image !== img));
-  };
+    const img = images[i]
+    setImages(images.filter((image) => image !== img))
+  }
 
   const setNewListingData = () => {
-    const numBedrooms = roomList.length;
-    let totalBeds = 0;
+    const numBedrooms = roomList.length
+    let totalBeds = 0
     roomList.forEach((room) => {
-      totalBeds += parseInt(room.numBeds);
-    });
+      totalBeds += parseInt(room.numBeds)
+    })
     const data = {
       title,
       address: {
@@ -179,42 +177,33 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         images,
         video: videoURL,
       },
-    };
-    callCreateListing(data);
-  };
+    }
+    callCreateListing(data)
+  }
 
   const ListingActionButton = () => {
     return (
       <Grid2 xs={12}>
-        <Button
-          variant='outlined'
-          fullWidth
-          onClick={setNewListingData}
-        >
+        <Button variant="outlined" fullWidth onClick={setNewListingData}>
           Save
         </Button>
       </Grid2>
-    );
-  };
+    )
+  }
 
   const ListingEditThumbnail = () => {
     if (listingInfo) {
       return (
         <Grid2>
           <Grid2 xs={12}>
-            <Typography variant='overline'>
-              Listing Thumbnail
-            </Typography>
+            <Typography variant="overline">Listing Thumbnail</Typography>
           </Grid2>
-          <ImageListItem
-            key={listingInfo.thumbnail}
-            style={imageStyle}
-          >
+          <ImageListItem key={listingInfo.thumbnail} style={imageStyle}>
             <img
-              id='thumbnail'
+              id="thumbnail"
               src={listingInfo.thumbnail}
-              alt='listing thumbnail'
-              loading='lazy'
+              alt="listing thumbnail"
+              loading="lazy"
             />
             <ImageListItemBar
               sx={{
@@ -223,7 +212,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
                   'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
               }}
               title={'Thumbnail'}
-              position='top'
+              position="top"
               actionIcon={
                 <IconButton
                   sx={{ color: 'white' }}
@@ -233,58 +222,58 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
                   <DeleteSharpIcon />
                 </IconButton>
               }
-              actionPosition='right'
+              actionPosition="right"
             />
           </ImageListItem>
         </Grid2>
-      );
+      )
     }
-    return null;
-  };
+    return null
+  }
 
   const ListingEditImagesTitle = () => {
     if (listingInfo) {
       return (
         <Grid2 xs={12}>
-          <Typography variant='overline'>Property Images</Typography>
+          <Typography variant="overline">Property Images</Typography>
         </Grid2>
-      );
+      )
     }
-    return null;
-  };
+    return null
+  }
 
   const ListingEditImages = () => {
     if (listingInfo) {
       if (listingInfo.metadata.images.length === 0) {
-        return null;
+        return null
       }
-      return <EditImageList images={images} removeImage={removeImage} />;
+      return <EditImageList images={images} removeImage={removeImage} />
     }
-    return null;
-  };
+    return null
+  }
 
   const ListingEditUploadImage = () => {
     if (listingInfo) {
       return (
         <Grid2 xs={12} md={6}>
           <input
-            type='file'
-            accept='image/*'
+            type="file"
+            accept="image/*"
             style={{ display: 'none' }}
-            id='imageUpload'
+            id="imageUpload"
             onChange={updateImages}
           />
-          <label htmlFor='imageUpload'>
-            <Button color='primary' component='span'>
+          <label htmlFor="imageUpload">
+            <Button color="primary" component="span">
               Upload
             </Button>
           </label>
         </Grid2>
-      );
+      )
     }
 
-    return null;
-  };
+    return null
+  }
 
   return (
     <Box
@@ -307,28 +296,26 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         // xs={24}
       >
         <Grid2 xs={12}>
-          <Typography variant='overline'>
-            Listing Information
-          </Typography>
+          <Typography variant="overline">Listing Information</Typography>
         </Grid2>
 
         <Grid2 xs={12}>
           <TextField
             fullWidth
-            label='Title'
+            label="Title"
             defaultValue={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </Grid2>
 
         <Grid2 xs={12}>
-          <Typography variant='overline'>Property Address</Typography>
+          <Typography variant="overline">Property Address</Typography>
         </Grid2>
 
         <Grid2 xs={12}>
           <TextField
             fullWidth
-            label='Address Line'
+            label="Address Line"
             defaultValue={street}
             required
             onChange={(e) => setStreet(e.target.value)}
@@ -338,7 +325,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={6} md={3}>
           <TextField
             fullWidth
-            label='City/Suburb'
+            label="City/Suburb"
             defaultValue={city}
             required
             onChange={(e) => setCity(e.target.value)}
@@ -347,7 +334,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={6} md={3}>
           <TextField
             fullWidth
-            label='State'
+            label="State"
             defaultValue={state}
             required
             onChange={(e) => setState(e.target.value)}
@@ -356,7 +343,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={6} md={3}>
           <TextField
             fullWidth
-            label='Postcode'
+            label="Postcode"
             defaultValue={postcode}
             required
             onChange={(e) => setPostcode(e.target.value)}
@@ -365,7 +352,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={6} md={3}>
           <TextField
             fullWidth
-            label='Country'
+            label="Country"
             defaultValue={country}
             required
             onChange={(e) => setCountry(e.target.value)}
@@ -373,22 +360,18 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         </Grid2>
 
         <Grid2 xs={12}>
-          <Typography variant='overline'>
-            Property Information
-          </Typography>
+          <Typography variant="overline">Property Information</Typography>
         </Grid2>
 
         <Grid2 xs={12} md={4}>
           <FormControl fullWidth required>
-            <InputLabel id='PropertyTypeLabel'>
-              Property Type
-            </InputLabel>
+            <InputLabel id="PropertyTypeLabel">Property Type</InputLabel>
             <Select
               fullWidth
-              labelId='PropertyTypeLabel'
-              id='PropertyType'
+              labelId="PropertyTypeLabel"
+              id="PropertyType"
               value={type}
-              label='Property Type'
+              label="Property Type"
               onChange={handleTypeChange}
             >
               <MenuItem value={'House'}>House</MenuItem>
@@ -401,20 +384,16 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
 
         <Grid2 xs={12} md={4}>
           <FormControl fullWidth required>
-            <InputLabel htmlFor='Price'>
-              Price (per night)
-            </InputLabel>
+            <InputLabel htmlFor="Price">Price (per night)</InputLabel>
             <OutlinedInput
               fullWidth
-              id='Price'
+              id="Price"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               startAdornment={
-                <InputAdornment position='start'>
-                  $
-                </InputAdornment>
+                <InputAdornment position="start">$</InputAdornment>
               }
-              label='Price per week'
+              label="Price per week"
               // helperText='Price per week'
             />
           </FormControl>
@@ -423,7 +402,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={12} md={4}>
           <TextField
             fullWidth
-            label='Number of Bathrooms'
+            label="Number of Bathrooms"
             defaultValue={bathrooms}
             required
             onChange={(e) => setBathrooms(parseInt(e.target.value))}
@@ -433,7 +412,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <Grid2 xs={12}>
           <TextField
             fullWidth
-            label='Amenities'
+            label="Amenities"
             defaultValue={amenities}
             multiline
             onChange={handleAmenitiesChange}
@@ -443,9 +422,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         {/* add bedrooms */}
 
         <Grid2 xs={12}>
-          <Typography variant='overline'>
-            Bedrooms information
-          </Typography>
+          <Typography variant="overline">Bedrooms information</Typography>
         </Grid2>
 
         <Grid2 xs={12}>
@@ -457,12 +434,12 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
                     fullWidth
                     required
                     onChange={(e) => {
-                      handleRoomTypeChange(e, i);
+                      handleRoomTypeChange(e, i)
                     }}
                     value={room.roomType}
                     defaultValue={room.roomType}
                     id={i}
-                    label='Type of Room'
+                    label="Type of Room"
                   ></TextField>
                 </Grid2>
                 <Grid2 xs={8} md={4}>
@@ -470,25 +447,25 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
                     fullWidth
                     required
                     onChange={(e) => {
-                      handleNumsBedsChange(e, i);
+                      handleNumsBedsChange(e, i)
                     }}
                     value={room.numBeds}
                     defaultValue={room.numBeds}
                     id={i}
-                    label='Number of beds'
+                    label="Number of beds"
                   ></TextField>
                 </Grid2>
                 <Grid2 xs={4}>
                   <Button
                     onClick={(e) => {
-                      handleRoomRemove(e, i);
+                      handleRoomRemove(e, i)
                     }}
                   >
                     Remove
                   </Button>
                 </Grid2>
               </Grid2>
-            );
+            )
           })}
           <Grid2>
             <Button onClick={handleRoomAdd}>Add room</Button>
@@ -498,50 +475,43 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <ListingEditThumbnail />
 
         <Grid2 xs={12}>
-          <Typography variant='overline'>
-            Upload New Thumbnail
-          </Typography>
+          <Typography variant="overline">Upload New Thumbnail</Typography>
         </Grid2>
         <Grid2 xs={12}>
-          <Stack direction='row' spacing={1} alignItems='center'>
+          <Stack direction="row" spacing={1} alignItems="center">
             <Typography fontSize={'small'}>Image</Typography>
-            <Switch
-              checked={isVideo}
-              onChange={() => setIsVideo(!isVideo)}
-            />
-            <Typography fontSize={'small'}>
-              Youtube Video
-            </Typography>
+            <Switch checked={isVideo} onChange={() => setIsVideo(!isVideo)} />
+            <Typography fontSize={'small'}>Youtube Video</Typography>
           </Stack>
         </Grid2>
 
         {isVideo
           ? (
-            <Grid2 xs={12}>
-              <TextField
-                size='small'
-                variant='standard'
-                label='Video URL'
-                value={videoURL}
-                onChange={(e) => setVideoURL(e.target.value)}
-              />
-            </Grid2>
+          <Grid2 xs={12}>
+            <TextField
+              size="small"
+              variant="standard"
+              label="Video URL"
+              value={videoURL}
+              onChange={(e) => setVideoURL(e.target.value)}
+            />
+          </Grid2>
             )
           : (
-            <Grid2 xs={12}>
-              <input
-                type='file'
-                accept='image/*'
-                style={{ display: 'none' }}
-                id='thumbnailUpload'
-                onChange={updateThumbnail}
-              />
-              <label htmlFor='thumbnailUpload'>
-                <Button color='primary' component='span'>
-                  Upload Image
-                </Button>
-              </label>
-            </Grid2>
+          <Grid2 xs={12}>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="thumbnailUpload"
+              onChange={updateThumbnail}
+            />
+            <label htmlFor="thumbnailUpload">
+              <Button color="primary" component="span">
+                Upload Image
+              </Button>
+            </label>
+          </Grid2>
             )}
         <ListingEditImagesTitle />
         <Grid2>
@@ -551,12 +521,12 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         <ListingActionButton />
       </Grid2>
     </Box>
-  );
-};
+  )
+}
 
 CreateDialog.propTypes = {
   callCreateListing: PropTypes.func,
-  listingInfo: PropTypes.object
-};
+  listingInfo: PropTypes.object,
+}
 
-export default CreateDialog;
+export default CreateDialog
