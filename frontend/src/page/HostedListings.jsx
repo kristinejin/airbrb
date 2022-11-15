@@ -239,7 +239,7 @@ const HostedListings = (props) => {
             >
             <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
+            <Typography name='createANewlisting' sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
               Create a new listing
             </Typography>
           </Toolbar>
@@ -259,7 +259,7 @@ const HostedListings = (props) => {
 
       <Box sx={{ border: '1px solid rgb(230, 230, 230)', padding: '30px' }} justifyContent='space-between' alignItems='center' display='flex'>
         <Box sx={{ flex: '1' }} >
-          <Button sx={{ fontSize: '20px' }} onClick={() => { window.location.href = '/' }}><HomeIcon sx={{ height: '30px', width: '30px', verticalAlign: 'middle' }}/>Go Home</Button>
+          <Button id='goHomeButton' sx={{ fontSize: '20px' }} onClick={() => { window.location.href = '/' }}><HomeIcon sx={{ height: '30px', width: '30px', verticalAlign: 'middle' }}/>Go Home</Button>
         </Box>
         <Typography sx={{ flex: '1', textAlign: 'center' }} component='h1' variant='h4'>Your listings</Typography>
         <Box sx={{ flex: '1' }}>
@@ -292,7 +292,7 @@ const HostedListings = (props) => {
           // alignItems: 'flex-start',
         }}
       >
-        <Button onClick={() => setCreate(true)}>
+        <Button name='createListing' onClick={() => setCreate(true)}>
           Create New Listing
         </Button>
         <Button onClick={() => setUpload(true)}>
@@ -313,10 +313,10 @@ const HostedListings = (props) => {
         </Grid>
       </Box>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Set availability</DialogTitle>
+        <DialogTitle name='availabilityTitle'>Set availability</DialogTitle>
         <DialogContent>
           {availability.map((data, index) => (
-            <Box key={index} sx={{ paddingTop: '20px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <Box name='availability' key={index} sx={{ paddingTop: '20px', display: 'flex', alignItems: 'center', gap: '5px' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
 
                 <DesktopDatePicker
@@ -340,7 +340,7 @@ const HostedListings = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={addAvailability}>Add an availability</Button>
-          <Button onClick={() => publishListing(publishId)}>Submit</Button>
+          <Button name='submit' onClick={() => publishListing(publishId)}>Submit</Button>
         </DialogActions>
       </Dialog>
     </Box>
