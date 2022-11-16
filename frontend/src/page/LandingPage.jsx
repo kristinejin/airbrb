@@ -8,6 +8,7 @@ import Select from '@mui/material/Select'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import TuneIcon from '@mui/icons-material/Tune'
+import Grid2 from '@mui/material/Unstable_Grid2'
 
 import { withStyles } from '@mui/styles'
 
@@ -286,25 +287,28 @@ const LandingPage = (props) => {
         >
           airbrb
         </Typography>
-        <TextField
-          placeholder="Search..."
-          size="small"
-          sx={{
-            width: '40vw',
-          }}
-          InputProps={{
-            endAdornment: (
-              <IconButton
-                type="button"
-                aria-label="search"
-                onClick={searchAction}
-              >
-                <SearchIcon />
-              </IconButton>
-            ),
-          }}
-          onChange={handleSearchStrUpdate}
-        ></TextField>
+        <Grid2>
+          <TextField
+            fullWidth
+            placeholder="Search..."
+            size="small"
+            sx={{
+              minWidth: '30vw',
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  type="button"
+                  aria-label="search"
+                  onClick={searchAction}
+                >
+                  <SearchIcon />
+                </IconButton>
+              ),
+            }}
+            onChange={handleSearchStrUpdate}
+          ></TextField>
+        </Grid2>
         <Box sx={{ flex: '1' }}>
           <SideMenu />
         </Box>
