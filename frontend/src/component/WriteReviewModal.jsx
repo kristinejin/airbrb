@@ -1,64 +1,59 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Rating from '@mui/material/Rating';
-import TextField from '@mui/material/TextField';
-import PropTypes from 'prop-types';
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import Rating from '@mui/material/Rating'
+import TextField from '@mui/material/TextField'
+import PropTypes from 'prop-types'
 
-import { apiCall } from '../util/api';
+import { apiCall } from '../util/api'
 
-import React from 'react';
+import React from 'react'
 
 const WriteReviewModal = (props) => {
-  const open = props.open;
-  const setOpen = props.setOpen;
-  const reviews = props.reviews;
-  const setReviews = props.setReviews;
-  const bookingId = props.bookingId;
-  const listingId = props.listingId;
-  const refresh = props.refresh;
+  const open = props.open
+  const setOpen = props.setOpen
+  const reviews = props.reviews
+  const setReviews = props.setReviews
+  const bookingId = props.bookingId
+  const listingId = props.listingId
+  const refresh = props.refresh
 
-  const [textValue, setTextValue] = React.useState('');
-  const [ratingValue, setRatingValue] = React.useState(0);
+  const [textValue, setTextValue] = React.useState('')
+  const [ratingValue, setRatingValue] = React.useState(0)
 
   const submitReview = () => {
-    const email = localStorage.getItem('email');
-    const postedOn = new Date().toISOString();
+    const email = localStorage.getItem('email')
+    const postedOn = new Date().toISOString()
 
     const newReview = {
       email,
       message: textValue,
       stars: ratingValue === null ? 0 : ratingValue,
       postedOn,
-    };
+    }
 
     apiCall(`listings/${listingId}/review/${bookingId}`, 'PUT', {
       review: newReview,
     }).then(() => {
-      const allReviews = [...reviews];
-      allReviews.push(newReview);
-      setReviews(allReviews);
-      refresh();
-      setOpen(false);
-    });
-  };
+      const allReviews = [...reviews]
+      allReviews.push(newReview)
+      setReviews(allReviews)
+      refresh()
+      setOpen(false)
+    })
+  }
 
   const handleTextChange = (event) => {
-    setTextValue(event.target.value);
-  };
+    setTextValue(event.target.value)
+  }
 
   return (
-    <Dialog
-      open={open}
-      onClose={() => setOpen(false)}
-      fullWidth
-      maxWidth='sm'
-    >
+    <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
       <DialogTitle>
         <IconButton onClick={() => setOpen(false)}>
           <CloseIcon />
@@ -70,7 +65,8 @@ const WriteReviewModal = (props) => {
           onChange={handleTextChange}
           multiline
           rows={4}
-          placeholder='How was your trip?'
+          placeholder="How was your trip?"
+          id="writeReviewTextfield"
           fullWidth
         />
 
@@ -79,20 +75,20 @@ const WriteReviewModal = (props) => {
           <Rating
             value={ratingValue}
             onChange={(event, newValue) => {
-              setRatingValue(newValue);
+              setRatingValue(newValue)
             }}
           />
         </Box>
 
-        <SubmitButton onClick={submitReview}/>
+        <SubmitButton onClick={submitReview} />
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
 export const SubmitButton = ({ onClick }) => {
   return (
-    <Button sx={{ float: 'right' }} onClick={onClick}>
+    <Button id="submitReview" sx={{ float: 'right' }} onClick={onClick}>
       Submit review
     </Button>
   )
@@ -105,10 +101,10 @@ WriteReviewModal.propTypes = {
   setReviews: PropTypes.func,
   bookingId: PropTypes.number,
   listingId: PropTypes.number,
-  refresh: PropTypes.func
-};
+  refresh: PropTypes.func,
+}
 SubmitButton.propTypes = {
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 }
 
-export default WriteReviewModal;
+export default WriteReviewModal

@@ -338,7 +338,9 @@ const HostedListings = (props) => {
         <Button name="createListing" onClick={() => setCreate(true)}>
           Create New Listing
         </Button>
-        <Button onClick={() => setUpload(true)}>Upload New Listing</Button>
+        <Button name="uploadListing" onClick={() => setUpload(true)}>
+          Upload New Listing
+        </Button>
       </Box>
 
       <Box sx={{ padding: '40px' }}>
@@ -353,6 +355,7 @@ const HostedListings = (props) => {
               />
               <Card sx={{ textAlign: 'center' }}>
                 <Button
+                  name="bookingHistoryBtn"
                   sx={{ width: '100%' }}
                   onClick={() => {
                     window.location.href = `/BookingHistory/${data.id}`

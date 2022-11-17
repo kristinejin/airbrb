@@ -1,5 +1,4 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
 import { shallow } from 'enzyme'
 import CreateDialog, { ListingActionButton } from '../component/CreateDialog'
 import { defaultThumbnail } from '../util/defaultThumbnail'
