@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^12.1.5",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "cypress": "^11.0.1",
     "eslint": "^8.26.0",
     "eslint-config-standard": "^17.0.0",
