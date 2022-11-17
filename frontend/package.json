@@ -12,6 +12,7 @@
     "@mui/x-date-pickers": "^5.0.8",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/user-event": "^13.5.0",
+    "ajv": "^8.11.2",
     "cypress-localstorage-commands": "^2.2.1",
     "dayjs": "^1.11.6",
     "enzyme-adapter-react-16": "^1.15.7",
