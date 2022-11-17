@@ -86,43 +86,19 @@ describe('empty spec', () => {
       .then((id) => {
         cy.get('#' + id)
       })
-      .should(
-        'have.attr',
-        'class',
-        'MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input'
-      )
+
       .next()
-      .should(
-        'have.attr',
-        'class',
-        'MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root'
-      )
       .children('.MuiIconButton-root')
       .should('have.length', 1)
       .click()
       .get('.MuiPickersArrowSwitcher-root')
-      .should(
-        'have.attr',
-        'class',
-        'MuiPickersArrowSwitcher-root css-9reuh9-MuiPickersArrowSwitcher-root'
-      )
       .children('.MuiIconButton-root')
       .should('have.length', 2)
       .eq(1)
       .click({ force: true })
       .get('.MuiDayPicker-monthContainer')
-      .should(
-        'have.attr',
-        'class',
-        'MuiDayPicker-monthContainer css-6t5f1e-MuiDayPicker-monthContainer'
-      )
       .children('.MuiDayPicker-weekContainer')
       .eq(2)
-      .should(
-        'have.attr',
-        'class',
-        'MuiDayPicker-weekContainer css-ghi3gg-MuiDayPicker-weekContainer'
-      )
       .children()
       .eq(0)
       .click({ force: true })
