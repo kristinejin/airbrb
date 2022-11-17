@@ -9,6 +9,7 @@ import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import TuneIcon from '@mui/icons-material/Tune'
 import Grid2 from '@mui/material/Unstable_Grid2'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 import { withStyles } from '@mui/styles'
 
@@ -20,6 +21,7 @@ import Chip from '@mui/material/Chip'
 import FilterDialog from '../component/FilterDialog'
 import { getMinPrice, getMaxPrice } from '../util/priceData'
 import { getAverageRating } from '../util/averageRating'
+// import { isMobileWidth } from '../util/screen'
 
 const styles = (theme) => ({
   searchBox: {
@@ -277,7 +279,7 @@ const LandingPage = (props) => {
           sx={{
             flex: '1',
             cursor: 'pointer',
-            display: { xs: 'none', sm: 'none', md: 'block' },
+            display: { xs: 'none', sm: 'block', md: 'block' },
           }}
           component="h1"
           variant="h4"
@@ -316,44 +318,63 @@ const LandingPage = (props) => {
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          pt: 2,
+          padding: '20px 40px 20px 40px',
         }}
       >
-        <Chip
-          label="Filters"
-          size="lg"
-          onClick={handleClickFilters}
-          sx={{
-            m: 0.5,
+        <IconButton
+          type="button"
+          aria-label="return to all listings"
+          onClick={() => {
+            getListings()
           }}
-          // TuneIcon
-          icon={<TuneIcon fontSize="small" />}
         >
-          Filters
-        </Chip>
-
-        <FilterDialog
-          open={showFilters}
-          handleClick={handleClickFilters}
-          handleApply={handleApplyFilters}
-          priceInfo={priceRange}
-        />
-
-        <FormControl sx={{ ml: 1, maxWidth: 170 }} size="small">
-          <Select
-            sx={{ maxWidth: 160 }}
-            labelId="demo-select-small"
-            id="demo-select-small"
-            value={sort}
-            onChange={handleApplySort}
+          <ArrowBackIcon />
+          <Typography
+            variant="body2"
+            sx={{ display: { xs: 'none', sm: 'block', md: 'block' } }}
           >
-            <MenuItem value={'Most Relevant'}>Most relevant</MenuItem>
-            <MenuItem value={'Rating DESC'}>Rating (Highest - Lowest)</MenuItem>
-            <MenuItem value={'Rating ASC'}>Rating (Lowest - Highest)</MenuItem>
-          </Select>
-        </FormControl>
+            All listings
+          </Typography>
+        </IconButton>
+        <Box>
+          <Chip
+            label="Filters"
+            size="lg"
+            onClick={handleClickFilters}
+            sx={{
+              m: 0.5,
+            }}
+            // TuneIcon
+            icon={<TuneIcon fontSize="small" />}
+          >
+            Filters
+          </Chip>
+          <FilterDialog
+            open={showFilters}
+            handleClick={handleClickFilters}
+            handleApply={handleApplyFilters}
+            priceInfo={priceRange}
+          />
+          <FormControl sx={{ ml: 1, maxWidth: 170 }} size="small">
+            <Select
+              sx={{ maxWidth: 160 }}
+              labelId="demo-select-small"
+              id="demo-select-small"
+              value={sort}
+              onChange={handleApplySort}
+            >
+              <MenuItem value={'Most Relevant'}>Most relevant</MenuItem>
+              <MenuItem value={'Rating DESC'}>
+                Rating (Highest - Lowest)
+              </MenuItem>
+              <MenuItem value={'Rating ASC'}>
+                Rating (Lowest - Highest)
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
       <Box sx={{ padding: '10px 40px 40px 40px' }}>
         {bookedListings.length !== 0 && (

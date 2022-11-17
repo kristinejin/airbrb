@@ -123,7 +123,6 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
   const updateThumbnail = (e) => {
     //  convert data
     const upload = e.target.files[0]
-
     fileToDataUrl(upload).then((data) => {
       setThumbnail(data)
     })
@@ -151,6 +150,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
   }
 
   const setNewListingData = () => {
+    console.log('clickd')
     const numBedrooms = roomList.length
     let totalBeds = 0
     roomList.forEach((room) => {
@@ -165,7 +165,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         postcode,
         country,
       },
-      price,
+      price: parseInt(price),
       thumbnail,
       metadata: {
         propertyType: type,
@@ -178,6 +178,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
         video: videoURL,
       },
     }
+    console.log(data)
     callCreateListing(data)
   }
 
@@ -479,8 +480,7 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
           </Grid2>
         </Grid2>
 
-        <ListingEditThumbnail />
-
+        {listingInfo && <ListingEditThumbnail id="listingEditThumbnail" />}
         <Grid2 xs={12}>
           <Typography variant="overline">Upload New Thumbnail</Typography>
         </Grid2>
@@ -526,11 +526,11 @@ const CreateDialog = ({ callCreateListing, listingInfo }) => {
             </label>
           </Grid2>
             )}
-        <ListingEditImagesTitle />
+        {listingInfo && <ListingEditImagesTitle id="listingEditImagesTitle" />}
         <Grid2>
           <ListingEditImages />
         </Grid2>
-        <ListingEditUploadImage />
+        {listingInfo && <ListingEditUploadImage id="listingEditUploadImage" />}
         <Grid2 xs={12}>
           <ListingActionButton setNewListingData={setNewListingData} />
         </Grid2>

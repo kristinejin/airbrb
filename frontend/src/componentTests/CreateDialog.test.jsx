@@ -2,6 +2,7 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { shallow } from 'enzyme'
 import CreateDialog, { ListingActionButton } from '../component/CreateDialog'
+import { defaultThumbnail } from '../util/defaultThumbnail'
 
 describe('<CreateDialog>', () => {
   it('should render an create dialog', () => {
@@ -46,27 +47,51 @@ describe('<CreateDialog>', () => {
     const video2 = wrapper.find('#thumbnailUploadVideo')
     const image2 = wrapper.find('#thumbnailUpload')
 
+    // make sure the thumbnail image is not present when there is no listing info passed in as prop
+    const thumbnail = wrapper.find('#listingEditThumbnail')
+    expect(thumbnail).toHaveLength(0)
+
     // check thumbnail type have been changed to video
     expect(select2.prop('checked')).toEqual(true)
     expect(video2).toHaveLength(1)
     expect(image2).toHaveLength(0)
   })
 
-  it('should call create listing fn when save button is clicked', () => {
-    const mock = jest.fn()
-    const wrapper = shallow(<CreateDialog callCreateListing={mock} />)
-    const button = wrapper.find(ListingActionButton)
-    expect(button).toHaveLength(1)
-
-    button.simulate('click')
-    // expect(mock).toHaveBeenCalledTimes(1)
-  })
-
   it('should render thumbnail and images when listing info is given', () => {
     const mock = jest.fn()
-    const listingInfo = {}
-    // const wrapper = shallow(
-    //   <CreateDialog callCreateListing={mock} listingInfo={listingInfo} />
-    // )
+    const listingInfo = {
+      title: 'title',
+      address: {
+        street: 'street',
+        city: 'city',
+        state: 'state',
+        postcode: 2020,
+        country: 'country',
+      },
+      price: 200,
+      thumbnail: defaultThumbnail,
+      metadata: {
+        propertyType: 'type',
+        numBaths: 2,
+        numBedroom: 2,
+        numBeds: 2,
+        amenities: 'string',
+        bedrooms: [],
+        images: [],
+        video: undefined,
+      },
+    }
+
+    const wrapper = shallow(
+      <CreateDialog callCreateListing={mock} listingInfo={listingInfo} />
+    )
+
+    // check thumbnail and images are present in edit mode
+    const thumbnail = wrapper.find('#listingEditThumbnail')
+    expect(thumbnail).toHaveLength(1)
+    const imageTitle = wrapper.find('#listingEditImagesTitle')
+    expect(imageTitle).toHaveLength(1)
+    const imageUpload = wrapper.find('#listingEditUploadImage')
+    expect(imageUpload).toHaveLength(1)
   })
 })
