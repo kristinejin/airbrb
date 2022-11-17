@@ -3,3 +3,4 @@
 - Clickable items have 'hints' that they are clickable (bold, underlined and/or hovor affect)
 - Consistent font throughout the application
 - Minimum use of button types to ensure clean interface
+- Booking history shows less on tables when screen is reduced
