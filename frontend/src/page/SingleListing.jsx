@@ -1,155 +1,151 @@
-import React from 'react';
-import { apiCall } from '../util/api';
-import { useTheme } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Grid2 from '@mui/material/Unstable_Grid2';
-import Card from '@mui/material/Card';
-import Divider from '@mui/material/Divider';
-import CardContent from '@mui/material/CardContent';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import MobileStepper from '@mui/material/MobileStepper';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import AdvancedRatingPopup from '../component/AdvancedRatingPopup';
-import { getAverageRating } from '../util/averageRating';
-import Rating from '@mui/material/Rating';
-import HomeIcon from '@mui/icons-material/Home';
-import * as dayjs from 'dayjs';
+import React from 'react'
+import { apiCall } from '../util/api'
+import { useTheme } from '@mui/material/styles'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Grid2 from '@mui/material/Unstable_Grid2'
+import Card from '@mui/material/Card'
+import Divider from '@mui/material/Divider'
+import CardContent from '@mui/material/CardContent'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import MobileStepper from '@mui/material/MobileStepper'
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown'
+import AdvancedRatingPopup from '../component/AdvancedRatingPopup'
+import { getAverageRating } from '../util/averageRating'
+import Rating from '@mui/material/Rating'
+import HomeIcon from '@mui/icons-material/Home'
+import * as dayjs from 'dayjs'
 
-import { useParams } from 'react-router-dom';
-import { SideMenu } from '../component/SideMenu';
-import ReviewModal from '../component/ReviewModal';
-import CustomDatePicker from '../component/DatePicker';
-import Youtube from '../component/YouTube';
+import { useParams } from 'react-router-dom'
+import { SideMenu } from '../component/SideMenu'
+import ReviewModal from '../component/ReviewModal'
+import CustomDatePicker from '../component/DatePicker'
+import Youtube from '../component/YouTube'
 
 const clickable = {
   cursor: 'pointer',
   textDecorationLine: 'underline',
   fontWeight: '600',
-};
+}
 
 const SingleListing = () => {
-  const listingId = useParams().listingId;
-  const dateRange = useParams().dateRange;
-  const theme = useTheme();
+  const listingId = useParams().listingId
+  const dateRange = useParams().dateRange
+  const theme = useTheme()
 
-  const [listing, setListing] = React.useState({});
-  const [images, setImages] = React.useState([]);
-  const [isLoaded, setIsLoaded] = React.useState(false);
-  const [isBooked, setIsBooked] = React.useState(false);
-  const [bookingStatus, setBookingStatus] = React.useState(false);
-  const [openReview, setOpenReview] = React.useState(false);
+  const [listing, setListing] = React.useState({})
+  const [images, setImages] = React.useState([])
+  const [isLoaded, setIsLoaded] = React.useState(false)
+  const [isBooked, setIsBooked] = React.useState(false)
+  const [bookingStatus, setBookingStatus] = React.useState(false)
+  const [openReview, setOpenReview] = React.useState(false)
   const [bookedDates, setBookedDates] = React.useState({
     start: new Date(),
     end: new Date(),
-  });
-  const [maxSteps, setMaxSteps] = React.useState(false);
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [bookingSuccess, setBookingSuccess] = React.useState(false);
-  const [newBid, setNewBid] = React.useState(0);
-  const [allReviews, setAllReviews] = React.useState('');
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  })
+  const [maxSteps, setMaxSteps] = React.useState(false)
+  const [activeStep, setActiveStep] = React.useState(0)
+  const [bookingSuccess, setBookingSuccess] = React.useState(false)
+  const [newBid, setNewBid] = React.useState(0)
+  const [allReviews, setAllReviews] = React.useState('')
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
   React.useEffect(() => {
     listingInfo()
       .then((data) => {
-        setListing(data.listing);
-        setMaxSteps(data.listing.metadata.images.length + 1);
-        setImages([
-          data.listing.thumbnail,
-          ...data.listing.metadata.images,
-        ]);
-        setIsLoaded(true);
-        setAllReviews(data.listing.reviews);
+        setListing(data.listing)
+        setMaxSteps(data.listing.metadata.images.length + 1)
+        setImages([data.listing.thumbnail, ...data.listing.metadata.images])
+        setIsLoaded(true)
+        setAllReviews(data.listing.reviews)
       })
       .catch((data) => {
-        setIsLoaded(false);
-        alert(data);
-      });
-  }, []);
+        setIsLoaded(false)
+        alert(data)
+      })
+  }, [])
 
   React.useEffect(() => {
-    getAllBookings();
-  }, [isBooked]);
+    getAllBookings()
+  }, [isBooked])
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+  }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
 
   const listingInfo = async () => {
-    const info = await apiCall(`listings/${listingId}`, 'GET');
-    return info;
-  };
+    const info = await apiCall(`listings/${listingId}`, 'GET')
+    return info
+  }
 
   const refreshListing = () => {
     listingInfo().then((data) => {
-      setListing(data.listing);
-    });
-  };
+      setListing(data.listing)
+    })
+  }
 
   const addressStr = () => {
-    return `${listing.address.street}, ${listing.address.city}, ${listing.address.country} ${listing.address.postcode}`;
-  };
+    return `${listing.address.street}, ${listing.address.city}, ${listing.address.country} ${listing.address.postcode}`
+  }
 
   const handleOpenReview = () => {
-    setOpenReview(true);
-  };
+    setOpenReview(true)
+  }
 
   const openPopover = (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    setAnchorEl(anchorEl ? null : event.currentTarget);
+    event.stopPropagation()
+    event.preventDefault()
+    setAnchorEl(anchorEl ? null : event.currentTarget)
   }
   const closePopover = (event) => {
     if (event !== undefined) {
-      event.stopPropagation();
-      event.preventDefault();
+      event.stopPropagation()
+      event.preventDefault()
     }
-    setAnchorEl(null);
+    setAnchorEl(null)
   }
 
   // For booking
   const handleOnChangeDateStart = (date) => {
-    const ISODate = date.toISOString();
-    const newBooked = bookedDates;
-    newBooked.start = ISODate;
-    setBookedDates(newBooked);
-  };
+    const ISODate = date.toISOString()
+    const newBooked = bookedDates
+    newBooked.start = ISODate
+    setBookedDates(newBooked)
+  }
 
   const handleOnChangeDateEnd = (date) => {
-    const ISODate = date.toISOString();
-    const newBooked = bookedDates;
-    newBooked.end = ISODate;
-    setBookedDates(newBooked);
-  };
+    const ISODate = date.toISOString()
+    const newBooked = bookedDates
+    newBooked.end = ISODate
+    setBookedDates(newBooked)
+  }
 
   const getAdjustedDate = (current) => {
-    let adjusted = new Date(current);
+    let adjusted = new Date(current)
     adjusted = new Date(
       adjusted.getTime() - adjusted.getTimezoneOffset() * 60000
-    );
-    adjusted = adjusted.toISOString();
-    adjusted = adjusted.slice(0, -1);
-    return adjusted;
-  };
+    )
+    adjusted = adjusted.toISOString()
+    adjusted = adjusted.slice(0, -1)
+    return adjusted
+  }
 
   const handleBook = async () => {
-    const start = dayjs(bookedDates.start);
-    const end = dayjs(bookedDates.end);
-    const duration =
-      end.diff(start, 'day') > 0 ? end.diff(start, 'day') : 1;
-    const total = duration * parseInt(listing.price);
+    const start = dayjs(bookedDates.start)
+    const end = dayjs(bookedDates.end)
+    const duration = end.diff(start, 'day') > 0 ? end.diff(start, 'day') : 1
+    const total = duration * parseInt(listing.price)
 
-    const correctStart = getAdjustedDate(start.toISOString());
-    const correctEnd = getAdjustedDate(end.toISOString());
+    const correctStart = getAdjustedDate(start.toISOString())
+    const correctEnd = getAdjustedDate(end.toISOString())
 
     const request = await apiCall(`bookings/new/${listingId}`, 'POST', {
       dateRange: {
@@ -157,39 +153,37 @@ const SingleListing = () => {
         enddate: correctEnd,
       },
       totalPrice: total,
-    });
+    })
     // popup showing booking status
-    setNewBid(request.bookingId);
-    setBookingSuccess(true);
-  };
+    setNewBid(request.bookingId)
+    setBookingSuccess(true)
+  }
 
   const getAllBookings = async () => {
-    const resp = await apiCall('bookings', 'GET');
-    const bookings = resp.bookings;
+    const resp = await apiCall('bookings', 'GET')
+    const bookings = resp.bookings
 
     bookings.forEach((b) => {
       if (
         b.owner === localStorage.getItem('email') &&
         parseInt(b.listingId) === parseInt(listingId)
       ) {
-        setIsBooked(true);
-        setBookingStatus(b.status);
+        setIsBooked(true)
+        setBookingStatus(b.status)
       }
-    });
-  };
+    })
+  }
 
   const ShowBookingStatus = () => {
     if (!localStorage.getItem('token')) {
-      return null;
+      return null
     }
     if (isBooked) {
       return (
         <Box>
-          <Typography>
-            Your booking status is {bookingStatus}
-          </Typography>
+          <Typography>Your booking status is {bookingStatus}</Typography>
         </Box>
-      );
+      )
     }
 
     return (
@@ -203,17 +197,17 @@ const SingleListing = () => {
       >
         <Typography>You have not booked this property yet</Typography>
       </Box>
-    );
-  };
+    )
+  }
 
   const BookListing = () => {
-    let price = listing.price;
-    let priceLabel = 'per night';
+    let price = listing.price
+    let priceLabel = 'per night'
     if (dateRange !== 'false') {
       // calculate total price
-      const days = Math.abs(parseInt(dateRange));
-      price *= days;
-      priceLabel = `for total of ${days} day(s)`;
+      const days = Math.abs(parseInt(dateRange))
+      price *= days
+      priceLabel = `for total of ${days} day(s)`
     }
     const BookingSection = () => {
       if (!localStorage.getItem('token')) {
@@ -229,12 +223,12 @@ const SingleListing = () => {
               Want to book this property? Login or sign up first!
             </Typography>
           </Box>
-        );
+        )
       }
 
       return (
         <Box>
-          <Grid2 container spacing={2} justifyContent='center'>
+          <Grid2 container spacing={2} justifyContent="center">
             <Grid2
               xs={12}
               sx={{
@@ -247,40 +241,24 @@ const SingleListing = () => {
                 fullWidth
                 dateRange={{ start: null, end: null }}
                 handleOnChangeDateEnd={handleOnChangeDateEnd}
-                handleOnChangeDateStart={
-                  handleOnChangeDateStart
-                }
+                handleOnChangeDateStart={handleOnChangeDateStart}
                 availability={listing.availability}
               />
-            </Grid2>
-            <Grid2
-              xs={12}
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-              }}
-            >
-              <Typography variant='h7'>
-                Total Price: (To be implemented w/ booking)
-              </Typography>
             </Grid2>
             {bookingSuccess && (
               <Alert
                 onClose={() => {
-                  setBookingSuccess(false);
+                  setBookingSuccess(false)
                 }}
-                severity='success'
+                severity="success"
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
                 }}
               >
-                <AlertTitle>
-                  Congrats, this booking has been made.
-                </AlertTitle>
-                Your booking id is #{newBid}, you booking status
-                will change once the host process your booking
+                <AlertTitle>Congrats, this booking has been made.</AlertTitle>
+                Your booking id is #{newBid}, you booking status will change
+                once the host process your booking
               </Alert>
             )}
 
@@ -294,9 +272,9 @@ const SingleListing = () => {
               }}
             >
               <Button
-                name='submit'
+                name="submit"
                 fullWidth
-                variant='outlined'
+                variant="outlined"
                 sx={{ width: '90%' }}
                 onClick={handleBook}
               >
@@ -305,8 +283,8 @@ const SingleListing = () => {
             </Grid2>
           </Grid2>
         </Box>
-      );
-    };
+      )
+    }
 
     return (
       <Grid2 xs={12} md={8}>
@@ -323,7 +301,7 @@ const SingleListing = () => {
                 display: 'flex',
               }}
             >
-              <Typography variant='h5' sx={{ pr: 0.5 }}>
+              <Typography variant="h5" sx={{ pr: 0.5 }}>
                 ${price}
               </Typography>
               <Typography
@@ -345,29 +323,38 @@ const SingleListing = () => {
           </CardContent>
         </Card>
       </Grid2>
-    );
-  };
+    )
+  }
 
   if (!isLoaded || !maxSteps || images.length === 0 || !allReviews) {
-    return <p>loading...</p>;
+    return <p>loading...</p>
   }
 
   return (
     <Box>
       <Box
         sx={{ border: '1px solid rgb(230, 230, 230)', padding: '30px' }}
-        justifyContent='space-between'
-        alignItems='center'
-        display='flex'
+        justifyContent="space-between"
+        alignItems="center"
+        display="flex"
       >
-        <Button id='goHomeButton' sx={{ fontSize: '20px' }} onClick={() => { window.location.href = '/' }}><HomeIcon sx={{ height: '30px', width: '30px', verticalAlign: 'middle' }}/><Typography sx={{ fontSize: '20px' }}>Go Home</Typography></Button>
+        <Button
+          id="goHomeButton"
+          sx={{ fontSize: '20px' }}
+          onClick={() => {
+            window.location.href = '/'
+          }}
+        >
+          <HomeIcon
+            sx={{ height: '30px', width: '30px', verticalAlign: 'middle' }}
+          />
+          <Typography sx={{ fontSize: '20px' }}>Go Home</Typography>
+        </Button>
 
         <Box sx={{ flex: '1' }}>
           <SideMenu />
         </Box>
       </Box>
-
-      {/* Review Modal:  https://mui.com/joy-ui/react-modal/ */}
 
       <ReviewModal
         open={openReview}
@@ -388,22 +375,28 @@ const SingleListing = () => {
           m: 2,
         }}
       >
-        <Typography variant='h2'>{listing.title}</Typography>
+        <Typography variant="h2">{listing.title}</Typography>
         <Grid2 container spacing={1}>
           <Grid2 sx={{ display: 'flex' }}>
-            <Button sx={{ position: 'relative', bottom: '5px', left: '5px' }}
+            <Button
+              sx={{ position: 'relative', bottom: '5px', left: '5px' }}
               onClick={openPopover}
               onMouseEnter={openPopover}
             >
               <Rating
-              size='small'
-              value={parseFloat(getAverageRating(listing.reviews), 10)}
-              precision={0.5}
-              readOnly
+                size="small"
+                value={parseFloat(getAverageRating(listing.reviews), 10)}
+                precision={0.5}
+                readOnly
               />
-              <KeyboardArrowDown sx={{ fill: 'gray' }}/>
+              <KeyboardArrowDown sx={{ fill: 'gray' }} />
             </Button>
-            <AdvancedRatingPopup anchorEl={anchorEl} openPopover={openPopover} closePopover={closePopover} listing={listing}/>
+            <AdvancedRatingPopup
+              anchorEl={anchorEl}
+              openPopover={openPopover}
+              closePopover={closePopover}
+              listing={listing}
+            />
           </Grid2>
           <Grid2>
             <Typography>|</Typography>
@@ -411,6 +404,7 @@ const SingleListing = () => {
           <Grid2>
             {/* make clickable, view reviews */}
             <Typography
+              id="viewAllReviewBtn"
               onClick={handleOpenReview}
               style={clickable}
             >
@@ -428,36 +422,36 @@ const SingleListing = () => {
         <Box sx={{ maxWidth: 500, flexGrow: 1 }}>
           {activeStep === 0 && listing.metadata.video
             ? (
-              <Box
-                sx={{
-                  height: 300,
-                  display: 'block',
-                  maxWidth: 500,
-                  overflow: 'hidden',
-                  width: '100%',
-                }}
-              >
-                <Youtube code={listing.metadata.video} />
-              </Box>
+            <Box
+              sx={{
+                height: 300,
+                display: 'block',
+                maxWidth: 500,
+                overflow: 'hidden',
+                width: '100%',
+              }}
+            >
+              <Youtube code={listing.metadata.video} />
+            </Box>
               )
             : (
-              <Box
-                component='img'
-                sx={{
-                  height: 300,
-                  display: 'block',
-                  maxWidth: 500,
-                  overflow: 'hidden',
-                  width: '100%',
-                }}
-                src={images[activeStep]}
-                alt='Listing Images'
-              />
+            <Box
+              component="img"
+              sx={{
+                height: 300,
+                display: 'block',
+                maxWidth: 500,
+                overflow: 'hidden',
+                width: '100%',
+              }}
+              src={images[activeStep]}
+              alt="Listing Images"
+            />
               )}
 
           <MobileStepper
             steps={maxSteps}
-            position='static'
+            position="static"
             activeStep={activeStep}
             nextButton={
               <Button
@@ -466,24 +460,21 @@ const SingleListing = () => {
               >
                 {theme.direction === 'rtl'
                   ? (
-                    <KeyboardArrowLeft />
+                  <KeyboardArrowLeft />
                     )
                   : (
-                    <KeyboardArrowRight />
+                  <KeyboardArrowRight />
                     )}
               </Button>
             }
             backButton={
-              <Button
-                onClick={handleBack}
-                disabled={activeStep === 0}
-              >
+              <Button onClick={handleBack} disabled={activeStep === 0}>
                 {theme.direction === 'rtl'
                   ? (
-                    <KeyboardArrowRight />
+                  <KeyboardArrowRight />
                     )
                   : (
-                    <KeyboardArrowLeft />
+                  <KeyboardArrowLeft />
                     )}
               </Button>
             }
@@ -498,9 +489,7 @@ const SingleListing = () => {
             <Typography>|</Typography>
           </Grid2>
           <Grid2>
-            <Typography>
-              {listing.metadata.numBedrooms} bedrooms
-            </Typography>
+            <Typography>{listing.metadata.numBedrooms} bedrooms</Typography>
           </Grid2>
           <Grid2>
             <Typography>|</Typography>
@@ -512,9 +501,7 @@ const SingleListing = () => {
             <Typography>|</Typography>
           </Grid2>
           <Grid2>
-            <Typography>
-              {listing.metadata.numBaths} bathrooms
-            </Typography>
+            <Typography>{listing.metadata.numBaths} bathrooms</Typography>
           </Grid2>
         </Grid2>
 
@@ -523,7 +510,7 @@ const SingleListing = () => {
         <BookListing sx={{ width: '80vw' }} />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default SingleListing;
+export default SingleListing

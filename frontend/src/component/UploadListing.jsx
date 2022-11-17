@@ -7,14 +7,12 @@ import DialogActions from '@mui/material/DialogActions'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
-import Link from '@mui/material/Link'
 
 import React from 'react'
 import { parseJsonFile, validateJsonFile } from '../util/jsonFileReader'
 import { listingSchema, addressSchema, bedroomSchema } from '../util/schema'
 import { defaultThumbnail } from '../util/defaultThumbnail'
 import PropTypes from 'prop-types'
-import UploadGuide from './UploadListingGuide'
 
 const UploadListing = ({ open, handleClose, handleCreate }) => {
   const [file, setFile] = React.useState(false)
@@ -83,9 +81,6 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
     const validate = validateListingFile(newListing)
     if (validate.error) {
       alert(`${validate.msg}. Please use the sample JSON file as guide.`)
-      // setErrMsg(
-      //   `${validate.msg}. Please use the sample JSON file as guide.`
-      // );
       return
     }
 
@@ -106,15 +101,11 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
       newListing.thumbnail = defaultThumbnail
     }
 
+    console.log(newListing)
+
     const data = {
       title: newListing.title,
-      address: {
-        street: newListing.street,
-        city: newListing.city,
-        state: newListing.state,
-        postcode: newListing.postcode,
-        country: newListing.country,
-      },
+      address: newListing.address,
       price: newListing.price,
       thumbnail: newListing.thumbnail,
       metadata: {
@@ -159,24 +150,13 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
                 Sample.json
               </a>
             </Box>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 1 }} name="uploadListingTitle">
               <Typography>Upload a new listing:</Typography>
-              <input type="file" onChange={updateFile} />
-            </Box>
-            <Box>
-              <Typography variant="body2">
-                Still not sure what to do? Checkout a quick guide{' '}
-                <Link
-                  component="button"
-                  underline="always"
-                  variant="body2"
-                  onClick={() => {
-                    return <UploadGuide open={true} onClick={() => {}} />
-                  }}
-                >
-                  here
-                </Link>
-              </Typography>
+              <input
+                name="uploadListingFile"
+                type="file"
+                onChange={updateFile}
+              />
             </Box>
           </Box>
         </DialogContent>
@@ -187,6 +167,7 @@ const UploadListing = ({ open, handleClose, handleCreate }) => {
             onClick={() => {
               uploadFile()
             }}
+            name="uploadListingSubmit"
           >
             Upload
           </Button>

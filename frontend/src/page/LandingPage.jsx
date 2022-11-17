@@ -229,7 +229,6 @@ const LandingPage = (props) => {
 
   const sortListingAsc = (list) => {
     // sort high low
-    // console.log(list);
 
     const compare = (a, b) => {
       const averageA = getAverageRating(a.reviews)
@@ -292,6 +291,7 @@ const LandingPage = (props) => {
         <Grid2>
           <TextField
             fullWidth
+            name="searchBox"
             placeholder="Search..."
             size="small"
             sx={{
@@ -300,6 +300,7 @@ const LandingPage = (props) => {
             InputProps={{
               endAdornment: (
                 <IconButton
+                  name="searchBoxAction"
                   type="button"
                   aria-label="search"
                   onClick={searchAction}
@@ -325,6 +326,7 @@ const LandingPage = (props) => {
       >
         <IconButton
           type="button"
+          id="cleanAllSearchResult"
           aria-label="return to all listings"
           onClick={() => {
             getListings()

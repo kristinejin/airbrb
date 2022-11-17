@@ -1,12 +1,12 @@
-import React from 'react';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Grid2 from '@mui/material/Unstable_Grid2';
+import React from 'react'
+import Typography from '@mui/material/Typography'
+import TextField from '@mui/material/TextField'
+import Grid2 from '@mui/material/Unstable_Grid2'
 
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import PropTypes from 'prop-types';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import PropTypes from 'prop-types'
 
 const CustomDatePicker = ({
   dateRange,
@@ -14,38 +14,39 @@ const CustomDatePicker = ({
   handleOnChangeDateEnd,
   availability,
 }) => {
-  const [start, setStart] = React.useState(dateRange.start);
-  const [end, setEnd] = React.useState(dateRange.end);
+  const [start, setStart] = React.useState(dateRange.start)
+  const [end, setEnd] = React.useState(dateRange.end)
   const parseAvailability = () => {
-    const list = [];
+    const list = []
     if (!availability) {
-      return [];
+      return []
     }
     availability.forEach((a) => {
-      const start = new Date(a.start);
-      const end = new Date(a.end);
-      while (start <= end) { // eslint-disable-line no-unmodified-loop-condition
-        const date = new Date(start);
-        list.push(date.toISOString().split('T')[0]);
-        start.setDate(date.getDate() + 1);
+      let startdate = new Date(a.start)
+      const enddate = new Date(a.end)
+      while (startdate <= enddate) {
+        // eslint-disable-line no-unmodified-loop-condition
+        const date = new Date(startdate)
+        list.push(date.toISOString().split('T')[0])
+        startdate = date.setDate(date.getDate() + 1)
       }
-    });
-    return list;
-  };
+    })
+    return list
+  }
 
-  const avaiList = parseAvailability();
+  const avaiList = parseAvailability()
 
   const getDisabledDates = (date) => {
-    const ISODate = date.toISOString().split('T')[0];
+    const ISODate = date.toISOString().split('T')[0]
     if (!availability) {
-      return false;
+      return false
     }
 
     if (avaiList.includes(ISODate)) {
-      return false;
+      return false
     }
-    return true;
-  };
+    return true
+  }
 
   return (
     <Grid2
@@ -59,16 +60,16 @@ const CustomDatePicker = ({
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           fullWidth
-          label='CHECK IN'
-          inputFormat='MM/DD/YYYY'
+          label="CHECK IN"
+          inputFormat="MM/DD/YYYY"
           value={start}
           onChange={(newVal) => {
-            handleOnChangeDateStart(newVal);
+            handleOnChangeDateStart(newVal)
             // compare dates
-            setStart(newVal);
+            setStart(newVal)
             if (newVal > end) {
-              setEnd(newVal);
-              handleOnChangeDateEnd(newVal);
+              setEnd(newVal)
+              handleOnChangeDateEnd(newVal)
             }
           }}
           renderInput={(params) => <TextField {...params} />}
@@ -78,12 +79,12 @@ const CustomDatePicker = ({
         <Typography> - </Typography>
         <DatePicker
           fullWidth
-          label='CHECK OUT'
-          inputFormat='MM/DD/YYYY'
+          label="CHECK OUT"
+          inputFormat="MM/DD/YYYY"
           value={end}
           onChange={(newVal) => {
-            handleOnChangeDateEnd(newVal);
-            setEnd(newVal);
+            handleOnChangeDateEnd(newVal)
+            setEnd(newVal)
           }}
           renderInput={(params) => <TextField {...params} />}
           shouldDisableDate={(date) => getDisabledDates(date)}
@@ -91,14 +92,14 @@ const CustomDatePicker = ({
         />
       </LocalizationProvider>
     </Grid2>
-  );
-};
+  )
+}
 
 CustomDatePicker.propTypes = {
   dateRange: PropTypes.object,
   handleOnChangeDateStart: PropTypes.func,
   handleOnChangeDateEnd: PropTypes.func,
-  availability: PropTypes.array
-};
+  availability: PropTypes.array,
+}
 
-export default CustomDatePicker;
+export default CustomDatePicker

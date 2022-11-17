@@ -1,0 +1,5 @@
+- Use of alt and aria-label tag for all images and icons
+- Provide user a way back to the main page on all screens
+- Clickable items have 'hints' that they are clickable (bold, underlined and/or hovor affect)
+- Consistent fonts throughout the application
+- Minimum use of button types to ensure clean interface

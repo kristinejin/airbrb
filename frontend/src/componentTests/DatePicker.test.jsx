@@ -1,5 +1,4 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
 import CustomDatePicker from '../component/DatePicker'
 import { shallow } from 'enzyme'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
